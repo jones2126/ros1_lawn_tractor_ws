@@ -1,0 +1,56 @@
+<!-- 
+  Control a carlike robot with the teb_local_planner
+  - map_server
+  - (maybe) amcl
+  - (maybe) create fixed map to odom tansform
+  - move_base
+  - static map
+  - (maybe) rviz view
+  - (maybe) convert cmd_vel to ackermann_cmd
+  - (maybe) convert modified cmd_vel to ackermann_cmd
+ -->
+<launch>
+
+        <!--  ************** Global Parameters ***************  -->
+        <param name="/use_sim_time" value="true"/>
+
+        
+  <!-- Run the map server -->
+  <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find nav)/maps/farm.yaml"/>  -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find ackermann_vehicle)/maps/435_pine_valley.yaml"/>
+
+  <!--- Run AMCL -->
+  <!--- <include file="$(find nav)/launch/amcl_diff.launch" /> -->
+
+  <!-- If not running amcl, map odom on top of map -->
+  <!--  <node pkg="tf" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 map odom 100" /> -->
+  <!-- rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 test_parent test_child -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 map odom" />
+
+  <!--  ************** Navigation ***************  -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find ackermann_vehicle)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find ackermann_vehicle)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find ackermann_vehicle)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find ackermann_vehicle)/config/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find ackermann_vehicle)/config/teb_local_planner_params.yaml" command="load" />
+
+    <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+    <param name="planner_frequency" value="1.0" />
+    <param name="planner_patience" value="5.0" />
+
+    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+    <param name="controller_frequency" value="5.0" />
+    <param name="controller_patience" value="15.0" />
+
+    <!-- Our carlike robot is not able to rotate in place -->
+    <param name="clearing_rotation_allowed" value="false" />
+  </node>
+
+  <node pkg="ackermann_vehicle" type="mod_cmd_vel_to_ackermann.py" name="mod_cmd_vel_to_ackermann" output="screen">
+    <param name="twist_cmd_topic" type="string" value="/cmd_vel" />
+    <param name="ackermann_cmd_topic" type="string" value="/ackermann_cmd" />
+  </node>
+
+
+</launch>

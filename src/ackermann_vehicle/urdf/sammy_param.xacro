@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+  <xacro:property name="hub_dia" value="0.15"/>
+
+<!-- chassis_length is measured along the x axis, chassis_width
+       along the y axis, and chassis_height along the z axis. -->
+  <xacro:property name="chassis_length" value="0.75"/> <!-- 0.505 -->
+  <xacro:property name="chassis_width" value="0.33"/> <!-- 0.25 -->
+  <xacro:property name="chassis_height" value="0.01"/>
+  <xacro:property name="chassis_mass" value="2.788"/>
+
+  <xacro:property name="main_link" value="base_link" />
+  <!-- hub_dia and tire_dia are the diameters of the hub and tire,
+       respectively. -->
+  <xacro:property name="tire_front_dia" value="0.25"/>
+  <xacro:property name="tire_front_width" value="0.08"/>
+  <xacro:property name="tire_rear_dia" value="0.305"/>
+  <xacro:property name="tire_rear_width" value="0.09"/>
+
+  <!-- Wheel spacing is cener to center -->
+  <xacro:property name="wheel_spacing_front" value="0.45"/>
+  <xacro:property name="wheel_spacing_rear" value="0.5"/>
+  <xacro:property name="wheelbase" value="0.505"/>
+
+  <xacro:property name="wheel_mass" value="0.29"/> <!-- ?????? -->
+
+  <xacro:property name="axle_length" value="0.03"/> <!-- 0.05 -->
+
+  <xacro:property name="axle_eff_limit" value="5.12766"/>
+  <xacro:property name="axle_vel_limit" value="244.8696"/>
+  <xacro:property name="servo_stall_torque" value="0.5649"/>
+  <xacro:property name="servo_no_load_speed" value="4.553"/>
+
+</robot>

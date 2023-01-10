@@ -1,0 +1,17 @@
+image: 435_pine_valley_rviz.png
+resolution: 0.05187452
+# [x, y, z]  x appears to be East/West; y is North/South
+# for the map to be consistent you need to start the tractor in the same spot each time
+# or write a routine to calculate the current position from the lower left corner of the map
+# 40.345213, -80.129165
+#origin: [-25.0, -13.0, 0.0]
+#origin: [-19.0, -13.0, 0.0]
+# origin: [-15.8, -0.0, 0.0]
+#origin: [-16.0, -13.0, 0.0] # from -19 to -16 is the wrong direction
+#origin: [-21.0, -13.0, 0.0] # let's say this was too far on x axis by .5
+#origin: [-20.5, -13.0, 0.0] # let's say this was too far on x axis by .5
+#origin: [-20.5, -12.0, 0.0] # need y to come down a bit
+origin: [-20.2, -11.0, 0.0] # need y to come down a .5 more
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196

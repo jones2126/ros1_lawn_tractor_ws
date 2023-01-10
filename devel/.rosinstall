@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/al/ros1_lawn_tractor_ws/devel/setup.sh
