@@ -1,0 +1,1 @@
+This is an Ackermann vehicle that uses move_base.  Localization is accomplished with GPS.  The GPS location is translated into an odom message. 
