@@ -1,9 +1,8 @@
 ﻿This is an Ackermann steering style vehicle (i.e. the size of a lawn tractor) that uses movebase and teb-planner.  For simulation purposes we are leveraging Gazebo to create odom messages.  In the real world the vehicle will be localized using precision (i.e. RTK) GPS.  My primary goal for posting this is to show the vehicle in RVIS and provide the ability to issue 2D Nav goals  to see how the vehicle performs.  The current displayed map in RVIZ was manually created and represents my backyard.  Jeff Sampson did the “heavy lifting” to create most of this repository including the Ackermann style URDF which seems to be a relatively rare find.  
 
-We currently have a Zoom call on Thursday’s at Noon (ET) to discuss this platform and related items.  You are welcome to join in.  Start by joining the Slack Group for more details.
+We currently have a Zoom call on Thursday’s at Noon (ET) to discuss this platform and related items.  You are welcome to join in.  You can also join the Slack Group for more details.
 
-I started with a clean Ubuntu 20.04 build,  loaded ROS Noetic full desktop and installed  
-ROS Dependencies
+I started with a clean Ubuntu 20.04 build, loaded ROS Noetic full desktop and installed the following ROS Dependencies:
     • $ sudo apt install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
     • $ sudo apt install python3-rosdep
     • $ sudo rosdep init
@@ -35,6 +34,9 @@ The alternative way of starting the full package (i.e. without using ros_starter
     • $ rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/435_tractor.rviz
 
 The folder “support files” is for documents that get created in the development effort that might be useful.
+
+The next step is to finish the physical implementation of this.  Currently I have a  
+Cub Cadet lawn tractor along with the other major components (e.g. electric steering motor, Cytron motor controller, angle sensor, Super Servo for hydrostatic transmission control, a GNSS capable GPS which receives RTK corrections from my on-site base station).  I’m currently working on the low-level embedded code which I will publish here once it is in a more durable state.  A separate catkin_ws for work in progress is at https://github.com/jones2126/tractor_laptop_ROS_workspace
 
 In addition to Jeff Sampson, special thanks to Matt Droter, Vinney Ruia and Juan Eduardo Riva for all their help and contributions leading to this point.
 
