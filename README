@@ -15,7 +15,7 @@ I use a Tkinter gui and script to make it easier to run the launch files.  It re
 $ sudo apt-get install xdotool
 
 Update .bashrc
-$ nano ~/.bashrc (i.e. At the very end of your ~/.bashrc file add: source ~/ros1_lawn_tractor_ws/setup.bash)
+$ nano ~/.bashrc (i.e. At the very end of your ~/.bashrc file add: source ~/ros1_lawn_tractor_ws/devel/setup.bash)
 
 Install additional binaries that are required:
     • $ sudo apt-get install ros-noetic-effort-controllers

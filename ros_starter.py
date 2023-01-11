@@ -87,7 +87,7 @@ class Steps_to_Process(tk.Frame):
  
     def step_6_actions(self):  # rosbag
         self.step_0_actions()
-        subprocess.check_output(["xdotool", "type", "~/.ros/bagfiles" + "\n"])
+        subprocess.check_output(["xdotool", "type", "cd ~/.ros/bagfiles" + "\n"])
         time.sleep(1)
         subprocess.check_output(["xdotool", "type", "rosbag record -a" + "\n"])
         time.sleep(1)     
