@@ -35,8 +35,7 @@ The alternative way of starting the full package (i.e. without using ros_starter
 
 The folder “support files” is for documents that get created in the development effort that might be useful.
 
-The next step is to finish the physical implementation of this.  Currently I have a  
-Cub Cadet lawn tractor along with the other major components (e.g. electric steering motor, Cytron motor controller, angle sensor, Super Servo for hydrostatic transmission control, a GNSS capable GPS which receives RTK corrections from my on-site base station).  I’m currently working on the low-level embedded code which I will publish here once it is in a more durable state.  A separate catkin_ws for work in progress is at https://github.com/jones2126/tractor_laptop_ROS_workspace
+The next step is to finish the physical implementation of this. The intended use case is agriculture tractors, but currently I have started with a Cub Cadet lawn tractor along with the other major components (e.g. electric steering motor, Cytron motor controller, angle sensor, Super Servo for hydrostatic transmission control, a GNSS capable GPS which receives RTK corrections from my on-site base station).  I’m currently working on the low-level embedded code which I will publish here once it is in a more durable state.  A separate catkin_ws for work in progress is at https://github.com/jones2126/tractor_laptop_ROS_workspace
 
 In addition to Jeff Sampson, special thanks to Matt Droter, Vinney Ruia and Juan Eduardo Riva for all their help and contributions leading to this point.
 
