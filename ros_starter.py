@@ -23,12 +23,12 @@ class Steps_to_Process(tk.Frame):
         self.title_string.set("Lawn Tractor Startup")
         title_label = ttk.Label(self, textvariable=self.title_string, font=("TkDefaultFont", 12), wraplength=200)        
 
-        step_1_button = ttk.Button(self, text="Gazebo", width=50, command=self.step_1_actions)
-        step_2_button = ttk.Button(self, text="nav_newteb", width=50, command=self.step_2_actions)
-        step_3_button = ttk.Button(self, text="RVIZ", width=50, command=self.step_3_actions)
-        step_4_button = ttk.Button(self, text="GPS ODOM", width=50, command=self.step_4_actions)
-        step_5_button = ttk.Button(self, text="Move Base Launch", width=50, command=self.step_5_actions)
-        step_6_button = ttk.Button(self, text="Save Rosbag", width=50, command=self.step_6_actions)        
+        step_1_button = ttk.Button(self, text="1. Gazebo", width=50, command=self.step_1_actions)
+        step_2_button = ttk.Button(self, text="2. nav_newteb", width=50, command=self.step_2_actions)
+        step_3_button = ttk.Button(self, text="3. RVIZ", width=50, command=self.step_3_actions)
+        step_4_button = ttk.Button(self, text="rostopic echo /move_base_simple/goal", width=50, command=self.step_4_actions)
+        step_5_button = ttk.Button(self, text="rostopic echo /cmd_vel", width=50, command=self.step_5_actions)
+        step_6_button = ttk.Button(self, text="rosbag record -a", width=50, command=self.step_6_actions)        
 
 
         # Layout form
@@ -51,7 +51,7 @@ class Steps_to_Process(tk.Frame):
         subprocess.check_output(["xdotool", "type", "\n"])
         time.sleep(.5)
 
-    def step_0_actions(self): # main launch of sensors
+    def step_0_actions(self): # used for testing
         working_directory1 = "--working-directory=/home/al"
         subprocess.call(["xdotool", "exec", "gnome-terminal", "--geometry=120x10+350+800", working_directory1])
         time.sleep(2) # delay for sensors to fire up
@@ -60,42 +60,37 @@ class Steps_to_Process(tk.Frame):
         #subprocess.check_output(["xdotool", "type", "source devel/setup.bash" + "\n"])
         #time.sleep(3) # delay for testing
 
-    def step_1_actions(self): # main launch of sensors
+    def step_1_actions(self): # launch Gazebo
         self.step_0_actions()
         subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle ack_new.launch" + "\n"])
-        time.sleep(1) # delay for testing
+        time.sleep(1) 
    
     def step_2_actions(self):   # movebase
         self.step_0_actions()
         subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle nav_newteb.launch" + "\n"])
-        time.sleep(1) # delay for testing
+        time.sleep(1) 
    
     def step_3_actions(self):   # rviz       
-        working_directory1 = "--working-directory=/home/al"
-        subprocess.call(["xdotool", "exec", "gnome-terminal", "--geometry=120x10+550+800", working_directory1])
-        time.sleep(3)
+        self.step_0_actions()
         subprocess.check_output(["xdotool", "type", "rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/435_tractor.rviz" + "\n"])
+        time.sleep(1) 
              
-    def step_4_actions(self):  # gps odom
-        working_directory1 = "--working-directory=/home/al"
-        subprocess.call(["xdotool", "exec", "gnome-terminal", "--geometry=120x10+750+800", working_directory1])
-        self.RPi_login_steps()
-        subprocess.check_output(["xdotool", "type", "cd ~/catkin_ws" + "\n"])
-        time.sleep(.5)
-        subprocess.check_output(["xdotool", "type", "rosrun beginner_tutorials gps_odom.py" + "\n"])
-    def step_5_actions(self): # move base
-        working_directory1 = "--working-directory=/home/al"
-        subprocess.call(["xdotool", "exec", "gnome-terminal", "--geometry=120x10+950+700", working_directory1])
-        self.RPi_login_steps()
-        subprocess.check_output(["xdotool", "type", "cd ~/catkin_ws" + "\n"])
-        time.sleep(.5)
-        subprocess.check_output(["xdotool", "type", "roslaunch lawn_tractor_sim lawn_tractor.launch" + "\n"])   
-    def step_6_actions(self):  # rosbag
-        working_directory1 = "--working-directory=/home/al"
-        subprocess.call(["xdotool", "exec", "gnome-terminal", "--geometry=120x10+1150+700", working_directory1])
-        self.RPi_login_steps()
-        subprocess.check_output(["xdotool", "type", "bash ros_bagfile.sh" + "\n"])  
+    def step_4_actions(self):  # rostopic echo /move_base_simple/goal
+        self.step_0_actions()
+        subprocess.check_output(["xdotool", "type", "rostopic echo /move_base_simple/goal" + "\n"])
+        time.sleep(1)
 
+    def step_5_actions(self): # rostopic echo /cmd_vel
+        self.step_0_actions()
+        subprocess.check_output(["xdotool", "type", "rostopic echo /cmd_vel" + "\n"])
+        time.sleep(1)
+ 
+    def step_6_actions(self):  # rosbag
+        self.step_0_actions()
+        subprocess.check_output(["xdotool", "type", "~/.ros/bagfiles" + "\n"])
+        time.sleep(1)
+        subprocess.check_output(["xdotool", "type", "rosbag record -a" + "\n"])
+        time.sleep(1)     
 
 class ROS_GUI(tk.Tk):
     """ROS GUI Main Application"""
