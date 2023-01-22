@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<!-- ========================= Sensors ========================= -->
+
+  <!-- Fake gps sensor -->
+  <joint name="gps0_joint" type="fixed">
+    <axis xyz="1 0 0"/> <!-- 0 1 0 -->
+    <origin xyz="0 0 0.53"/>
+    <parent link="base_link"/>
+    <child link="gps0_link"/>
+  </joint>
+  <link name="gps0_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.075" length="0.05"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.075" length="0.04"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="gps0_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+  <gazebo>
+    <plugin name="my_gps0_sim" filename="libhector_gazebo_ros_gps.so">
+      <alwaysOn>1</alwaysOn>
+      <updateRate>10.0</updateRate>
+      <bodyName>gps0_link</bodyName>
+        <frameId>gps0_link</frameId>
+        <topicName>gps0/fix</topicName>
+        <velocityTopicName>gps0/fix_velocity</velocityTopicName>
+        <drift>0.1 0.1 0.1</drift>
+        <gaussianNoise>0.04 0.04 0.1</gaussianNoise>
+        <velocityDrift>0 0 0</velocityDrift>
+        <velocityGaussianNoise>0.1 0.1 0.1</velocityGaussianNoise>
+        <!-- Set the initial GPS location -->
+        <referenceLatitude>45.0122488</referenceLatitude>
+        <referenceLongitude>-93.2439029</referenceLongitude>
+    </plugin>
+  </gazebo>
+
+
+  <!-- Another mock fake gps sensor -->
+  <joint name="gps1_joint" type="fixed">
+    <axis xyz="1 0 0"/> <!-- 0 1 0 -->
+    <origin xyz="0.69 0 0.4575"/>
+    <parent link="base_link"/>
+    <child link="gps1_link"/>
+  </joint>
+  <link name="gps1_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.075" length="0.05"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.075" length="0.04"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="gps1_link">
+    <material>Gazebo/White</material>
+  </gazebo>
+<!--
+  <gazebo>
+    <plugin name="my_gps1_sim" filename="libhector_gazebo_ros_gps.so">
+      <alwaysOn>1</alwaysOn>
+      <updateRate>10.0</updateRate>
+      <bodyName>gps1_link</bodyName>
+        <frameId>gps1_link</frameId>
+        <topicName>gps1/fix</topicName>
+        <velocityTopicName>gps1/fix_velocity</velocityTopicName>
+        <drift>0.1 0.1 0.1</drift>
+        <gaussianNoise>0.04 0.04 0.1</gaussianNoise>
+        <velocityDrift>0 0 0</velocityDrift>
+        <velocityGaussianNoise>0.1 0.1 0.1</velocityGaussianNoise>
+   Set the initial GPS location
+        <referenceLatitude>45.0122488</referenceLatitude>
+        <referenceLongitude>-93.2439029</referenceLongitude>
+    </plugin>
+  </gazebo>
+-->
+
+
+  <!-- SickLMS200 Laser Scanner -->
+  <joint name="lms200_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0.63 0 0.1675" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="lms200_link"/>
+  </joint>
+
+  <link name="lms200_link">
+    <collision>
+      <geometry>
+        <box size="0.15 0.15 0.18 "/>
+      </geometry>
+    </collision>
+    <visual>
+      <geometry>
+        <box size="0.15 0.15 0.18 "/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  <gazebo reference="lms200_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <!-- Hokuyo Plugin -->
+  <gazebo reference="lms200_link">
+     <!--  <sensor type="gpu_ray" name="head_hokuyo_sensor"> -->
+    <sensor type="ray" name="head_hokuyo_sensor">
+    <pose>0 0 0 0 0 0</pose>
+    <visualize>false</visualize>
+    <update_rate>10</update_rate>
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>180</samples>
+          <resolution>1</resolution>
+          <min_angle>-1.57</min_angle>
+          <max_angle>1.57</max_angle>
+        </horizontal>
+      </scan>
+      <range>
+        <min>0.20</min>
+        <max>8.0</max>
+        <resolution>0.01</resolution>
+      </range>
+      <noise>
+        <type>gaussian</type>
+        <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+        <mean>0.0</mean>
+        <stddev>0.01</stddev>
+      </noise>
+    </ray>
+      <!--  <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so"> -->
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so"> 
+        <topicName>/scan</topicName>
+        <frameName>lms200_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+
+  <!-- Fake IMU sensor -->
+  <joint name="imu_joint" type="fixed">
+    <axis xyz="1 0 0"/> <!-- 0 1 0 -->
+    <origin xyz="0.47 -0.08 0.4375 "/>
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+  </joint>
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="imu_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+  <gazebo>   
+    <plugin name="imu_plugin" filename="libhector_gazebo_ros_imu.so">
+      <alwaysOn>true</alwaysOn>       
+      <bodyName>imu_link</bodyName>
+      <frameId>imu_link</frameId>
+      <topicName>imu/data</topicName>
+      <serviceName>imu/service</serviceName>
+      <gaussianNoise>0.001</gaussianNoise>
+      <updateRate>30.0</updateRate> 
+    </plugin>
+  </gazebo>
+
+</robot>

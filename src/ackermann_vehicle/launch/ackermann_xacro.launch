@@ -25,9 +25,9 @@ limitations under the License.
 
   <group ns="$(arg namespace)">
     <!-- robot_description is used by nodes that publish to joint_states. -->
+    <!-- to run "sammy" robot change the command below to point to  /urdf/robot.urdf.xacro"/> -->
     <param name="robot_description"
-           command="$(find xacro)/xacro --inorder $(find ackermann_vehicle)/urdf/robot.urdf.xacro"/>
-
+           command="$(find xacro)/xacro --inorder $(find ackermann_vehicle)/urdf/cub_cadet_urdf.xacro"/>
     <!-- Read joint positions from joint_states, then publish the vehicle's
          state to tf. -->
     <node name="vehicle_state_publisher" pkg="robot_state_publisher"

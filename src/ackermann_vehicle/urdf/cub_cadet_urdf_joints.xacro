@@ -1,0 +1,246 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <xacro:include filename="inertial_macros.xacro"/>
+
+  <!-- Null inertial element. This is needed to make the model work with
+       Gazebo. -->
+  <xacro:macro name="null_inertial">
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </xacro:macro>
+
+    <material name="white">
+        <color rgba="1 1 1 1" />
+    </material>
+
+    <material name="orange">
+        <color rgba="1 0.3 0.1 1"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0.2 0.2 1 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+    <link name="base_footprint">
+    </link>
+
+<!-- ========================================================== -->
+  <!-- Degree-to-radian conversions -->
+  <xacro:property name="degrees_45" value="0.785398163"/>
+  <xacro:property name="degrees_90" value="1.57079633"/>
+  <xacro:property name="neg_degrees_90" value="-1.57079633"/>
+
+  <material name="tire_mat">
+    <color rgba="0 0 0 1"/>
+  </material>
+
+  <!-- Inertia of a thick-walled cylindrical tube with open ends. Height is
+       measured along the z axis, which is the tube's axis. inner_rad and
+       outer_rad are the tube's inner and outer radii, respectively. -->
+  <xacro:macro name="thick_walled_tube_inertial"
+               params="inner_rad outer_rad height mass">
+    <inertial>
+      <mass value="${mass}"/>
+      <inertia ixx="${(1 / 12) * mass * (3 * (inner_rad * inner_rad +
+                    outer_rad * outer_rad) + height * height)}"
+               ixy="0" ixz="0"
+               iyy="${(1 / 12) * mass * (3 * (inner_rad * inner_rad +
+                    outer_rad * outer_rad) + height * height)}"
+               iyz="0"
+               izz="${mass * (inner_rad * inner_rad +
+                    outer_rad * outer_rad) / 2}"/>
+    </inertial>
+  </xacro:macro>
+
+
+    <!-- BASE LINK -->
+
+    <joint name="base_footprint_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+       <!--  <origin xyz="0.0 0 0.1525"/> -->
+       <!-- <origin xyz="0.0 0 ${tire_rear_dia}"/>  wheels are still off the ground -->
+        <origin xyz="0.0 0 ${tire_rear_dia / 2}"/>
+    </joint>
+
+    <link name="base_link">
+    </link>
+
+    <!-- CHASSIS LINK -->
+
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis"/>
+        <origin xyz="0.0 0 0"/>
+    </joint>
+
+    <link name="chassis">
+        <visual>
+            <origin xyz="0.3 0 0.0"/>
+            <geometry>
+                <box size="0.6 0.15 0.01"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <origin xyz="0.2525 0 0.0"/>
+            <geometry>
+                <box size="0.6 0.15 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="0.5" x="0.6" y="0.15" z="0.01">
+            <origin xyz="0.3 0 0.0" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+    <gazebo reference="chassis">
+      <material>Gazebo/White</material>
+    </gazebo>
+
+   
+<!-- ========================================================== -->
+<!-- The "wheel" macro defines an axle carrier, axle, and wheel. -->
+  <xacro:macro name="wheel" params="lr_prefix fr_prefix lr_reflect t_dia t_width">
+
+    <link name="${lr_prefix}_${fr_prefix}_axle_carrier">
+<!--
+        <visual>
+            <geometry>
+                <box size="0.05 0.05 0.05"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+ -->
+      <xacro:null_inertial/>
+    </link>
+     <!-- Create a rotational joint between the *_wheel and the *_axle_carrier, It gets called *_axle. -->
+    <joint name="${lr_prefix}_${fr_prefix}_axle" type="continuous">
+      <parent link="${lr_prefix}_${fr_prefix}_axle_carrier"/>
+      <child link="${lr_prefix}_${fr_prefix}_wheel"/>
+      <origin rpy="${lr_reflect * neg_degrees_90} 0 0"/>
+      <axis xyz="0 0 ${lr_reflect}"/>
+      <limit effort="${axle_eff_limit}" velocity="${axle_vel_limit}"/>
+    </joint>
+    <!-- Connect a transmission to the axle so we can rotate it from a ROS topic -->
+    <transmission name="${lr_prefix}_${fr_prefix}_axle_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${lr_prefix}_${fr_prefix}_axle">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${lr_prefix}_${fr_prefix}_axle_act">
+        -- This hardwareInterface element exists for compatibility with ROS Hydro. --
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <link name="${lr_prefix}_${fr_prefix}_wheel">
+      <!-- Create the cylinder to represent this wheel -->
+      <visual>
+        <origin xyz="0 0 0"/>  <!-- This needs axle_length added in -->
+        <geometry>
+          <cylinder radius="${t_dia / 2}" length="${t_width}"/>
+        </geometry>
+        <material name="tire_mat"/>  <!-- Set color in RVIZ -->
+      </visual>
+      <!-- Create the cylinder used to check for collisions -->
+      <collision>
+        <origin xyz="0 0 0"/>  <!-- This needs axle_length added in -->
+       <geometry>
+          <cylinder radius="${t_dia / 2}" length="${t_width}"/>
+        </geometry>
+      </collision>
+
+      <!-- Set the inertia for this wheel -->
+      <xacro:thick_walled_tube_inertial
+          inner_rad="${hub_dia / 2}" outer_rad="${t_dia / 2}"
+          height="${t_width}" mass="${wheel_mass}"/>
+    </link>
+    <!-- Set color in Gazebo -->
+    <gazebo reference="${lr_prefix}_${fr_prefix}_wheel">
+      <material>Gazebo/Black</material>
+    </gazebo>
+
+  </xacro:macro>
+
+
+<!-- ========================================================== -->
+<!-- Front wheel macro -->
+  <xacro:macro name="front_wheel"
+               params="lr_prefix fr_prefix lr_reflect fr_reflect">
+    <!-- Connect steering link directly to "main_link" (base_footprint) -->
+    <joint name="${lr_prefix}_${fr_prefix}_connection" type="fixed">
+      <parent link="${main_link}"/>
+      <child link="${lr_prefix}_steering_link"/>
+      <origin xyz="${wheelbase}
+                   ${lr_reflect * (wheel_spacing_front / 2)}
+                   ${(tire_front_dia / 2) - (tire_rear_dia / 2)}"/>
+    </joint>
+    <link name="${lr_prefix}_steering_link">
+      <xacro:null_inertial/>
+    </link>
+    <joint name="${lr_prefix}_steering_joint" type="revolute">
+      <parent link="${lr_prefix}_steering_link"/>
+      <child link="${lr_prefix}_${fr_prefix}_axle_carrier"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${-degrees_45}" upper="${degrees_45}"
+             effort="${servo_stall_torque}" velocity="${servo_no_load_speed}"/>
+    </joint>
+    <transmission name="${lr_prefix}_steering_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${lr_prefix}_steering_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${lr_prefix}_steering_act">
+        -- This hardwareInterface element exists for compatibility with ROS Hydro. --
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <xacro:wheel lr_prefix="${lr_prefix}" fr_prefix="${fr_prefix}"
+                 lr_reflect="${lr_reflect}"
+                 t_dia="${tire_front_dia}" t_width="${tire_front_width}"/>
+  </xacro:macro>
+
+<!-- ========================================================== -->
+<!-- Rear wheel macro -->
+  <xacro:macro name="rear_wheel"
+               params="lr_prefix fr_prefix lr_reflect fr_reflect">
+    <joint name="${lr_prefix}_${fr_prefix}_connection" type="fixed">
+	<parent link="${main_link}"/>
+        <child link="${lr_prefix}_${fr_prefix}_axle_carrier"/>
+        <!-- Where is this axle_carrier is attached in relation to "main_link" (base_footprint) -->
+        <origin xyz="0  ${lr_reflect * (wheel_spacing_rear / 2)}  0"/>  <!-- Need to add in axle length -->
+    </joint>
+    <xacro:wheel lr_prefix="${lr_prefix}" fr_prefix="${fr_prefix}"
+                 lr_reflect="${lr_reflect}"
+                 t_dia="${tire_rear_dia}" t_width="${tire_rear_width}"/>
+  </xacro:macro>
+
+<!-- ========================================================== -->
+<!-- Create Wheels -->
+  <xacro:front_wheel lr_prefix="left" fr_prefix="front"
+                     lr_reflect="1" fr_reflect="1"/>
+  <xacro:front_wheel lr_prefix="right" fr_prefix="front"
+                     lr_reflect="-1" fr_reflect="1"/>
+  <xacro:rear_wheel lr_prefix="left" fr_prefix="rear"
+                    lr_reflect="1" fr_reflect="-1"/>
+  <xacro:rear_wheel lr_prefix="right" fr_prefix="rear"
+                    lr_reflect="-1" fr_reflect="-1"/>
+<!-- ========================================================== -->
+
+  <gazebo>
+    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control"/>
+  </gazebo>
+
+</robot>

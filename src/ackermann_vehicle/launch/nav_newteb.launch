@@ -17,7 +17,7 @@
         
   <!-- Run the map server -->
   <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find nav)/maps/farm.yaml"/>  -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find ackermann_vehicle)/maps/435_pine_valley.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find ackermann_vehicle)/maps/2126_field_1.yaml"/>
 
   <!--- Run AMCL -->
   <!--- <include file="$(find nav)/launch/amcl_diff.launch" /> -->
@@ -33,7 +33,7 @@
     <rosparam file="$(find ackermann_vehicle)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find ackermann_vehicle)/config/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find ackermann_vehicle)/config/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find ackermann_vehicle)/config/teb_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find ackermann_vehicle)/config/cub_cadet_teb_local_planner_params.yaml" command="load" />
 
     <param name="base_global_planner" value="global_planner/GlobalPlanner" />
     <param name="planner_frequency" value="1.0" />

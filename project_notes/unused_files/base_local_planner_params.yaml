@@ -1,0 +1,13 @@
+base_local_planner: teb_local_planner/TebLocalPlannerROS
+
+TebLocalPlannerROS:
+  max_vel_x: 1.8
+  min_vel_x: 0.5
+  max_vel_theta: 1.8
+  min_in_place_vel_theta: 1.8
+
+  acc_lim_theta: 1.8
+  acc_lim_x: 1.8
+  acc_lim_y: 1.8
+
+  holonomic_robot: false

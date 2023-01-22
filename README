@@ -29,7 +29,7 @@ You are now ready to start up Gazebo, run movebase and RVIZ.  The suggested way 
 Then one-by-one, click the corresponding button, wait for the launch file to complete, then click the next one.  After which you can issue a 2D Nav goal in RVIS to see the vehicle move and the path teb-planner has calculated.
 
 The alternative way of starting the full package (i.e. without using ros_starter.py):
-    • $ roslaunch ackermann_vehicle ack_new.launch
+    • $ roslaunch ackermann_vehicle cub_cadet_gazebo.launch
     • $ roslaunch ackermann_vehicle nav_newteb.launch
     • $ rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/435_tractor.rviz
 

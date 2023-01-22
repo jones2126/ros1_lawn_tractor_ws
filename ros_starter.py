@@ -62,7 +62,7 @@ class Steps_to_Process(tk.Frame):
 
     def step_1_actions(self): # launch Gazebo
         self.step_0_actions()
-        subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle ack_new.launch" + "\n"])
+        subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle cub_cadet_gazebo.launch" + "\n"])
         time.sleep(1) 
    
     def step_2_actions(self):   # movebase
@@ -82,6 +82,7 @@ class Steps_to_Process(tk.Frame):
 
     def step_5_actions(self): # rostopic echo /cmd_vel
         self.step_0_actions()
+        time.sleep(3) # delay for sensors to fire up
         subprocess.check_output(["xdotool", "type", "rostopic echo /cmd_vel" + "\n"])
         time.sleep(1)
  
