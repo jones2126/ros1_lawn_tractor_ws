@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
-
+<!-- cub_cadet_urdf_sensors.xacro -->
 <!-- ========================= Sensors ========================= -->
 
   <!-- Fake gps sensor -->
+
   <joint name="gps0_joint" type="fixed">
     <axis xyz="1 0 0"/> <!-- 0 1 0 -->
-    <origin xyz="0 0 0.53"/>
+    <origin xyz="0.3 -0.1 0.368" rpy= "0 0 0"/>  <!-- copied from vehicle_dimensions_helper.ods -->
     <parent link="base_link"/>
     <child link="gps0_link"/>
   </joint>
@@ -46,61 +47,10 @@
         <velocityDrift>0 0 0</velocityDrift>
         <velocityGaussianNoise>0.1 0.1 0.1</velocityGaussianNoise>
         <!-- Set the initial GPS location -->
-        <referenceLatitude>45.0122488</referenceLatitude>
-        <referenceLongitude>-93.2439029</referenceLongitude>
+        <referenceLatitude>30.175292</referenceLatitude>
+        <referenceLongitude>-96.512564</referenceLongitude>
     </plugin>
   </gazebo>
-
-
-  <!-- Another mock fake gps sensor -->
-  <joint name="gps1_joint" type="fixed">
-    <axis xyz="1 0 0"/> <!-- 0 1 0 -->
-    <origin xyz="0.69 0 0.4575"/>
-    <parent link="base_link"/>
-    <child link="gps1_link"/>
-  </joint>
-  <link name="gps1_link">
-    <inertial>
-      <mass value="0.001"/>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder radius="0.075" length="0.05"/>
-      </geometry>
-      <material name="white"/>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder radius="0.075" length="0.04"/>
-      </geometry>
-    </collision>
-  </link>
-  <gazebo reference="gps1_link">
-    <material>Gazebo/White</material>
-  </gazebo>
-<!--
-  <gazebo>
-    <plugin name="my_gps1_sim" filename="libhector_gazebo_ros_gps.so">
-      <alwaysOn>1</alwaysOn>
-      <updateRate>10.0</updateRate>
-      <bodyName>gps1_link</bodyName>
-        <frameId>gps1_link</frameId>
-        <topicName>gps1/fix</topicName>
-        <velocityTopicName>gps1/fix_velocity</velocityTopicName>
-        <drift>0.1 0.1 0.1</drift>
-        <gaussianNoise>0.04 0.04 0.1</gaussianNoise>
-        <velocityDrift>0 0 0</velocityDrift>
-        <velocityGaussianNoise>0.1 0.1 0.1</velocityGaussianNoise>
-   Set the initial GPS location
-        <referenceLatitude>45.0122488</referenceLatitude>
-        <referenceLongitude>-93.2439029</referenceLongitude>
-    </plugin>
-  </gazebo>
--->
 
 
   <!-- SickLMS200 Laser Scanner -->
@@ -175,7 +125,7 @@
   <!-- Fake IMU sensor -->
   <joint name="imu_joint" type="fixed">
     <axis xyz="1 0 0"/> <!-- 0 1 0 -->
-    <origin xyz="0.47 -0.08 0.4375 "/>
+    <origin xyz="0.2 0.1 0.216" rpy= "0 0 0"/>  <!-- copied from vehicle_dimensions_helper.ods -->
     <parent link="base_link"/>
     <child link="imu_link"/>
   </joint>

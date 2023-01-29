@@ -9,22 +9,23 @@ TebLocalPlannerROS:
  dt_hysteresis: 0.1
  max_samples: 500
  global_plan_overwrite_orientation: True
- allow_init_with_backwards_motion: True
+ allow_init_with_backwards_motion: True   # original True; Matt used False
  max_global_plan_lookahead_dist: 3.0
  global_plan_viapoint_sep: -1
  global_plan_prune_distance: 1
  exact_arc_length: False
- feasibility_check_no_poses: 2
+ feasibility_check_no_poses: 2   # original 2; Matt used 5
  publish_feedback: False
     
  # Robot
          
  max_vel_x: 1.8
  max_vel_x_backwards: 1.0
+ min_vel_x:  0.0  # original (not present); Matt used 0.0
  max_vel_y: 1.8
- max_vel_theta: 1.8 # the angular velocity is also bounded by min_turning_radius in case of a carlike robot (r = v / omega)
- acc_lim_x: 2.5
- acc_lim_theta: 2.5
+ max_vel_theta: 1.8  # original 1.8; Matt used 2.0
+ acc_lim_x: 2.5       # borrowed from Matt
+ acc_lim_theta: 2.5   # borrowed from Matt
 
  # ********************** Carlike robot parameters ********************
  min_turning_radius: 1.5        # Min turning radius of the carlike robot (compute value using a model or adjust with rqt_reconfigure manually)
@@ -45,8 +46,8 @@ TebLocalPlannerROS:
 
  # GoalTolerance
     
- xy_goal_tolerance: 0.2
- yaw_goal_tolerance: 0.1
+ xy_goal_tolerance: 0.2  # original .2; Matt used .4
+ yaw_goal_tolerance: 0.1  # original .1; Matt used .4
  free_goal_vel: False
  complete_global_plan: True
     
@@ -56,7 +57,7 @@ TebLocalPlannerROS:
  inflation_dist: 0.6
  include_costmap_obstacles: True
  costmap_obstacles_behind_robot_dist: 1.0
- obstacle_poses_affected: 15
+ obstacle_poses_affected: 15 # original 15; Matt used 10
 
  dynamic_obstacle_inflation_dist: 0.6
  include_dynamic_obstacles: True 
@@ -79,7 +80,7 @@ TebLocalPlannerROS:
  weight_acc_lim_theta: 1
  weight_kinematics_nh: 1000
  weight_kinematics_forward_drive: 1
- weight_kinematics_turning_radius: 1
+ weight_kinematics_turning_radius: 1 # original 1; Matt used 1.5
  weight_optimaltime: 1 # must be > 0
  weight_shortest_path: 0
  weight_obstacle: 100

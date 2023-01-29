@@ -3,10 +3,7 @@
 # costmap_common_params.yaml
 #---(in meters)---
 #footprint: [ [0.254, -0.0508], [0.1778, -0.0508], [0.1778, -0.1778], [-0.1905, -0.1778], [-0.254, 0], [-0.1905, 0.1778], [0.1778, 0.1778], [0.1778, 0.0508], [0.254, 0.0508] ]
-footprint:[[-0.16432, -0.39026], [-0.16432, 0.39026], [1.027, 0.39026], [1.027, -0.39026]]  # copied from vehicle_dimension_helper.ods
-
-
-
+footprint: [[-0.16432, -0.39026], [-0.16432, 0.39026], [1.027, 0.39026], [1.027, -0.39026]]  # copied from vehicle_dimension_helper.ods
 transform_tolerance: 0.2
 map_type: costmap
 
