@@ -26,7 +26,7 @@ Install additional binaries that are required:
 You are now ready to start up Gazebo, run movebase and RVIZ.  The suggested way to start is:
     • $ cd ~/ros1_lawn_tractor_ws/
     • $ python3 ros_starter.py
-Then one-by-one, click the corresponding button, wait for the launch file to complete, then click the next one.  After which you can issue a 2D Nav goal in RVIS to see the vehicle move and the path teb-planner has calculated.
+Then one-by-one, click button 1, 2 and 3 serially.  Wait for each launch file to complete, then click the next one.  After which you can issue a 2D Nav goal in RVIS to see the vehicle move and the path teb-planner has calculated.  If you want to see results from cmd_vel you can click the 5th button.  The first time run of Gazebo took a few minutes on a new machine for me.
 
 The alternative way of starting the full package (i.e. without using ros_starter.py):
     • $ roslaunch ackermann_vehicle cub_cadet_gazebo.launch

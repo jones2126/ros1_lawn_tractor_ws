@@ -20,12 +20,11 @@ TebLocalPlannerROS:
  # Robot
          
  max_vel_x: 1.8               # original 1.8; Matt used 2.0
- min_vel_x:  0.0              # original (not present); Matt used 0.0
  max_vel_x_backwards: 1.0     # original 1.0; Matt used 1.0
  max_vel_y: 0.0               # per http://wiki.ros.org/teb_local_planner - "should be zero for non-holonomic (car-like) robots"             
  max_vel_theta: 1.8           # original 1.8; Matt used 2.0
- acc_lim_x: 0.11              # original .11; Matt used 2.5
- acc_lim_theta: 0.11          # original .11; Matt used 2.5
+ acc_lim_x: 2.0               # original .11; Matt used 2.5
+ acc_lim_theta: 2.0           # original .11; Matt used 2.5
 
  # ********************** Carlike robot parameters ********************
  min_turning_radius: 2.135  # hard left uses 14 feet (outside dimension) to go 360 degrees; # original 2.135; Matt used 1.0
@@ -71,7 +70,7 @@ TebLocalPlannerROS:
  no_outer_iterations: 4                     # original 4; Matt used 4
  optimization_activate: True                # original True; Matt used True
  optimization_verbose: False                # original False; Matt used False
- penalty_epsilon: 0.1
+ penalty_epsilon: 0.05
  obstacle_cost_exponent: 4
  weight_max_vel_x: 2
  weight_max_vel_theta: 1
