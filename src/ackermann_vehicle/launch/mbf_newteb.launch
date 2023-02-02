@@ -1,0 +1,44 @@
+<!-- 
+  Control a carlike robot with the teb_local_planner
+  - map_server
+  - create fixed map to odom tansform
+  - Move Base Flex
+  - static map
+  - convert modified cmd_vel to ackermann_cmd
+ -->
+<launch>
+
+  <!--  ************** Global Parameters ***************  -->
+  <param name="/use_sim_time" value="true"/>
+
+  <!-- Run the map server -->
+  <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find nav)/maps/farm.yaml"/>  -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find ackermann_vehicle)/maps/2126_field_1.yaml"/>
+
+  <!-- If not running amcl, map odom on top of map -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 map odom" />
+
+  <!--  ************** Navigation ***************  -->
+
+  <!-- ****** Move Base Flex ***** -->
+  <node pkg="mbf_costmap_nav" type="mbf_costmap_nav" respawn="false" name="move_base_flex" output="screen">
+    <param name="tf_timeout" value="1.5"/>
+    <param name="planner_max_retries" value="3"/>
+    <rosparam file="$(find ackermann_vehicle)/config/planners.yaml" command="load" />
+    <rosparam file="$(find ackermann_vehicle)/config/controllers.yaml" command="load" />
+    <rosparam file="$(find ackermann_vehicle)/config/recovery_behaviors.yaml" command="load" />
+    <rosparam file="$(find ackermann_vehicle)/config/costmap_common_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find ackermann_vehicle)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find ackermann_vehicle)/config/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find ackermann_vehicle)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find ackermann_vehicle)/config/cub_cadet_teb_local_planner_params.yaml" command="load" />
+  </node>
+
+  <node pkg="ackermann_vehicle" type="mod_cmd_vel_to_ackermann.py" name="mod_cmd_vel_to_ackermann" output="screen">
+    <param name="twist_cmd_topic" type="string" value="/cmd_vel" />
+    <param name="ackermann_cmd_topic" type="string" value="/ackermann_cmd" />
+  </node>
+
+  <node name="move_base_relay" pkg="ackermann_vehicle" type="mb_relay_subscriber.py"/>
+
+</launch>

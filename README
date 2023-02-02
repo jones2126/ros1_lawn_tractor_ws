@@ -33,9 +33,12 @@ The alternative way of starting the full package (i.e. without using ros_starter
     • $ roslaunch ackermann_vehicle nav_newteb.launch
     • $ rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/435_tractor.rviz
 
-The folder “support files” is for documents that get created in the development effort that might be useful.
+The folder “project_notes” is for documents that get created in the development effort that might be useful.
 
-The next step is to finish the physical implementation of this. The intended use case is agriculture tractors, but currently I have started with a Cub Cadet lawn tractor along with the other major components (e.g. electric steering motor, Cytron motor controller, angle sensor, Super Servo for hydrostatic transmission control, a GNSS capable GPS which receives RTK corrections from my on-site base station).  I’m currently working on the low-level embedded code which I will publish here once it is in a more durable state.  A separate catkin_ws for work in progress is at https://github.com/jones2126/tractor_laptop_ROS_workspace
+The next step are:
+0. Resolve the issue where the robot only reaches max velocity (1.8 m/s) when 2D Nav goal is set in a certain direction (https://answers.ros.org/question/412031/using-teb_planner-and-move_base-the-robot-only-reaches-max-velocity-when-2d-nav-goal-is-set-in-a-certain-direction/)
+1. Convert from move_base to move_base_flex and run a series of waypoints using path_follower_node.py
+2. Finish the physical implementation of the lawn_tractor. The intended use case is agriculture related, but currently I have started with a Cub Cadet lawn tractor along with the other major components (e.g. electric steering motor, Cytron motor controller, angle sensor, Super Servo for hydrostatic transmission control, a GNSS capable GPS which receives RTK corrections from my on-site base station).  I’m currently working on the low-level embedded code which I will publish here once it is in a more durable state.  A separate catkin_ws for work in progress is at https://github.com/jones2126/tractor_laptop_ROS_workspace
 
 In addition to Jeff Sampson, special thanks to Matt Droter, Vinney Ruia and Juan Eduardo Riva for all their help and contributions leading to this point.
 

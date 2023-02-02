@@ -1,18 +1,16 @@
 #!/usr/bin/env python3  
-#
-#
+'''
+program to launch ros commands so you don't have to remember or type the commands
+
+to do: 
+- add display for current heading
+
+'''
 import tkinter as tk
 from tkinter import ttk
 import subprocess
 import time
-'''
-issues: 
-- speed up the login process by looking for the $ which shows the login has completed
-- add steps for cmd_vel
-- add display for heading
 
-
-'''
 
 class Steps_to_Process(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -28,8 +26,8 @@ class Steps_to_Process(tk.Frame):
         step_3_button = ttk.Button(self, text="3. RVIZ", width=50, command=self.step_3_actions)
         step_4_button = ttk.Button(self, text="rostopic echo /move_base_simple/goal", width=50, command=self.step_4_actions)
         step_5_button = ttk.Button(self, text="rostopic echo /cmd_vel", width=50, command=self.step_5_actions)
-        step_6_button = ttk.Button(self, text="rosbag record -a", width=50, command=self.step_6_actions)        
-
+        step_6_button = ttk.Button(self, text="rosbag record -a", width=50, command=self.step_6_actions)
+        step_7_button = ttk.Button(self, text="2B. mbf_newteb", width=50, command=self.step_7_actions)
 
         # Layout form
         self.columnconfigure(0, weight=1)             
@@ -39,7 +37,8 @@ class Steps_to_Process(tk.Frame):
         step_3_button.grid(row=3, column=0, sticky=tk.W)
         step_4_button.grid(row=4, column=0, sticky=tk.W)
         step_5_button.grid(row=5, column=0, sticky=tk.W)
-        step_6_button.grid(row=6, column=0, sticky=tk.W)     
+        step_6_button.grid(row=6, column=0, sticky=tk.W)
+        step_7_button.grid(row=7, column=0, sticky=tk.W)  
 
     def RPi_login_steps(self):
         time.sleep(2)
@@ -91,7 +90,12 @@ class Steps_to_Process(tk.Frame):
         subprocess.check_output(["xdotool", "type", "cd ~/.ros/bagfiles" + "\n"])
         time.sleep(1)
         subprocess.check_output(["xdotool", "type", "rosbag record -a" + "\n"])
-        time.sleep(1)     
+        time.sleep(1)
+        
+    def step_7_actions(self):   # movebaseflex
+        self.step_0_actions()
+        subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle mbf_newteb.launch" + "\n"])
+        time.sleep(1)
 
 class ROS_GUI(tk.Tk):
     """ROS GUI Main Application"""
