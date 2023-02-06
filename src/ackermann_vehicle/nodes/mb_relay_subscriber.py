@@ -26,7 +26,7 @@ def simple_goal_cb(msg):
 
 if __name__ == '__main__':
     rospy.init_node("move_base_relay")
-
+    rospy.loginfo("mb_relay_subscriber running to send move_base_simple/goal to mbf")
     # move base flex ation client relays incoming mb goals to mbf
     mbf_mb_ac = actionlib.SimpleActionClient("move_base_flex/move_base", mbf_msgs.MoveBaseAction)
     mbf_mb_ac.wait_for_server(rospy.Duration(20))

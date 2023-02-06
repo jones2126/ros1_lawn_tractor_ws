@@ -14,7 +14,7 @@ from geometry_msgs.msg import PoseStamped
 class PathFollower():
 
     def __init__(self):
-        self.vel_sub = rospy.Subscriber('drive_path', Path, self.path_callback)
+        self.vel_sub = rospy.Subscriber('/drive_path', Path, self.path_callback)
         self.client = actionlib.SimpleActionClient('/move_base_flex/exe_path', ExePathAction)
 
         self.got_path = 0
@@ -27,9 +27,11 @@ class PathFollower():
 
 
     def path_callback(self, msg):
+        print("In path_callback, got_path= ", self.got_path) 
         if self.got_path == 0:
             self.drive_path = msg
             self.got_path = 1
+            print("going into on_enter") 
             self.on_enter()
 
 

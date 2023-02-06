@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 
 import rospy
 from nav_msgs.msg import Path
@@ -15,7 +15,7 @@ def path_callback(msg):
 
 def path_publisher():
     rospy.init_node('path_publisher')
-    rospy.Subscriber('got_path', Float64, path_callback)
+    rospy.Subscriber('/got_path', Float64, path_callback)
     path_pub = rospy.Publisher('/drive_path', Path, queue_size=10)
 
     path = Path()
@@ -48,15 +48,17 @@ def path_publisher():
         pose.pose.orientation.z = quat[2]
         pose.pose.orientation.w = quat[3]
         pose.header.stamp = path.header.stamp
-        
+        # the next print line is a test to use these statements in another path follower program
+        print("create_pose(", x, "," , y, ",", 0, ",", quat[0], ",", quat[1], ",", quat[2], ",", quat[3], "),")
         path.poses.append(pose)
 
         seq += 1
 
-
+    iteration = 0
     while not rospy.is_shutdown():
         if (got_path is False):
-            print("Sending Path")  
+            iteration = iteration + 1
+            print("Sending Path, iteration ", iteration)  
             path_pub.publish(path)
         else:
             break
@@ -73,7 +75,7 @@ def load_file():
     
     global content
     try:
-        with open('generated_points.txt', 'r') as file:
+        with open('/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/generated_points.txt', 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]
     except:

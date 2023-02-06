@@ -1,11 +1,14 @@
 #! /usr/bin/env python3
 
-# Modifed from https://www.youtube.com/watch?v=I_5leJK8vhQ
+# Modifed from https://www.youtube.com/watch?v=I_5leJK8vhQ (How to publish odometry from simulation position, The Construct)
+#
+#
 # Slight changes for names
 # Added transform publisher using: https://gist.github.com/atotto/f2754f75bedb6ea56e3e0264ec405dcf
 # Converted to tf2
 
 import rospy
+from math import sqrt
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Header
 from gazebo_msgs.srv import GetModelState, GetModelStateRequest
@@ -70,7 +73,12 @@ while not rospy.is_shutdown():
 
 	odom.child_frame_id = 'base_footprint'
 	odom.pose.pose = result.pose
-	odom.twist.twist = result.twist
+	# odom.twist.twist = result.twist
+	x = float(result.twist.linear.x)
+	y = float(result.twist.linear.y)
+	odom.twist.twist.linear.x = float(sqrt(x ** 2 + y ** 2))
+	# odom.twist.twist.linear.z = float(atan2(y,x))
+	odom.twist.twist.angular.z = result.twist.angular.z
 
 	header.stamp = current_time
 	odom.header = header

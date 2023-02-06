@@ -22,8 +22,11 @@ def create_goal(x, y, z, xx, yy, zz, ww):
     return goal
 
 def move(goal):
+    rospy.loginfo("In move: x %s y %s", goal.target_pose.pose.position.x, goal.target_pose.pose.position.y)
     client.send_goal(goal)
+    rospy.loginfo("Goal sent, waiting")
     client.wait_for_result()
+    rospy.loginfo("Done waiting")
     return client.get_state() == GoalStatus.SUCCEEDED
 
 

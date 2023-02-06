@@ -28,6 +28,8 @@ class Steps_to_Process(tk.Frame):
         step_5_button = ttk.Button(self, text="rostopic echo /cmd_vel", width=50, command=self.step_5_actions)
         step_6_button = ttk.Button(self, text="rosbag record -a", width=50, command=self.step_6_actions)
         step_7_button = ttk.Button(self, text="2B. mbf_newteb", width=50, command=self.step_7_actions)
+        step_8_button = ttk.Button(self, text="3B. mbf_rviz", width=50, command=self.step_8_actions)
+        step_9_button = ttk.Button(self, text="4. Run mbf mission", width=50, command=self.step_9_actions)        
 
         # Layout form
         self.columnconfigure(0, weight=1)             
@@ -38,7 +40,9 @@ class Steps_to_Process(tk.Frame):
         step_4_button.grid(row=4, column=0, sticky=tk.W)
         step_5_button.grid(row=5, column=0, sticky=tk.W)
         step_6_button.grid(row=6, column=0, sticky=tk.W)
-        step_7_button.grid(row=7, column=0, sticky=tk.W)  
+        step_7_button.grid(row=7, column=0, sticky=tk.W)
+        step_8_button.grid(row=8, column=0, sticky=tk.W)
+        step_9_button.grid(row=9, column=0, sticky=tk.W)   
 
     def RPi_login_steps(self):
         time.sleep(2)
@@ -96,6 +100,18 @@ class Steps_to_Process(tk.Frame):
         self.step_0_actions()
         subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle mbf_newteb.launch" + "\n"])
         time.sleep(1)
+   
+    def step_8_actions(self):   # rviz with mbf config       
+        self.step_0_actions()
+        subprocess.check_output(["xdotool", "type", "rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/mbf.rviz" + "\n"])
+        time.sleep(1)         
+
+# rosrun ackermann_vehicle mb_relay_client.py
+    def step_9_actions(self):   # running a set of waypoints       
+        self.step_0_actions()
+        subprocess.check_output(["xdotool", "type", "rosrun ackermann_vehicle mb_relay_client.py" + "\n"])
+        time.sleep(1)      
+
 
 class ROS_GUI(tk.Tk):
     """ROS GUI Main Application"""

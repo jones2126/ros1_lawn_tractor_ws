@@ -27,7 +27,7 @@ TebLocalPlannerROS:
  acc_lim_theta: 2.0           # original .11; Matt used 2.5
 
  # ********************** Carlike robot parameters ********************
- min_turning_radius: 2.135  # hard left uses 14 feet (outside dimension) to go 360 degrees; # original 2.135; Matt used 1.0
+ min_turning_radius: 1.5  # hard left consumes 14 feet (outside dimension) to go 360 degrees; # original 2.135; Matt used 1.0; 1.5 delivers 14' OD
  wheelbase: 1.27            # copied from vehicle_dimension_helper.ods; Matt had 0.4 - not sure why
  cmd_angle_instead_rotvel: True # stage simulator takes the angle instead of the rotvel as input (twist message)
  # ********************************************************************
@@ -78,9 +78,9 @@ TebLocalPlannerROS:
  weight_acc_lim_theta: 1
  weight_kinematics_nh: 1000
  weight_kinematics_forward_drive: 1000  # default was 1, using 1000 to restrict going backwards
- weight_kinematics_turning_radius: 1
+ weight_kinematics_turning_radius: 1.5    # default was 1, using 1.5 as test
  weight_optimaltime: 1 # must be > 0
- weight_shortest_path: 0
+ weight_shortest_path: 100
  weight_obstacle: 100
  weight_inflation: 0.2
  weight_dynamic_obstacle: 10 # not in use yet
