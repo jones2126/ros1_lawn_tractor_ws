@@ -1,7 +1,7 @@
 local_costmap:
   global_frame: map
   robot_base_frame: base_footprint
-  update_frequency: 5.0
+  update_frequency: 2.0  # original was 5; Using 2 to attempt to reduce compute load
   publish_frequency: 2.0
   static_map: false
   rolling_window: true
