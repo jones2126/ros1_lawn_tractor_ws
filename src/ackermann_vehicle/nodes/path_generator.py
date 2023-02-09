@@ -29,8 +29,8 @@ start_yaw = 0.0
 def generate_path(x0,y0,x1,y1,theta0,theta1):
     q0 = (x0, y0, theta0)
     q1 = (x1, y1, theta1)
-    turning_radius = 1.7    # originally 2
-    step_size = 1.0         # originally 1
+    turning_radius = 5.0   # originally 2
+    step_size = 4.0         # originally 1
 
     path = dubins.shortest_path(q0, q1, turning_radius)
     configurations, _ = path.sample_many(step_size)
@@ -48,8 +48,14 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):  # pragma: no 
                   fc=fc, ec=ec, head_width=width, head_length=width)
         plt.plot(x, y)
 
+# main routine
+#
+# input_file_waypoints = "/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/waypoint.txt"
+# output_file_waypoints = "/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/generated_points.txt"
+input_file_waypoints = "/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/5m_circle_input.txt"
+output_file_waypoints = "/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/5m_circle_waypoints.txt"
 
-with open('/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/waypoint.txt', 'r') as file:
+with open(input_file_waypoints, 'r') as file:
     content = file.readlines()
     content = [x.strip() for x in content]
     for line in content:
@@ -86,7 +92,7 @@ with open('/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/waypoint.tx
         px = []
         py = []
         pyaw = []
-        with open('/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/generated_points.txt', 'w') as file:
+        with open(output_file_waypoints, 'w') as file:
             count = 0
             for p in drive_path:
                 if count > 20:

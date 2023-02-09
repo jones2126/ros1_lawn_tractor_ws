@@ -23,6 +23,14 @@ def angle_rad(p1, p2):
 	theta = math.atan2(dy, dx)    # Angle between p1 and p2 in radians
 	return theta
 
+from math import sin, cos, radians, pi
+def point_pos(x0, y0, d, theta):
+	# ref: https://stackoverflow.com/questions/23280636/python-find-a-x-y-coordinate-for-a-given-point-b-using-the-distance-from-the-po
+    theta_rad = pi/2 - radians(theta)
+    return x0 + d*cos(theta_rad), y0 + d*sin(theta_rad)
+    # option 2, https://stackoverflow.com/questions/48525583/get-a-points-position-from-an-angle-and-the-length-of-the-line
+    #(x2,y2) = (x1 + line_length*cos(angle),y1 + line_length*sin(angle))
+
 # main routine
 p = [0.00, 0.001]
 q = [6.0, 0.008]  # East, just to the North

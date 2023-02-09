@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# driving_square_example.py
+# driving_star_example.py
 # credit: https://uos.github.io/mbf_docs/tutorials/beginner/path_planning/
 '''
 Goal Position(17.3,  9.3, 0.000), Orientation(0.000, 0.000, -0.365, 0.931) = Angle: -0.746
@@ -51,16 +51,35 @@ def get_plan(pose):
 rospy.init_node("move_base_flex_client")
 
 target_poses = [ 
-    create_pose(17.3,  9.3, 0.000, 0.000, 0.000, -0.365, 0.931),
-    create_pose(23.9, 16.1, 0.000, 0.000, 0.000,  0.393, 0.919),
-    create_pose(15.9, 21.3, 0.000, 0.000, 0.000,  0.935, 0.354),
-    create_pose(10.6, 15.4, 0.000, 0.000, 0.000, -0.926, 0.378),
-    create_pose(17.3,  9.3, 0.000, 0.000, 0.000, -0.365, 0.931),
-    create_pose(23.9, 16.1, 0.000, 0.000, 0.000,  0.393, 0.919),
-    create_pose(15.9, 21.3, 0.000, 0.000, 0.000,  0.935, 0.354),
-    create_pose(10.6, 15.4, 0.000, 0.000, 0.000, -0.926, 0.378),
-    create_pose(17.3,  9.3, 0.000, 0.000, 0.000, -0.365, 0.931)    
+    create_pose(12.5, 14.3, 0, 0.0, 0.0, 0.8668, 0.4987),
+    create_pose(7.5, 14.3, 0, 0.0, 0.0, 1.0, 0.0),
+    create_pose(5.0, 10.0, 0, 0.0, 0.0, -0.8668, 0.4987),
+    create_pose(7.5, 5.7, 0, 0.0, 0.0, -0.4987, 0.8668),
+    create_pose(12.5, 5.7, 0, 0.0, 0.0, 0.0, 1.0),
+    create_pose(12.5, 5.7, 0, 0.0, 0.0, 0.4987, 0.8668),
+    create_pose(12.5, 14.3, 0, 0.0, 0.0, 0.8668, 0.4987),
+    create_pose(7.5, 14.3, 0, 0.0, 0.0, 1.0, 0.0),
+    create_pose(5.0, 10.0, 0, 0.0, 0.0, -0.8668, 0.4987),
+    create_pose(7.5, 5.7, 0, 0.0, 0.0, -0.4987, 0.8668),
+    create_pose(12.5, 5.7, 0, 0.0, 0.0, 0.0, 1.0),
+    create_pose(12.5, 5.7, 0, 0.0, 0.0, 0.4987, 0.8668)
 ]
+
+dubins_5m = [
+    create_pose( 0.0 , 9.9 , 0 , 0.0 , 0.0 , 0.0 , 1.0 ),
+    create_pose( 1.2 , 9.9 , 0 , 0.0 , 0.0 , 0.0 , 1.0 ),
+    create_pose( 4.79 , 8.38 , 0 , -0.0 , 0.0 , 0.3894 , -0.9211 ),
+    create_pose( 7.53 , 5.54 , 0 , -0.0 , 0.0 , 0.2342 , -0.9722 ),
+    create_pose( 11.41 , 5.26 , 0 , 0.0 , 0.0 , 0.1629 , 0.9866 ),
+    create_pose( 14.32 , 7.85 , 0 , 0.0 , 0.0 , 0.5342 , 0.8453 ),
+    create_pose( 14.49 , 11.74 , 0 , 0.0 , 0.0 , 0.8213 , 0.5706 ),
+    create_pose( 11.82 , 14.57 , 0 , 0.0 , 0.0 , 0.9786 , 0.2057 ),
+    create_pose( 7.93 , 14.63 , 0 , -0.0 , 0.0 , 0.9815 , -0.1916 ),
+    create_pose( 5.07 , 11.93 , 0 , -0.0 , 0.0 , 0.9039 , -0.4278 ),
+    create_pose( 1.63 , 10.12 , 0 , -0.0 , 0.0 , 0.9991 , -0.042 ),
+    create_pose( 1.2 , 10.1 , 0 , 0.0 , 0.0 , 1.0 , 0.0008 )
+]
+
 
 # move_base_flex exe path client
 mbf_ep_ac = actionlib.SimpleActionClient("move_base_flex/exe_path", mbf_msgs.ExePathAction)
@@ -70,7 +89,8 @@ rospy.loginfo("Connected to Move Base Flex ExePath server!")
 mbf_gp_ac = actionlib.SimpleActionClient("move_base_flex/get_path", mbf_msgs.GetPathAction)
 mbf_gp_ac.wait_for_server(rospy.Duration(10))
 rospy.on_shutdown(lambda: mbf_ep_ac.cancel_all_goals())
-for target_pose in target_poses:
+#for target_pose in target_poses:
+for target_pose in dubins_5m:    
     rospy.loginfo("Attempting to reach (%1.3f, %1.3f)", target_pose.pose.position.x, target_pose.pose.position.y)
     get_path_result = get_plan(target_pose)
     if get_path_result.outcome != mbf_msgs.MoveBaseResult.SUCCESS:

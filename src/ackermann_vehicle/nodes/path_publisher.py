@@ -49,7 +49,7 @@ def path_publisher():
         pose.pose.orientation.w = quat[3]
         pose.header.stamp = path.header.stamp
         # the next print line is a test to use these statements in another path follower program
-        print("create_pose(", x, "," , y, ",", 0, ",", quat[0], ",", quat[1], ",", quat[2], ",", quat[3], "),")
+        print("create_pose(", round(x,2), "," , round(y,2), ",", 0, ",", round(quat[0],4), ",", round(quat[1],4), ",", round(quat[2],4), ",", round(quat[3],4), "),")
         path.poses.append(pose)
 
         seq += 1
@@ -75,7 +75,7 @@ def load_file():
     
     global content
     try:
-        with open('/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/generated_points.txt', 'r') as file:
+        with open('/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/5m_circle_waypoints.txt', 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]
     except:
