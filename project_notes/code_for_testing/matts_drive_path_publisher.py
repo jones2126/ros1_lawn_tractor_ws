@@ -1,5 +1,10 @@
 #! /usr/bin/python3
-
+'''
+credit: I believe is Matt Droter
+uses as input the text file of waypoints in the x, y, yaw (radians) format.  Yaw is converted to a quaternion and a pose statement is produced
+subscribes to "got_path"
+publishes "drive_path"
+'''
 import rospy
 from nav_msgs.msg import Path
 from geometry_msgs.msg import  PoseStamped
@@ -75,7 +80,7 @@ def load_file():
     
     global content
     try:
-        with open('/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/5m_circle_waypoints.txt', 'r') as file:
+        with open('/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/5m_circle_2m_step_waypoints.txt', 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]
     except:

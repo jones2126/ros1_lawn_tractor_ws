@@ -29,7 +29,7 @@ def create_pose(x, y, z, xx, yy, zz, ww):
     return pose
 
 def create_path_goal(path, tolerance_from_action, dist_tolerance, angle_tolerance):
-    goal = mbf_msgs.ExePathGoal()
+    goal = mbf_msgs.ExePathGoal()   # ref: https://github.com/magazino/move_base_flex/blob/master/mbf_abstract_nav/src/move_base_action.cpp#L543
     goal.path = path
     goal.tolerance_from_action = tolerance_from_action
     goal.dist_tolerance = dist_tolerance

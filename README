@@ -1,18 +1,16 @@
-﻿This is an Ackermann steering style vehicle (i.e. the size of a lawn tractor) that uses movebase and teb-planner.  For simulation purposes we are leveraging Gazebo to create odom messages.  In the real world the vehicle will be localized using precision (i.e. RTK) GPS.  My primary goal for posting this is to show the vehicle in RVIS and provide the ability to issue 2D Nav goals  to see how the vehicle performs.  The current displayed map in RVIZ was manually created and represents my backyard.  Jeff Sampson did the “heavy lifting” to create most of this repository including the Ackermann style URDF which seems to be a relatively rare find.  
+﻿This is an Ackermann steering vehicle (i.e. the size of a lawn tractor) that uses move base flex and teb planner.  For simulation purposes we are leveraging Gazebo to create odom messages.  In the real world the vehicle will be localized using precision (i.e. RTK) GPS. The current displayed map in RVIZ was manually created to represent a large open field because I want to test the robot's ability to drive a Dubins path without dealing with obstacles.  Jeff Sampson did a lot of “heavy lifting” to create this repository including the Ackermann style URDF.  
 
 We currently have a Zoom call on Thursday’s at Noon (ET) to discuss this platform and related items.  You are welcome to join in.  You can also join the Slack Group for more details.
 
-I started with a clean Ubuntu 20.04 build, loaded ROS Noetic full desktop and installed the following ROS Dependencies:
+To replicate this, start with a clean Ubuntu 20.04 build, load ROS Noetic full desktop and install the following ROS Dependencies:
     • $ sudo apt install python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
     • $ sudo apt install python3-rosdep
     • $ sudo rosdep init
     • $ rosdep update
 
-My next step was to download the repository:
-$ git clone https://github.com/jones2126/ros1_lawn_tractor_ws.git
+Next download this repository: $ git clone https://github.com/jones2126/ros1_lawn_tractor_ws.git
 
-I use a Tkinter gui and script to make it easier to run the launch files.  It requires xdotool.
-$ sudo apt-get install xdotool
+I use a Tkinter gui and script to make it easier to run the launch files.  It requires xdotool.  Therefore $ sudo apt-get install xdotool
 
 Update .bashrc
 $ nano ~/.bashrc (i.e. At the very end of your ~/.bashrc file add: source ~/ros1_lawn_tractor_ws/devel/setup.bash)
@@ -22,22 +20,24 @@ Install additional binaries that are required:
     • $ sudo apt-get install ros-noetic-ackermann-msgs
     • $ sudo apt-get install ros-noetic-navigation
     • $ sudo apt-get install ros-noetic-teb-local-planner
+    • $ sudo apt-get install ros-noetic-move-base-flex
+    • $ sudo apt install python3-pip
+    • $ pip install dubins
 
-You are now ready to start up Gazebo, run movebase and RVIZ.  The suggested way to start is:
+You should now ready to start up Gazebo, run move_base_flex, Rviz and run the pre-planned Dubins path mission.  The suggested way to start is:
     • $ cd ~/ros1_lawn_tractor_ws/
     • $ python3 ros_starter.py
-Then one-by-one, click button 1, 2 and 3 serially.  Wait for each launch file to complete, then click the next one.  After which you can issue a 2D Nav goal in RVIS to see the vehicle move and the path teb-planner has calculated.  If you want to see results from cmd_vel you can click the 5th button.  The first time run of Gazebo took a few minutes on a new machine for me.
+Then one-by-one, click buttons 1, 2, 3 and the "Run mmbf mission".  Wait for each launch file to complete, then click the next one. If you want to see results from cmd_vel you can click the 5th button.
 
 The alternative way of starting the full package (i.e. without using ros_starter.py):
     • $ roslaunch ackermann_vehicle cub_cadet_gazebo.launch
     • $ roslaunch ackermann_vehicle nav_newteb.launch
-    • $ rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/435_tractor.rviz
+    • $ rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/tractor.rviz
 
 The folder “project_notes” is for documents that get created in the development effort that might be useful.
 
 The next step are:
-0. Resolve the issue where the robot only reaches max velocity (1.8 m/s) when 2D Nav goal is set in a certain direction (https://answers.ros.org/question/412031/using-teb_planner-and-move_base-the-robot-only-reaches-max-velocity-when-2d-nav-goal-is-set-in-a-certain-direction/)
-1. Convert from move_base to move_base_flex and run a series of waypoints using path_follower_node.py
+1. Determine how to have the robot maintain speed while running the mission path.
 2. Finish the physical implementation of the lawn_tractor. The intended use case is agriculture related, but currently I have started with a Cub Cadet lawn tractor along with the other major components (e.g. electric steering motor, Cytron motor controller, angle sensor, Super Servo for hydrostatic transmission control, a GNSS capable GPS which receives RTK corrections from my on-site base station).  I’m currently working on the low-level embedded code which I will publish here once it is in a more durable state.  A separate catkin_ws for work in progress is at https://github.com/jones2126/tractor_laptop_ROS_workspace
 
 In addition to Jeff Sampson, special thanks to Matt Droter, Vinney Ruia and Juan Eduardo Riva for all their help and contributions leading to this point.
@@ -45,4 +45,3 @@ In addition to Jeff Sampson, special thanks to Matt Droter, Vinney Ruia and Juan
 Zoom meeting (Thursdays at Noon (ET)) https://us02web.zoom.us/j/82088036016?pwd=K2lLc1FiWm9MU0dzRStxM2J2b3dpQT09#success
 
 Slack(Lawn Tractor Automation): https://app.slack.com/client/T8WP3RHH7/C8YBK20LX
-

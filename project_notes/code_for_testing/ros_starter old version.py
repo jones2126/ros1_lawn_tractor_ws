@@ -2,6 +2,9 @@
 '''
 program to launch ros commands so you don't have to remember or type the commands
 
+to do: 
+- add display for current heading
+
 '''
 import tkinter as tk
 from tkinter import ttk
@@ -19,14 +22,14 @@ class Steps_to_Process(tk.Frame):
         title_label = ttk.Label(self, textvariable=self.title_string, font=("TkDefaultFont", 12), wraplength=200)        
 
         step_1_button = ttk.Button(self, text="1. Gazebo", width=50, command=self.step_1_actions)
-        step_2_button = ttk.Button(self, text="2. teb_planner", width=50, command=self.step_2_actions)
+        step_2_button = ttk.Button(self, text="2. nav_newteb", width=50, command=self.step_2_actions)
         step_3_button = ttk.Button(self, text="3. RVIZ", width=50, command=self.step_3_actions)
         step_4_button = ttk.Button(self, text="rostopic echo /move_base_simple/goal", width=50, command=self.step_4_actions)
         step_5_button = ttk.Button(self, text="rostopic echo /cmd_vel", width=50, command=self.step_5_actions)
         step_6_button = ttk.Button(self, text="rosbag record -a", width=50, command=self.step_6_actions)
-        step_7_button = ttk.Button(self, text="tbd", width=50, command=self.step_7_actions)
-        step_8_button = ttk.Button(self, text="tbd", width=50, command=self.step_8_actions)
-        step_9_button = ttk.Button(self, text="Run mmbf mission", width=50, command=self.step_9_actions)        
+        step_7_button = ttk.Button(self, text="2B. mbf_newteb", width=50, command=self.step_7_actions)
+        step_8_button = ttk.Button(self, text="3B. mbf_rviz", width=50, command=self.step_8_actions)
+        step_9_button = ttk.Button(self, text="4. Run mbf mission", width=50, command=self.step_9_actions)        
 
         # Layout form
         self.columnconfigure(0, weight=1)             
@@ -41,7 +44,7 @@ class Steps_to_Process(tk.Frame):
         step_8_button.grid(row=8, column=0, sticky=tk.W)
         step_9_button.grid(row=9, column=0, sticky=tk.W)   
 
-    def RPi_login_steps(self):  # unused currently.  Leaving in case I need it again.
+    def RPi_login_steps(self):
         time.sleep(2)
         cmd_RPi_login = "plink RPI_local_mofi_6c -pw ubuntu"  # command to login to RPi
         #cmd_RPi_login = "plink tractor -pw ubuntu"  # command to login to RPi
@@ -60,19 +63,19 @@ class Steps_to_Process(tk.Frame):
         #subprocess.check_output(["xdotool", "type", "source devel/setup.bash" + "\n"])
         #time.sleep(3) # delay for testing
 
-    def step_1_actions(self): # Gazebo
+    def step_1_actions(self): # launch Gazebo
         self.step_0_actions()
         subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle cub_cadet_gazebo.launch" + "\n"])
         time.sleep(1) 
    
     def step_2_actions(self):   # movebase
         self.step_0_actions()
-        subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle mbf_newteb.launch" + "\n"])
+        subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle nav_newteb.launch" + "\n"])
         time.sleep(1) 
    
     def step_3_actions(self):   # rviz       
         self.step_0_actions()
-        subprocess.check_output(["xdotool", "type", "rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/tractor.rviz" + "\n"])
+        subprocess.check_output(["xdotool", "type", "rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/435_tractor.rviz" + "\n"])
         time.sleep(1) 
              
     def step_4_actions(self):  # rostopic echo /move_base_simple/goal
@@ -82,7 +85,7 @@ class Steps_to_Process(tk.Frame):
 
     def step_5_actions(self): # rostopic echo /cmd_vel
         self.step_0_actions()
-        time.sleep(3) # delay 
+        time.sleep(3) # delay for sensors to fire up
         subprocess.check_output(["xdotool", "type", "rostopic echo /cmd_vel" + "\n"])
         time.sleep(1)
  
@@ -93,20 +96,20 @@ class Steps_to_Process(tk.Frame):
         subprocess.check_output(["xdotool", "type", "rosbag record -a" + "\n"])
         time.sleep(1)
         
-    def step_7_actions(self):   # open
+    def step_7_actions(self):   # movebaseflex
         self.step_0_actions()
-        subprocess.check_output(["xdotool", "type", "cd ~/ros1_lawn_tractor_ws" + "\n"])
+        subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle mbf_newteb.launch" + "\n"])
         time.sleep(1)
    
-    def step_8_actions(self):   # open      
+    def step_8_actions(self):   # rviz with mbf config       
         self.step_0_actions()
-        subprocess.check_output(["xdotool", "type", "cd ~/ros1_lawn_tractor_ws" + "\n"])
+        subprocess.check_output(["xdotool", "type", "rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/mbf.rviz" + "\n"])
         time.sleep(1)         
 
+# rosrun ackermann_vehicle mb_relay_client.py
     def step_9_actions(self):   # running a set of waypoints       
         self.step_0_actions()
-        time.sleep(5) # delay because my computer is slow with Gazebo running         
-        subprocess.check_output(["xdotool", "type", "rosrun ackermann_vehicle mbf_exec_mission.py" + "\n"])
+        subprocess.check_output(["xdotool", "type", "rosrun ackermann_vehicle mb_relay_client.py" + "\n"])
         time.sleep(1)      
 
 
