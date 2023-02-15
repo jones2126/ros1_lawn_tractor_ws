@@ -62,14 +62,19 @@ Generate points that represent a circle with 6 points.  pi()/6 = 1.047 so the an
 print("calculate points for a circle")
 starting_pt = [10.0, 10.0]
 cir_diam = 5
-target_angle_rad = [0, 1.047, 2.094, 3.142, -2.094, -1.047]
+#target_angle_rad = [0, 1.047, 2.094, 3.142, -2.094, -1.047]
+#target_angle_rad = [0, 0.79, 1.57, 2.36, 3.14, 3.93, 4.71, 5.5]  # .785 increment ~pi()/4  8 point octogon
+target_angle_rad = [0, 0.52, 1.05, 2.09, 2.62, 3.14, 3.67, 4.19, 4.71, 5.24, 5.76]  # .524 increment ~pi()/6  12 point Dodecagon
+'''
+
+'''
 mission = []
 for index, x in enumerate(target_angle_rad):
     new_point = point_pos(starting_pt[0], starting_pt[1], cir_diam, x)
     result_string = "New point {0} Going from {1},{2} at {3} radians generates the new point {4}".format(index, starting_pt[0], starting_pt[1], x, new_point)
     print(result_string)
     mission.append(new_point)
-print(mission)
+print("mission:", mission)
 '''
 
 Now I need to take the mission and calculate the angles, in radians, between points.  I can manually load the points into coordinates_a.txt and rerun the program

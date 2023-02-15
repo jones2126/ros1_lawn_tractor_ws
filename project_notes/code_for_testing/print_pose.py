@@ -36,7 +36,7 @@ def get_rotation(msg):
 # main function
 rospy.init_node('check_odometry')
 sub = rospy.Subscriber ('/odom', Odometry, odometryCb)
-r = rospy.Rate(1.5)
+r = rospy.Rate(1)
 while not rospy.is_shutdown():
     value_string = "{0:4.2f}, {1:4.2f}, {2:4.3f}, {3:4.4f}, {4:4.4f}, {5:4.4f}, {6:4.4f}".format(x_pose, y_pose, yaw, quat_x, quat_y, quat_z, quat_w)
     print(value_string)

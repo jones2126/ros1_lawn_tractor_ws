@@ -29,8 +29,8 @@ start_yaw = 0.0
 def generate_path(x0,y0,x1,y1,theta0,theta1):
     q0 = (x0, y0, theta0)
     q1 = (x1, y1, theta1)
-    turning_radius = 5.0   # originally 2
-    step_size = 2.0         # originally 1
+    turning_radius = 1.8   # originally 2
+    step_size = 1.50         # originally 1
 
     path = dubins.shortest_path(q0, q1, turning_radius)
     configurations, _ = path.sample_many(step_size)
@@ -53,7 +53,7 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):  # pragma: no 
 # input_file_waypoints = "/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/waypoint.txt"
 # output_file_waypoints = "/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/generated_points.txt"
 input_file_waypoints = "/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/5m_circle_input.txt"
-output_file_waypoints = "/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/5m_circle_2m_step_waypoints.txt"
+output_file_waypoints = "/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/north_turn_south_waypoints.txt"
 
 with open(input_file_waypoints, 'r') as file:
     content = file.readlines()

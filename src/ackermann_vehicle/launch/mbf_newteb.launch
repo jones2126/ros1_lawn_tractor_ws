@@ -13,7 +13,8 @@
 
   <!-- Run the map server -->
   <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find nav)/maps/farm.yaml"/>  -->
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find ackermann_vehicle)/maps/2126_field_1.yaml"/>
+  <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find ackermann_vehicle)/maps/2126_field_1.yaml"/>  -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find ackermann_vehicle)/maps/435_pine_valley.yaml"/> 
 
   <!-- If not running amcl, map odom on top of map -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 map odom" />
