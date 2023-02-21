@@ -67,14 +67,14 @@ set(ackermann_vehicle_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(ackermann_vehicle_SOURCE_PREFIX /home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle)
-  set(ackermann_vehicle_DEVEL_PREFIX /home/al/ros1_lawn_tractor_ws/devel)
+  set(ackermann_vehicle_SOURCE_PREFIX /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle)
+  set(ackermann_vehicle_DEVEL_PREFIX /home/tractor/ros1_lawn_tractor_ws/devel)
   set(ackermann_vehicle_INSTALL_PREFIX "")
   set(ackermann_vehicle_PREFIX ${ackermann_vehicle_DEVEL_PREFIX})
 else()
   set(ackermann_vehicle_SOURCE_PREFIX "")
   set(ackermann_vehicle_DEVEL_PREFIX "")
-  set(ackermann_vehicle_INSTALL_PREFIX /home/al/ros1_lawn_tractor_ws/install)
+  set(ackermann_vehicle_INSTALL_PREFIX /home/tractor/ros1_lawn_tractor_ws/install)
   set(ackermann_vehicle_PREFIX ${ackermann_vehicle_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/al/ros1_lawn_tractor_ws/install/lib;/home/al/ros1_lawn_tractor_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/tractor/ros1_lawn_tractor_ws/install/lib;/home/tractor/ros1_lawn_tractor_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -185,7 +185,7 @@ foreach(t ${ackermann_vehicle_EXPORTED_TARGETS})
   endif()
 endforeach()
 
-set(depends "")
+set(depends "roscpp;rospy;std_msgs;move_base_msgs;mbf_msgs;geometry_msgs")
 foreach(depend ${depends})
   string(REPLACE " " ";" depend_list ${depend})
   # the package name of the dependency must be kept in a unique variable so that it is not overwritten in recursive calls

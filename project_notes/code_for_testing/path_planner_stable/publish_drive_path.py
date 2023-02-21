@@ -65,6 +65,7 @@ def path_publisher():
             iteration = iteration + 1
             print("Sending Path, iteration ", iteration)  
             path_pub.publish(path)
+            got_path = True  # this is a hack to Matt's original Subscribe to got_path approach
         else:
             break
 
@@ -80,7 +81,7 @@ def load_file():
     
     global content
     try:
-        with open('/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/5m_circle_2m_step_waypoints.txt', 'r') as file:
+        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/generated_points.txt', 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]
     except:

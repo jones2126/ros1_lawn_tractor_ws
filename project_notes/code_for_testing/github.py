@@ -59,7 +59,7 @@ class Steps_to_Process(tk.Frame):
         time.sleep(.5)
 
     def step_0_actions(self): # used for testing
-        working_directory1 = "--working-directory=/home/al"
+        working_directory1 = "--working-directory=/home/tractor"
         subprocess.call(["xdotool", "exec", "gnome-terminal", "--geometry=120x10+350+800", working_directory1])
         time.sleep(2) # delay for terminal to open
         #subprocess.check_output(["xdotool", "type", "cd ~/ros1_lawn_tractor_ws" + "\n"])
@@ -69,14 +69,14 @@ class Steps_to_Process(tk.Frame):
 
     def step_1_actions(self): # update Github repo
         self.step_0_actions()
-        input_comment_file = "/home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/github_comment.txt"
+        input_comment_file = "/home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/github_comment.txt"
         with open(input_comment_file, 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]
             for line in content:
                 results = line.split()
                 github_comment = results[0]
-        input_comment_file = "/home/al/github_token.txt"
+        input_comment_file = "/home/tractor/github_token.txt"
         with open(input_comment_file, 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]

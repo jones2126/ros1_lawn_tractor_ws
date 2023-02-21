@@ -38,7 +38,17 @@ The folder “project_notes” is for documents that get created in the developm
 
 The next step are:
 1. Determine how to have the robot maintain speed while running the mission path.
-2. Finish the physical implementation of the lawn_tractor. The intended use case is agriculture related, but currently I have started with a Cub Cadet lawn tractor along with the other major components (e.g. electric steering motor, Cytron motor controller, angle sensor, Super Servo for hydrostatic transmission control, a GNSS capable GPS which receives RTK corrections from my on-site base station).  I’m currently working on the low-level embedded code which I will publish here once it is in a more durable state.  A separate catkin_ws for work in progress is at https://github.com/jones2126/tractor_laptop_ROS_workspace
+2. Finish the physical implementation of the lawn_tractor.
+3. Test and tune software.
+
+The intended use case is agriculture related.  I have started with a Cub Cadet lawn tractor before implementation on my John Deere 5055.  The major control components include: electric steering motor, Cytron motor controller, angle sensor, Super Servo for hydrostatic transmission control, and a GNSS capable GPS which receives RTK corrections from my on-site base station.  
+
+The low-level control software(i.e. embedded code) runs on:
+a. TTGO LoRa Oled v1 - one for radio control and one on the tractor
+b. Two Teensy 3.2 boards for wheel odometry
+The embedded code is work-in-process and located here: https://github.com/jones2126/lawn_tractor_embedded_code  
+
+A separate catkin_ws for notes and additional work in progress is at https://github.com/jones2126/tractor_laptop_ROS_workspace
 
 In addition to Jeff Sampson, special thanks to Matt Droter, Vinney Ruia and Juan Eduardo Riva for all their help and contributions leading to this point.
 

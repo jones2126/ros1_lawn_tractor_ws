@@ -7,6 +7,5 @@
 # new environment variables
 
 # modified environment variables
-export LD_LIBRARY_PATH='/opt/ros/noetic/lib'
-export PKG_CONFIG_PATH='/opt/ros/noetic/lib/pkgconfig'
-export PWD='/home/al/ros1_lawn_tractor_ws/build'
+export PWD='/home/tractor/ros1_lawn_tractor_ws/build'
+export PYTHONPATH='/opt/ros/noetic/lib/python3/dist-packages'

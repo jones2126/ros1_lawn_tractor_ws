@@ -1,8 +1,8 @@
-# Install script for directory: /home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle
+# Install script for directory: /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/al/ros1_lawn_tractor_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/tractor/ros1_lawn_tractor_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/al/ros1_lawn_tractor_ws/build/ackermann_vehicle/catkin_generated/installspace/ackermann_vehicle.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/tractor/ros1_lawn_tractor_ws/build/ackermann_vehicle/catkin_generated/installspace/ackermann_vehicle.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ackermann_vehicle/cmake" TYPE FILE FILES
-    "/home/al/ros1_lawn_tractor_ws/build/ackermann_vehicle/catkin_generated/installspace/ackermann_vehicleConfig.cmake"
-    "/home/al/ros1_lawn_tractor_ws/build/ackermann_vehicle/catkin_generated/installspace/ackermann_vehicleConfig-version.cmake"
+    "/home/tractor/ros1_lawn_tractor_ws/build/ackermann_vehicle/catkin_generated/installspace/ackermann_vehicleConfig.cmake"
+    "/home/tractor/ros1_lawn_tractor_ws/build/ackermann_vehicle/catkin_generated/installspace/ackermann_vehicleConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ackermann_vehicle" TYPE FILE FILES "/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ackermann_vehicle" TYPE FILE FILES "/home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/package.xml")
 endif()
 

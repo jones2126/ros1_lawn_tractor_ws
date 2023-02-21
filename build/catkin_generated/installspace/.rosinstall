@@ -1,2 +1,2 @@
 - setup-file:
-    local-name: /home/al/ros1_lawn_tractor_ws/install/setup.sh
+    local-name: /home/tractor/ros1_lawn_tractor_ws/install/setup.sh

@@ -62,16 +62,19 @@ class Steps_to_Process(tk.Frame):
 
     def step_1_actions(self): # Gazebo
         self.step_0_actions()
+        time.sleep(1)        
         subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle cub_cadet_gazebo.launch" + "\n"])
         time.sleep(1) 
    
     def step_2_actions(self):   # movebase
         self.step_0_actions()
+        time.sleep(2)
         subprocess.check_output(["xdotool", "type", "roslaunch ackermann_vehicle mbf_newteb.launch" + "\n"])
         time.sleep(1) 
    
     def step_3_actions(self):   # rviz       
         self.step_0_actions()
+        time.sleep(2)        
         subprocess.check_output(["xdotool", "type", "rviz -d ~/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/tractor.rviz" + "\n"])
         time.sleep(1) 
              
