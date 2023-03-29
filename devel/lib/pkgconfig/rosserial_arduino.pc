@@ -1,0 +1,8 @@
+prefix=/home/tractor/ros1_lawn_tractor_ws/devel
+
+Name: rosserial_arduino
+Description: Description of rosserial_arduino
+Version: 0.9.2
+Cflags: -I/home/tractor/ros1_lawn_tractor_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime

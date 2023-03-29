@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: rosserial_vex_cortex
+Version: 0.9.2
+Summary: rosserial for Cortex/AVR platforms.
+Home-page: UNKNOWN
+Author: Canyon Turtle
+Author-email: canyonturtle@gmail.com
+License: BSD
+Description: UNKNOWN
+Platform: UNKNOWN

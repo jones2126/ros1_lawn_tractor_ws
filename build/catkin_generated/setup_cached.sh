@@ -8,4 +8,3 @@
 
 # modified environment variables
 export PWD='/home/tractor/ros1_lawn_tractor_ws/build'
-export PYTHONPATH='/opt/ros/noetic/lib/python3/dist-packages'

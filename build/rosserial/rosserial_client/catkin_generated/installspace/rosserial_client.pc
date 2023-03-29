@@ -1,0 +1,8 @@
+prefix=/home/tractor/ros1_lawn_tractor_ws/install
+
+Name: rosserial_client
+Description: Description of rosserial_client
+Version: 0.9.2
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

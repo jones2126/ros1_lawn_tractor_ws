@@ -1,0 +1,8 @@
+prefix=/home/tractor/ros1_lawn_tractor_ws/install
+
+Name: chip_imu_driver
+Description: Description of chip_imu_driver
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp geometry_msgs sensor_msgs serial tf

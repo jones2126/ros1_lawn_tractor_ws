@@ -1,0 +1,121 @@
+<robot name="ackermann_robot">
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="1.5 0.5 0.5"/>
+</geometry>
+<material name="white">
+<color rgba="1 1 1 1"/>
+</material>
+</visual>
+<collision>
+<geometry>
+<box size="1.5 0.5 0.5"/>
+</geometry>
+</collision>
+
+  </link>
+  <link name="front_left_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.159" radius="0.178"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.159" radius="0.178"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="front_right_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.159" radius="0.178"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.159" radius="0.178"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="rear_left_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.229" radius="0.2415"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.229" radius="0.2415"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="rear_right_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.229" radius="0.2415"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.229" radius="0.2415"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="front_left_wheel_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="front_left_wheel"/>
+    <origin xyz="0.4255 0.425 -0.25"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-0.7854" upper="0.7854"/>
+  </joint>
+  <joint name="front_right_wheel_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="front_right_wheel"/>
+    <origin xyz="0.4255 -0.425 -0.25"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-0.7854" upper="0.7854"/>
+  </joint>
+  <joint name="rear_left_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rear_left_wheel"/>
+    <origin xyz="-0.3685 0.3685 -0.25"/>
+  </joint>
+  <joint name="rear_right_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rear_right_wheel"/>
+    <origin xyz="-0.3685 -0.3685 -0.25"/>
+  </joint>
+<transmission name="ackermann_transmission">
+<type>transmission_interface/SimpleTransmission</type>
+<actuator name="front_left_wheel_joint">
+<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+<mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<actuator name="front_right_wheel_joint">
+<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+<mechanicalReduction>1</mechanicalReduction>
+</actuator>
+<joint name="rear_left_wheel_joint">
+<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+</joint>
+<joint name="rear_right_wheel_joint">
+<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+</joint>
+</transmission>
+
+</robot>

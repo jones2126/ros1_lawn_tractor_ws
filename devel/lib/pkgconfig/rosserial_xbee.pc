@@ -1,0 +1,8 @@
+prefix=/home/tractor/ros1_lawn_tractor_ws/devel
+
+Name: rosserial_xbee
+Description: Description of rosserial_xbee
+Version: 0.9.2
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

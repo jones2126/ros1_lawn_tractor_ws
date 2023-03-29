@@ -1,0 +1,14 @@
+<launch>
+  <node pkg="rosserial_python" type="serial_node.py" name="ttgo_main_serial_node" output="screen">
+    <param name="port" value="/dev/ttgo_main"/>
+    <param name="baud" value="57600"/>
+  </node>
+  <node pkg="rosserial_python" type="serial_node.py" name="odom_left_serial_node" output="screen">
+    <param name="port" value="/dev/odom_left"/>
+    <param name="baud" value="57600"/>
+  </node>
+  <node pkg="rosserial_python" type="serial_node.py" name="odom_right_serial_node" output="screen">
+    <param name="port" value="/dev/odom_right"/>
+    <param name="baud" value="57600"/>
+  </node>
+</launch>
