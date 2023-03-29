@@ -92,10 +92,10 @@ class Steps_to_Process(tk.Frame):
         time.sleep(1)
         subprocess.check_output(["xdotool", "type", "git push origin master" + "\n"])
         time.sleep(10)
-        subprocess.check_output(["xdotool", "type", "jones2126" + "\n"])
-        time.sleep(3)
-        subprocess.check_output(["xdotool", "type", github_token + "\n"])
-        time.sleep(1)
+        #subprocess.check_output(["xdotool", "type", "jones2126" + "\n"])
+        #time.sleep(3)
+        #subprocess.check_output(["xdotool", "type", github_token + "\n"])
+        #time.sleep(1)
 
     def step_2_actions(self):   # placeholder
         self.step_0_actions()
