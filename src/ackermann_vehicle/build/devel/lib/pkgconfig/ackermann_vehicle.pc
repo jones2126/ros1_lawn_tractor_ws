@@ -1,0 +1,8 @@
+prefix=/home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/build/devel
+
+Name: ackermann_vehicle
+Description: Description of ackermann_vehicle
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

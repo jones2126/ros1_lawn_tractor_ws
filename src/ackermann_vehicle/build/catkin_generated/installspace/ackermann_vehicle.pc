@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: ackermann_vehicle
+Description: Description of ackermann_vehicle
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

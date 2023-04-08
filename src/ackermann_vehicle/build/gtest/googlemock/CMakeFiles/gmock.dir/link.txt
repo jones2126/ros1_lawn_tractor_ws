@@ -1,0 +1,1 @@
+/usr/bin/g++ -fPIC -g  -shared -Wl,-soname,libgmockd.so -o ../lib/libgmockd.so CMakeFiles/gmock.dir/src/gmock-all.cc.o  -Wl,-rpath,/home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/build/gtest/lib ../lib/libgtestd.so -lpthread 

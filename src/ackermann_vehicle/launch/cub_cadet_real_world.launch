@@ -7,14 +7,25 @@
     <arg name="namespace" value="$(arg namespace)"/>
   </include>
 
-  <!-- Read joint positions from joint_states, then publish the vehicle's state to tf. -->
-  <node name="vehicle_state_publisher2" pkg="robot_state_publisher"
-    type="robot_state_publisher">
-    <param name="publish_frequency" value="30.0"/>
-  </node>
+   <group ns="$(arg namespace)">
+    <!-- Create the world. -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch"></include>
 
-  <group ns="$(arg namespace)">
-    <!-- Load the joint controllers. One of these publishes the joint states to joint_states. -->
+    <!-- Spawn the vehicle. -->
+    <!-- The arguments were used in simulation.  Since I publish an odom I'm commenting this out 
+    <node name="spawn_vehicle" pkg="gazebo_ros" type="spawn_model"
+          args="-urdf -param robot_description -model ackermann_vehicle
+                -gazebo_namespace /$(arg namespace)/gazebo
+                -x $(arg x) -y $(arg y) -z $(arg z)
+                -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
+    -->                
+
+<node name="spawn_vehicle" pkg="gazebo_ros" type="spawn_model"
+      args="-urdf -param robot_description -model ackermann_vehicle
+            -gazebo_namespace /$(arg namespace)/gazebo"/>
+
+    <!-- Load the joint controllers. One of these publishes the joint states
+         to joint_states. -->
     <node name="controller_spawner" pkg="controller_manager" type="spawner"
           args="$(find ackermann_vehicle)/config/cub_cadet_spawner_params.yaml"/>
 
