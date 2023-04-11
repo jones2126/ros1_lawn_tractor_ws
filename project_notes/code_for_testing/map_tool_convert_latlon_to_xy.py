@@ -149,6 +149,22 @@ def LLtoUTM(Lat,Long):
       UTMNorthing += 10000000.0;
   
   return (UTMNorthing, UTMEasting, UTMZone)
+
+def meters_to_degrees_change(dx, dy, initial_lat, initial_lon):
+    R_e = 6371000  # Earth's radius in meters
+    #lat_rad = math.radians(initial_lat)
+    lat_rad = radians(initial_lat)
+
+    dlat = dy / R_e
+    #dlon = dx / (R_e * math.cos(lat_rad))
+    dlon = dx / (R_e * cos(lat_rad))    
+
+    #new_lat = initial_lat + math.degrees(dlat)
+    new_lat = initial_lat + degrees(dlat)    
+    #new_lon = initial_lon + math.degrees(dlon)
+    new_lon = initial_lon + degrees(dlon)    
+
+    return new_lat, new_lon  
 '''
 Center of the open gate: 30.175287, -96.512580  (start_lat, start_lon)
 Lower left corner post: 30.175197, -96.513304   (ll_lat, ll_lon)
@@ -171,3 +187,18 @@ _xg, _yg = ll2xy(ll_lat, ll_lon, start_lat, start_lon)
 print("lower left to starting position")
 print("x: ", _xg)
 print("y: ", _yg)
+
+'''
+Below I am calculating a new lat lon for the starting position of the tractor.  Using Google map 
+was a little imprecise.
+
+'''
+initial_lat = 40.345245345
+initial_lon = -80.128990477
+dx = 4.5  # Change in x axis (meters)
+dy = 8    # Change in y axis (meters)
+
+new_lat, new_lon = meters_to_degrees_change(dx, dy, initial_lat, initial_lon)
+
+print(f"New latitude: {new_lat}")
+print(f"New longitude: {new_lon}")

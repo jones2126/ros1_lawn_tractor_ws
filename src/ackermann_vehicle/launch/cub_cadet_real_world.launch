@@ -54,10 +54,6 @@
     <param name="initial_yaw" type="double" value="-90.94"/> <!-- initial yaw is 184 degrees (compass heading) -->    
   </node>
 
-    <!-- <node name="odom_wheel_node" pkg="ackermann_vehicle" type="odom_wheel.py" output="screen" /> -->
-    <!-- <node name="odom_wheel_node" pkg="ackermann_vehicle" type="ekf_odom_pub" output="screen" /> -->
-    <node name="odom_wheel_node" pkg="ackermann_vehicle" type="odom_wheel_230329.py" output="screen" />    
-
     <!-- ****** map server ***** -->
   <node name="map_server" pkg="map_server" type="map_server"
        args="$(find ackermann_vehicle)/maps/435_pine_valley.yaml" output="screen">
@@ -82,6 +78,22 @@
     <rosparam file="$(find ackermann_vehicle)/config/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find ackermann_vehicle)/config/cub_cadet_teb_local_planner_params.yaml" command="load" />
   </node>
+
+  <!-- Launch the nmea_serial_driver node.   LOCATED IN CATKIN_WS -->
+  <node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
+    <param name="port" value="/dev/gps"/>
+    <param name="baud" value="115200" />
+    <param name="frame_id" value="gps" />
+    <param name="use_GNSS_time" value="False" />
+    <param name="time_ref_source" value="gps" />
+    <param name="useRMC" value="False" />
+  </node>
+
+  <!-- Launch script to produce an odom statement - LOCATED IN CATKIN_WS  -->
+    <!-- <node name="odom_wheel_node" pkg="ackermann_vehicle" type="ekf_odom_pub" output="screen" /> -->
+    <node name="odom_wheel_node" pkg="ackermann_vehicle" type="odom_from_wheel_and_gps.py" output="screen" />
+  <!-- <node pkg="beginner_tutorials" name="gps_odom" type="gps_odom.py" output="screen">  -->
+  <!-- </node> -->
 
   <!-- ****** rvis ***** -->
   <node pkg="rviz" type="rviz" name="rviz" args="-d /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/cub_cadet_real_world.rviz"/>  
