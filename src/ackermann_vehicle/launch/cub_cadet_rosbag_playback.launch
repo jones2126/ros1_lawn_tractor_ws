@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-04-11-11-41-14.bag"/>
+  <!-- <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-04-13-10-16-31.bag"/>   -->
+  
+  <!-- Launch map_server to use the same map as in the original launch file -->
+  <node name="map_server" pkg="map_server" type="map_server"
+       args="$(find ackermann_vehicle)/maps/435_pine_valley.yaml" output="screen">
+    <param name="frame_id" value="map"/>
+  </node>
+
+    <!-- Static transform from map to odom -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 map odom" />
+
+    <!-- Launch RViz  -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/cub_cadet_rosbag_playback.rviz"/>  
+
+    <!-- Play the rosbag file starting ?? seconds into the file -->
+    <node pkg="rosbag" type="play" name="rosbag_play" args="--start=5 $(arg rosbag_file)" />
+
+
+</launch>

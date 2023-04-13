@@ -81,7 +81,7 @@ limitations under the License.
   </group>
 
     <!-- Create odom message from Gazebo -->
-    <node name="odom_pub" pkg="ackermann_vehicle" type="odom.py" output="screen"/>
+    <node name="odom_pub" pkg="ackermann_vehicle" type="odom_from_gazebo.py" output="screen"/>
 
     <!-- <include file="$(find my_odom_publisher)/launch/start_odom.launch"/>  -->
 

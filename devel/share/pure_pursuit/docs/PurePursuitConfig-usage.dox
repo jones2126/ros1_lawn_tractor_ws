@@ -1,0 +1,7 @@
+\subsubsection usage Usage
+\verbatim
+<node name="pure_pursuit" pkg="pure_pursuit" type="pure_pursuit">
+  <param name="max_linear_velocity" type="double" value="0.1" />
+</node>
+\endverbatim
+

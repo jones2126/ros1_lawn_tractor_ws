@@ -1,0 +1,8 @@
+prefix=/home/tractor/ros1_lawn_tractor_ws/devel
+
+Name: pure_pursuit
+Description: Description of pure_pursuit
+Version: 0.9.0
+Cflags: -I/home/tractor/ros1_lawn_tractor_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: roscpp std_msgs geometry_msgs nav_msgs ackermann_msgs tf2 tf2_ros rospy dynamic_reconfigure
