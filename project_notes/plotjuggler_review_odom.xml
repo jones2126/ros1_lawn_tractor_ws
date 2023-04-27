@@ -1,34 +1,103 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <root>
  <tabbed_widget parent="main_window" name="Main Window">
-  <Tab tab_name="tab1" containers="1">
+  <Tab tab_name="pose x &amp; y" containers="1">
    <Container>
-    <DockSplitter sizes="1" orientation="-" count="1">
+    <DockSplitter sizes="1" count="1" orientation="-">
      <DockArea name="...">
-      <plot flip_y="false" flip_x="false" mode="TimeSeries" style="Lines">
-       <range bottom="-1.152103" top="46.835306" left="0.000000" right="223.160000"/>
+      <plot style="Lines" flip_x="false" mode="XYPlot" flip_y="false">
+       <range right="36.589270" top="19.615226" left="-9.415765" bottom="-6.474472"/>
        <limitY/>
-       <curve color="#1f77b4" name="/left_meters_travelled_msg/data"/>
-       <curve color="#d62728" name="/right_meters_travelled_msg/data"/>
+       <curve color="#1f77b4" curve_y="/odom/pose/pose/position/y" curve_x="/odom/pose/pose/position/x" name="/odom/pose/pose/position/[x;y]"/>
       </plot>
      </DockArea>
     </DockSplitter>
    </Container>
   </Tab>
-  <Tab tab_name="tab3" containers="1">
+  <Tab tab_name="speed" containers="1">
    <Container>
-    <DockSplitter sizes="1" orientation="-" count="1">
+    <DockSplitter sizes="1" count="1" orientation="-">
      <DockArea name="...">
-      <plot flip_y="false" flip_x="false" mode="XYPlot" style="Lines">
-       <range bottom="-39.991928" top="0.982635" left="-30.139934" right="47.754866"/>
+      <plot style="Lines" flip_x="false" mode="TimeSeries" flip_y="false">
+       <range right="165.302000" top="2.249504" left="0.000000" bottom="-0.725434"/>
        <limitY/>
-       <curve color="#d62728" curve_x="/odom/pose/pose/position/x" curve_y="/odom/pose/pose/position/y" name="/odom/pose/pose/position/[x;y]"/>
+       <curve color="#ff7f0e" name="/right_speed/data"/>
+       <curve color="#f14cc1" name="/cmd_vel/linear/x"/>
+       <curve color="#9467bd" name="/speed/data"/>
+       <curve color="#1ac938" name="/left_speed/data"/>
+       <curve color="#d62728" name="/odom/twist/twist/linear/x"/>
       </plot>
      </DockArea>
     </DockSplitter>
    </Container>
   </Tab>
-  <currentTabIndex index="1"/>
+  <Tab tab_name="transmission" containers="1">
+   <Container>
+    <DockSplitter sizes="1" count="1" orientation="-">
+     <DockArea name="...">
+      <plot style="Lines" flip_x="false" mode="TimeSeries" flip_y="false">
+       <range right="108.785000" top="301.525000" left="68.566000" bottom="237.475000"/>
+       <limitY/>
+       <curve color="#d62728" name="/transmission_servo/data"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="angular z" containers="1">
+   <Container>
+    <DockSplitter sizes="1" count="1" orientation="-">
+     <DockArea name="...">
+      <plot style="Lines" flip_x="false" mode="TimeSeries" flip_y="false">
+       <range right="165.283000" top="3179.170743" left="0.000000" bottom="-2036.228710"/>
+       <limitY/>
+       <curve color="#1ac938" name="/odom/twist/twist/angular/z"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="fix" containers="1">
+   <Container>
+    <DockSplitter sizes="1" count="1" orientation="-">
+     <DockArea name="...">
+      <plot style="Lines" flip_x="false" mode="TimeSeries" flip_y="false">
+       <range right="165.302000" top="2.075000" left="0.000000" bottom="-1.075000"/>
+       <limitY/>
+       <curve color="#d62728" name="/fix/status/status"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="pose z" containers="1">
+   <Container>
+    <DockSplitter sizes="1" count="1" orientation="-">
+     <DockArea name="...">
+      <plot style="Lines" flip_x="false" mode="TimeSeries" flip_y="false">
+       <range right="165.283000" top="1.049997" left="0.000000" bottom="-1.050000"/>
+       <limitY/>
+       <curve color="#d62728" name="/odom/pose/pose/orientation/z"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="tab2" containers="1">
+   <Container>
+    <DockSplitter sizes="1" count="1" orientation="-">
+     <DockArea name="...">
+      <plot style="Lines" flip_x="false" mode="TimeSeries" flip_y="false">
+       <range right="165.302000" top="265.290572" left="0.004000" bottom="-6.566693"/>
+       <limitY/>
+       <curve color="#1ac938" name="/left_meters_travelled_msg/data"/>
+       <curve color="#ff7f0e" name="/right_meters_travelled_msg/data"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <currentTabIndex index="6"/>
  </tabbed_widget>
  <use_relative_time_offset enabled="1"/>
  <!-- - - - - - - - - - - - - - - -->
@@ -68,8 +137,8 @@
  </Plugins>
  <!-- - - - - - - - - - - - - - - -->
  <previouslyLoaded_Datafiles>
-  <fileInfo filename="../../bagfiles/2023-04-08-11-46-25.bag" prefix="">
-   <selected_datasources value="/imu/data;/left_meters_travelled_msg;/odom;/right_meters_travelled_msg;/tf"/>
+  <fileInfo filename="../../bagfiles/2023-04-26-18-43-08.bag" prefix="">
+   <selected_datasources value="/chatter;/cmd_vel;/fix;/hdg_from_imu;/imu/data;/left_meters_travelled_msg;/left_speed;/odom;/right_meters_travelled_msg;/right_speed;/speed;/tf;/transmission_servo"/>
    <plugin ID="DataLoad ROS bags">
     <use_header_stamp value="false"/>
     <discard_large_arrays value="true"/>

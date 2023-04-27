@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
 
-  <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-04-11-11-41-14.bag"/>
-  <!-- <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-04-13-10-16-31.bag"/>   -->
+  <!-- <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-04-11-11-41-14.bag"/> -->
+  <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-04-14-16-42-05.bag"/>  
   
   <!-- Launch map_server to use the same map as in the original launch file -->
   <node name="map_server" pkg="map_server" type="map_server"
@@ -17,7 +17,7 @@
     <node pkg="rviz" type="rviz" name="rviz" args="-d /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/cub_cadet_rosbag_playback.rviz"/>  
 
     <!-- Play the rosbag file starting ?? seconds into the file -->
-    <node pkg="rosbag" type="play" name="rosbag_play" args="--start=5 $(arg rosbag_file)" />
+    <node pkg="rosbag" type="play" name="rosbag_play" args="--start=40 $(arg rosbag_file)" />
 
 
 </launch>

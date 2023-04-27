@@ -37,8 +37,11 @@
 
   </group>
 
-  <!-- Add the necessary nodes for GPS and wheel encoders here -->
-  <!-- For example, you may need to include the launch file or nodes for your GPS and wheel encoder packages -->
+  <!-- Start rosserial nodes for main ttgo board (tractor control), left and right encoders and IMU -->
+  <node pkg="rosserial_python" type="serial_node.py" name="ttgo_main_serial_node" output="screen">
+    <param name="port" value="/dev/ttgo_main"/>
+    <param name="baud" value="57600"/>
+  </node>
   <node pkg="rosserial_python" type="serial_node.py" name="odom_left_serial_node" output="screen">
     <param name="port" value="/dev/odom_left"/>
     <param name="baud" value="57600"/>
@@ -47,7 +50,6 @@
     <param name="port" value="/dev/odom_right"/>
     <param name="baud" value="57600"/>
   </node>
-
   <arg name="port" default="/dev/rosimu" />
   <node pkg="chip_imu_driver" type="chip_imu_driver_node" name="chip_imu_driver_node" output="screen">
     <param name="port" value="$(arg port)" />

@@ -28,6 +28,8 @@ class OdomPublisher:
         self.right_distance_prev = 0.0
         self.left_delta = 0.0
         self.right_delta = 0.0
+        self.left_speed = 0
+        self.right_speed = 0
         self.heading_radians_imu = -1.509
         self.heading_radians_wheels = self.heading_radians_imu
         self.prev_yaw = 0.0
@@ -56,6 +58,10 @@ class OdomPublisher:
 
         rospy.Subscriber('/left_meters_travelled_msg', Float32, self.left_distance_cb)
         rospy.Subscriber('/right_meters_travelled_msg', Float32, self.right_distance_cb)
+
+        rospy.Subscriber('/left_speed', Float32, self.left_speed_cb)
+        rospy.Subscriber('/right_speed', Float32, self.right_speed_cb)
+
         rospy.Subscriber('/imu/data', Imu, self.imu_callback)
         rospy.Subscriber("fix", NavSatFix, self.gps_callback)
         self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=50)
@@ -67,6 +73,12 @@ class OdomPublisher:
                       
     def right_distance_cb(self, msg):
         self.right_distance = msg.data
+
+    def left_speed_cb(self, msg):
+        self.left_speed = msg.data
+
+    def right_speed_cb(self, msg):
+        self.right_speed = msg.data               
 
     def imu_callback(self, msg):
         self.imu_calls = self.imu_calls + 1
@@ -100,6 +112,12 @@ class OdomPublisher:
                           current_time_imu, self.prev_time_imu, delta_time_imu)            
         else:
             self.angular_vel_z_imu = delta_yaw / delta_time_imu
+            # I was having some issues with self.angular_vel_z_imu being way out of bounds
+            # this is a stop gap measure until I can figure out why
+            if self.angular_vel_z_imu > PI:
+                self.angular_vel_z_imu = PI
+            elif self.angular_vel_z_imu < -PI:
+                self.angular_vel_z_imu = -PI
 
         if self.heading_radians_imu   > PI:
             self.heading_radians_imu = self.heading_radians_imu  - ( 2 * PI)
@@ -133,11 +151,14 @@ class OdomPublisher:
 
         # Calculate the distance travelled and speed by the robot using the average distance of the two wheels
         distance = (self.left_delta + self.right_delta) / 2
+        linear_velocity_from_wheels = (self.left_speed + self.right_speed) / 2
+        '''
         if delta_time_odom == 0: # I was having an issue with this, but added another "nanosecond" check above
             linear_velocity = 0
             rospy.loginfo("delta_time_odom = 0")
         else:
-            linear_velocity = distance / delta_time_odom        
+            linear_velocity = distance / delta_time_odom
+        '''     
 
         # Calculate the change in orientation (theta) of the robot to be used in the distance calculation
         delta_theta = (self.right_delta - self.left_delta) / self.wheelbase
@@ -177,7 +198,7 @@ class OdomPublisher:
         odom_msg.pose.pose.orientation.y = self.quat[1]
         odom_msg.pose.pose.orientation.z = self.quat[2]
         odom_msg.pose.pose.orientation.w = self.quat[3]
-        odom_msg.twist.twist.linear.x = linear_velocity
+        odom_msg.twist.twist.linear.x = linear_velocity_from_wheels
         odom_msg.twist.twist.linear.y = 0.0
         odom_msg.twist.twist.angular.z = self.angular_vel_z_imu
 
