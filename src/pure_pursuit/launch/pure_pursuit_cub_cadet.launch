@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- pure_persuit.launch 14/12/19 -->
+
+
+<launch>
+
+  <!-- Run the map server -->
+  <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find jeff)/maps/farm.yaml"/> -->
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 map odom" /> -->
+
+  <arg name="name" default="tractor"/>
+  
+  <!-- Pure pursuit path tracking -->
+  <node pkg="pure_pursuit" type="pure_pursuit" name="controller"  clear_params="true">
+    <param name="robot_frame_id" value="base_link"/>
+    <param name="global_frame_id" value="odom"/>
+    <param name="lookahead_frame_id" value="lookahead"/>
+    <rosparam file="$(find ackermann_vehicle)/config/cub_cadet_pure_pursuit.yaml" command="load"/>
+    <remap from="path_segment" to="/drive_path"/>
+    <remap from="odometry" to="odom"/>
+    <remap from="cmd_vel" to="cmd_vel"/>
+    <!-- <remap from="cmd_acker" to="/ackermann_cmd"/> -->
+    <remap from="cmd_acker" to="/acker_in"/>
+  </node>
+
+  <!-- Convert AckermannDriveStamp to AckermannDrive -->
+  <node pkg="ackermann_vehicle" type="ackermannstamped2ackermann.py" name="ackermannstamped2ackermann" >
+    <remap from="acker_out" to="/ackermann_cmd"/>
+  </node>
+
+</launch>
+
