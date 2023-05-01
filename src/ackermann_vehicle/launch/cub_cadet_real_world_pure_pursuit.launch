@@ -114,4 +114,7 @@
     <remap from="cmd_acker" to="/acker_in"/>
   </node>  
 
+ <!-- ****** set parameters for speed control ***** -->
+ <param name="/speed_params" type="yaml" value="[230, 245, 256, 279, 285, 291, 294]" />  
+
 </launch>

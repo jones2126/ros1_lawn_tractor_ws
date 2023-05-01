@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+  <!--Used with the program:  ~lawn_tractor_embedded_code/ttgo_read_ROS_params/src/main.cpp -->
+  
+  <!-- worked -->
+  <!-- <rosparam param="/speed_params">[254.22, 245.2, 255.3, 279.4, 285.5, 291.6, 256.7]</rosparam>   -->
+    <!--taken from: ~/Documents/ubuntu backup files/catkin_ws/src/steer_test_launch.launch -->
+
+  <!-- <param name="/speed_params" type="yaml" value="[254.99, 245.99, 255.99, 279.4, 285.5, 291.6, 256.7]" /> -->
+  <param name="/speed_params" type="yaml" value="[254, 245, 255, 279, 285, 291, 256]" />
+
+
+  <!-- Start rosserial nodes for main ttgo board -->
+  <node pkg="rosserial_python" type="serial_node.py" name="ttgo_main_serial_node" output="screen">
+    <param name="port" value="/dev/ttgo_main"/>
+    <param name="baud" value="57600"/>
+  </node>
+</launch>    
