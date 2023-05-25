@@ -64,9 +64,9 @@ class OdomPublisher:
 
         rospy.Subscriber('/imu/data', Imu, self.imu_callback)
         rospy.Subscriber("fix", NavSatFix, self.gps_callback)
-        self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=50)
-        self.hdg_from_imu_pub = rospy.Publisher('hdg_from_imu', Float64, queue_size=10)
-        self.hdg_from_wheels_pub = rospy.Publisher('hdg_from_wheels', Float64, queue_size=10)        
+        self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=1)
+        self.hdg_from_imu_pub = rospy.Publisher('hdg_from_imu', Float64, queue_size=1)
+        self.hdg_from_wheels_pub = rospy.Publisher('hdg_from_wheels', Float64, queue_size=1)        
         
     def left_distance_cb(self, msg):
         self.left_distance = msg.data

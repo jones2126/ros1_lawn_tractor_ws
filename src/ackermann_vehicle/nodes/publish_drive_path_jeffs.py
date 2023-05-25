@@ -83,7 +83,7 @@ def load_file():
     rospy.loginfo("starting load_file")
     global content
     try:
-        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/generated_points.txt', 'r') as file:  # this file is drawn from the folder where the program is started
+        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/box_turn.txt', 'r') as file:  # this file is drawn from the folder where the program is started
         #with open('7pts.txt', 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]

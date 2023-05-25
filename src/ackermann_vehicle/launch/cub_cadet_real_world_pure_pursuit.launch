@@ -115,6 +115,6 @@
   </node>  
 
  <!-- ****** set parameters for speed control ***** -->
- <param name="/speed_params" type="yaml" value="[230, 245, 256, 279, 285, 291, 294]" />  
+ <param name="/speed_params" type="yaml" value="[230, 245, 256, 279, 287, 291, 294]" />  
 
 </launch>

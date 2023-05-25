@@ -1,0 +1,45 @@
+/*
+This program is for testing to send and rececive serial data.  On the laptop there is a python program
+that sends a string every 10 seconds.  This program recognizes it has received data and blinks the LED
+at a different rate (e.g. 10 Hz) and when there is no data it blinks the led at a slower rate (eg. 1 Hz).
+Periodically (e.g. 30 second intervals) a Serial.println message is sent back to the laptop that can be 
+detected by PuTTy or some other monitoring software monitoring the serial port (e.g. ttyACM0).
+
+*/
+const int LED_PIN = 2;  // Pin connected to the LED
+unsigned long printTime = millis(); 
+void clearInputBuffer() {
+  while (Serial.available() > 0) {
+    Serial.read();
+  }
+}
+void setup() {
+  pinMode(LED_PIN, OUTPUT);
+  Serial.begin(115200);  // Set the baud rate to match the serial monitor on the computer
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    blinkLED(10);
+    char receivedData = Serial.read();
+    clearInputBuffer();
+  }
+  else {
+    blinkLED(1);
+  }
+  if (millis() - printTime > 30000){
+    Serial.println("30 second timer reached");
+    printTime = millis();
+  }
+}
+
+void blinkLED(int frequencyHz) {
+  int interval = 1000 / (2 * frequencyHz);  // Calculate the LED toggle interval in milliseconds
+  unsigned long startTime = millis(); 
+  while (millis() - startTime < 2000) {  // Loop for 2 seconds
+    digitalWrite(LED_PIN, HIGH);
+    delay(interval);
+    digitalWrite(LED_PIN, LOW);
+    delay(interval);
+  }
+}
