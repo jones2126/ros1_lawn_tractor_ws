@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="namespace" default="/"/>
+  <arg name="cmd_timeout" default="0.5"/>
+
+  <include file="$(find ackermann_vehicle)/launch/ackermann_xacro.launch">
+    <arg name="namespace" value="$(arg namespace)"/>
+  </include>
+
+  <group ns="$(arg namespace)">
+    <node name="controller_spawner" pkg="controller_manager" type="spawner"
+          args="$(find ackermann_vehicle)/config/cub_cadet_spawner_params.yaml"/>
+
+    <node name="ackermann_controller" pkg="ackermann_vehicle" type="ackermann_controller.py">
+      <param name="cmd_timeout" value="$(arg cmd_timeout)"/>
+      <rosparam file="$(find ackermann_vehicle)/config/cub_cadet_cntrlpy_params.yaml" command="load"/>
+    </node>
+  </group>
+
+  <node pkg="rosserial_python" type="serial_node.py" name="odom_left_serial_node" output="screen">
+    <param name="port" value="/dev/odom_left"/>
+    <param name="baud" value="57600"/>
+  </node>
+  <node pkg="rosserial_python" type="serial_node.py" name="odom_right_serial_node" output="screen">
+    <param name="port" value="/dev/odom_right"/>
+    <param name="baud" value="57600"/>
+  </node>
+  <arg name="port" default="/dev/rosimu" />
+  <node pkg="chip_imu_driver" type="chip_imu_driver_node" name="chip_imu_driver_node" output="screen">
+    <param name="port" value="$(arg port)" />
+    <param name="initial_yaw" type="double" value="-90.94"/> <!-- initial yaw is 184 degrees (compass heading) -->    
+  </node>
+
+  <!-- ****** map server ***** -->
+  <node name="map_server" pkg="map_server" type="map_server"
+       args="$(find ackermann_vehicle)/maps/435_pine_valley.yaml" output="screen">
+    <param name="frame_id" value="map"/>
+  </node>
+
+  <!-- If not running amcl, map odom on top of map -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 map odom" />
+
+  <node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
+    <param name="port" value="/dev/gps"/>
+    <param name="baud" value="115200" />
+    <param name="frame_id" value="gps" />
+    <param name="use_GNSS_time" value="False" />
+    <param name="time_ref_source" value="gps" />
+    <param name="useRMC" value="False" />
+  </node>
+
+  <node name="odom_wheel_node" pkg="ackermann_vehicle" type="odom_from_wheel_and_gps.py" output="screen" />
+
+  <!-- ****** rvis ***** -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/cub_cadet_real_world.rviz"/>  
+
+  <node pkg="pure_pursuit" type="pure_pursuit" name="controller"  clear_params="true">
+    <param name="robot_frame_id" value="base_link"/>
+    <param name="global_frame_id" value="odom"/>
+    <param name="lookahead_frame_id" value="lookahead"/>
+    <rosparam file="$(find pure_pursuit)/cfg/pure_pursuit_cub_cadet.yaml" command="load"/>    
+    <remap from="path_segment" to="/drive_path"/>
+    <remap from="odometry" to="odom"/>
+    <remap from="cmd_vel" to="cmd_vel"/>
+    <remap from="cmd_acker" to="/acker_in"/>
+  </node>  
+
+  <param name="/speed_params" type="yaml" value="[230, 245, 256, 291, 294, 295, 296]" /> 
+
+<!-- linear_x >= 1.00 -> transmissionServoValue = transmissionFullForwardPos;  (1.50 m/s) 
+     linear_x >= 0.75 -> transmissionServoValue = transmission075ForwardPos;   (1.00 m/s) 
+     linear_x >= 0.50 -> transmissionServoValue = transmission050ForwardPos;   (0.75 m/s) 
+     linear_x >= 0.05 -> transmissionServoValue = transmission025ForwardPos;   (0.50 m/s)    -->
+
+<!--    transmissionFullReversePos,
+        transmission075ReversePos,
+        transmissionNeutralPos,
+        transmission025ForwardPos,
+        transmission050ForwardPos,
+        transmission075ForwardPos,
+        transmissionFullForwardPos,
+-->
+
+  <node name="serial_xfer" pkg="ackermann_vehicle" type="ROS2portXfer.py" output="screen" />  
+  
+</launch>

@@ -44,8 +44,11 @@ class OdomPublisher:
         self.last_print_time = rospy.Time.now()
         #self.GPS_origin_lat = 40.345245345   # should represent garage at 435 Pine Valley Dr
         #self.GPS_origin_lon = -80.128990477
-        self.GPS_origin_lat = 40.345317290728474
-        self.GPS_origin_lon = -80.12893737841993
+        #self.GPS_origin_lat = 40.345317290728474
+        #self.GPS_origin_lon = -80.12893737841993
+
+        self.GPS_origin_lat = 40.345357907221724
+        self.GPS_origin_lon = -80.12897250341993
 
         self.x = 0.0
         self.y = 0.0        

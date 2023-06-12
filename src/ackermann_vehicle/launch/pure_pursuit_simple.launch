@@ -1,0 +1,13 @@
+<launch>
+  <!-- pure pursuit and its controller -->
+  <node pkg="pure_pursuit" type="pure_pursuit" name="controller"  clear_params="true">
+    <param name="robot_frame_id" value="base_link"/>
+    <param name="global_frame_id" value="odom"/>
+    <param name="lookahead_frame_id" value="lookahead"/>
+    <rosparam file="$(find pure_pursuit)/cfg/pure_pursuit_cub_cadet.yaml" command="load"/>    
+    <remap from="path_segment" to="/drive_path"/>
+    <remap from="odometry" to="odom"/>
+    <remap from="cmd_vel" to="cmd_vel"/>
+    <remap from="cmd_acker" to="/acker_in"/>
+  </node>
+</launch>

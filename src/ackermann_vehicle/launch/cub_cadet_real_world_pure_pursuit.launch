@@ -37,11 +37,8 @@
 
   </group>
 
-  <!-- Start rosserial nodes for main ttgo board (tractor control), left and right encoders and IMU -->
-  <node pkg="rosserial_python" type="serial_node.py" name="ttgo_main_serial_node" output="screen">
-    <param name="port" value="/dev/ttgo_main"/>
-    <param name="baud" value="57600"/>
-  </node>
+  <!-- Start rosserial nodes for left and right wheel encoders and IMU -->
+
   <node pkg="rosserial_python" type="serial_node.py" name="odom_left_serial_node" output="screen">
     <param name="port" value="/dev/odom_left"/>
     <param name="baud" value="57600"/>
@@ -116,5 +113,7 @@
 
  <!-- ****** set parameters for speed control ***** -->
  <param name="/speed_params" type="yaml" value="[230, 245, 256, 279, 287, 291, 294]" />  
+
+<!-- <node name="serial_xfer" pkg="ackermann_vehicle" type="test_read_serial.py" output="screen" /> -->
 
 </launch>

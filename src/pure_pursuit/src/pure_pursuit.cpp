@@ -5,7 +5,12 @@
    Sorniotti et al. Path tracking for Automated Driving, 2017.
  */
 
-/* Copied from Juan's workspace */
+/* Copied from Juan's workspace
+
+potential ref: https://github.com/6RiverSystems/pure_pursuit/blob/6e54d43e307edcde4a2fac41c0ad5cbb6e47dbae/src/pure_pursuit.cpp
+potential ref: https://github.com/pasrom/pure_pursuit/blob/866b70b3b5fea1f94a3a1279f97fccb47616943f/src/pure_pursuit.cpp
+
+ */
 
 #include <string>
 #include <cmath>
@@ -236,12 +241,12 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
       //ROS_INFO("Lateral error (y-value of lookahead point.) to %.2f", yt);
       off_path_error_.data = yt;
       pub_off_path_error_.publish(off_path_error_);
-      cmd_vel_.angular.z = std::min( 2*v_ / ld_2 * yt, w_max_ );
-      //if (yt >= 0){
-      //  cmd_vel_.angular.z = std::min( 2*v_ / ld_2 * yt, w_max_ );
-      //} else {
-      //  cmd_vel_.angular.z = std::max( 2*v_ / ld_2 * yt, -w_max_ );
-      //}
+      //cmd_vel_.angular.z = std::min( 2*v_ / ld_2 * yt, w_max_ );
+      if (yt >= 0){
+        cmd_vel_.angular.z = std::min( 2*v_ / ld_2 * yt, w_max_ );
+      } else {
+        cmd_vel_.angular.z = std::max( 2*v_ / ld_2 * yt, -w_max_ );
+      }
 
       //ROS_WARN("angular z to %.2f", cmd_vel_.angular.z);
 
