@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+'''
+This program is designed to facilitate the communication between ROS and two serial 
+devices '/dev/ttgo_main' and '/dev/USB2TTL'. 
+
+functions read_ttgo_main, write_USB2TTL, and check_speed_params are processed as threads and running continuously
+
+This script is started in the launch file cub_cadet_real_world_june23.launch
+'''
 import rospy
 import serial
 import threading
@@ -6,6 +14,7 @@ import time
 from std_msgs.msg import Float32
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import NavSatFix
+from std_msgs.msg import Float64MultiArray
 
 # Add a global variable to signal threads to stop
 progControlFlag = True
@@ -47,8 +56,18 @@ def right_speed_callback(right_speed_msg):
 def read_ttgo_main():
     while progControlFlag and not rospy.is_shutdown():
         if ser1.in_waiting > 0:
-            line = ser1.readline()
-            print("From /dev/ttgo_main:", line.decode('utf-8').strip())
+            #line = ser1.readline()
+            #print("From /dev/ttgo_main:", line.decode('utf-8').strip())
+
+            line = ser1.readline().decode('utf-8').strip()
+            #print("From /dev/ttgo_main:", line)
+
+            if line[0] == '3':
+                components = line.split(',')
+                msg = Float64MultiArray() # Create a new Float64MultiArray
+                msg.data = [float(x) for x in components[1:]]  # Add each component to the data (excluding the first '3')
+                pub.publish(msg)
+
         else:
             time.sleep(0.1)
 
@@ -105,6 +124,7 @@ rospy.Subscriber('cmd_vel', Twist, twist_callback)
 rospy.Subscriber("left_speed", Float32, left_speed_callback)
 rospy.Subscriber("right_speed", Float32, right_speed_callback)
 rospy.Subscriber("fix", NavSatFix, fix_callback)
+pub = rospy.Publisher('my_array_topic', Float64MultiArray, queue_size=10)
 
 # Open the serial ports
 try:
