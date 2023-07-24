@@ -248,6 +248,6 @@ if __name__ == '__main__':
         time_elapsed_main = (current_time_main - odom_pub.last_print_time).to_sec()
         odom_pub.publish_odom()
         if time_elapsed_main >= 2.0:  # call print_info() every 2 seconds            
-            odom_pub.print_info()
+            #odom_pub.print_info()
             odom_pub.last_print_time = rospy.Time.now()
         rate.sleep()

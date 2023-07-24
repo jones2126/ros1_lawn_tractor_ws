@@ -3,7 +3,7 @@
 import rospy
 from nav_msgs.msg import Path
 from geometry_msgs.msg import  PoseStamped
-from tf.transformations import quaternion_from_euler
+from tf.transformations import quaternion_from_euler, euler_from_quaternion
 from std_msgs.msg import Float64
 
 got_path = False
@@ -53,25 +53,13 @@ def path_publisher():
 
         seq += 1
 
-    print("publishing path")  
+    print("publishing path, 1st attempt")  
     path_pub.publish(path)
     rospy.sleep(1)
-    print("publishing path")  
+    print("publishing path, 2nd attempt")  
     path_pub.publish(path)
-    print("Done")  
-    rospy.sleep(1)
-    quit()
+    print("Done")
 
-    '''
-    while not rospy.is_shutdown():
-        if (got_path is False):
-            print("publishing path")  
-            path_pub.publish(path)
-        else:
-            break
-
-        rospy.sleep(10)
-    '''
 
 content = {}
 def load_file():
@@ -109,18 +97,14 @@ def print_path_callback(msg):
         print(f"X: {x}, Y: {y}, Yaw: {yaw}")
 
 
-def path_subscriber():
-    rospy.init_node('path_subscriber')
-    rospy.Subscriber('/drive_path', Path, print_path_callback)
-    rospy.spin()
 
 if __name__ == '__main__':
     print("starting path_publisher.py")
     rospy.loginfo("starting path_publisher.py")
+    rospy.Subscriber('/drive_path', Path, print_path_callback)    
     try:
-        load_file()
-        path_publisher()
-        path_subscriber()
+        load_file()  
+        path_publisher()         
     except rospy.ROSInterruptException:
         pass
 

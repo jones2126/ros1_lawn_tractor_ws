@@ -89,7 +89,7 @@ def write_USB2TTL():
             str(gps_status), 
             str(gpsStatusAge)])
         ser2.write((velocity_str + '\n').encode())  
-        print("Written to /dev/USB2TTL:", velocity_str)
+        #print("Written to /dev/USB2TTL:", velocity_str)
         #time.sleep(.2)  # 5 Hz or 200 milliseconds
         time.sleep(1)  
 

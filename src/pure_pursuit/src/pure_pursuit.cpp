@@ -25,6 +25,7 @@ potential ref: https://github.com/pasrom/pure_pursuit/blob/866b70b3b5fea1f94a3a1
 #include <nav_msgs/Odometry.h>
 #include <ackermann_msgs/AckermannDriveStamped.h>
 #include <std_msgs/Float64.h>
+#include <std_msgs/Float64MultiArray.h>
 
 #include <kdl/frames.hpp>
 
@@ -69,6 +70,8 @@ private:
 
   //! Dynamic reconfigure callback.
   void reconfigure(pure_pursuit::PurePursuitConfig &config, uint32_t level);
+
+  void publishLookaheadData();
   
   // Vehicle parameters
   double L_;
@@ -88,10 +91,13 @@ private:
   std_msgs::Float64 got_path_;
   std_msgs::Float64 off_path_error_;
   
+  geometry_msgs::TransformStamped tf; 
+
   // Ros infrastructure
   ros::NodeHandle nh_, nh_private_;
   ros::Subscriber sub_odom_, sub_path_;
   ros::Publisher pub_vel_, pub_acker_, pub_got_path_, pub_off_path_error_;
+  ros::Publisher pub_multi_array_;
   tf2_ros::Buffer tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
   tf2_ros::TransformBroadcaster tf_broadcaster_;
@@ -125,6 +131,8 @@ PurePursuit::PurePursuit() : ld_(1.0), v_max_(0.1), v_(v_max_), w_max_(1.0), pos
   nh_private_.param<string>("lookahead_frame_id", lookahead_frame_id_, "lookahead");
   // Frame attached to midpoint of front axle (for front-steered vehicles).
   nh_private_.param<string>("ackermann_frame_id", acker_frame_id_, "rear_axle_midpoint");
+  pub_multi_array_ = nh_.advertise<std_msgs::Float64MultiArray>("lookahead_data", 1);
+
 
   // Populate messages with static data
   lookahead_.header.frame_id = robot_frame_id_;
@@ -152,7 +160,7 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
   // Odometry is not used directly, but through the tf tree.
 
   // Get the current robot pose
-  geometry_msgs::TransformStamped tf;
+  //geometry_msgs::TransformStamped tf;
   try
   {
     tf = tf_buffer_.lookupTransform(map_frame_id_, robot_frame_id_, ros::Time(0));
@@ -241,18 +249,27 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
       //ROS_INFO("Lateral error (y-value of lookahead point.) to %.2f", yt);
       off_path_error_.data = yt;
       pub_off_path_error_.publish(off_path_error_);
-      //cmd_vel_.angular.z = std::min( 2*v_ / ld_2 * yt, w_max_ );
+      /*
+      // original version
+      cmd_vel_.angular.z = std::min( 2*v_ / ld_2 * yt, w_max_ );
+      
+      second version is below, but I decided I don't want the low level controller
+      to use a rotational angle based on speed, but rather a steer angle
+      which matches the Ackermann steering angle so I'm going to comment
+      out 
       if (yt >= 0){
         cmd_vel_.angular.z = std::min( 2*v_ / ld_2 * yt, w_max_ );
       } else {
         cmd_vel_.angular.z = std::max( 2*v_ / ld_2 * yt, -w_max_ );
       }
+      */
 
       //ROS_WARN("angular z to %.2f", cmd_vel_.angular.z);
 
       // Compute desired Ackermann steering angle
       cmd_acker_.drive.steering_angle = std::min( atan2(2 * yt * L_, ld_2), delta_max_ );
-      
+      cmd_vel_.angular.z = cmd_acker_.drive.steering_angle;   // for expediency I'm using angular.z to hold steer angle
+
       // Set linear velocity for tracking.
       cmd_vel_.linear.x = v_;
       cmd_acker_.drive.speed = v_;
@@ -287,6 +304,10 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
     
     // Publish ackerman steering setpoints
     pub_acker_.publish(cmd_acker_);
+
+    // Publish the lookahead data
+    publishLookaheadData();
+
   }
   catch (tf2::TransformException &ex)
   {
@@ -353,7 +374,7 @@ KDL::Frame PurePursuit::transformToBaseLink(const geometry_msgs::Pose& pose,
   // TODO: See how the above conversions can be done more elegantly
   // using tf2_kdl and tf2_geometry_msgs
 
-  return F_map_tf.Inverse()*F_map_pose;
+  return F_map_tf.Inverse()*F_map_pose;  // calculates the transformation from the the robot to the pose.
 }
 
 void PurePursuit::run()
@@ -366,6 +387,34 @@ void PurePursuit::reconfigure(pure_pursuit::PurePursuitConfig &config, uint32_t 
   v_max_ = config.max_linear_velocity;
   //ld_cfg_ = config.lookahead_distance;
 }
+
+void PurePursuit::publishLookaheadData()
+{
+  /*I wanted to publish data to show the target and current positions along with the angle
+  to achieve the goal.
+  */
+  std_msgs::Float64MultiArray multi_array;
+
+  if(!path_.poses.empty()) {
+    double x = path_.poses[idx_].pose.position.x;
+    double y = path_.poses[idx_].pose.position.y;
+    multi_array.data.push_back(x);  // goal in map frame in path_.poses vector 
+    multi_array.data.push_back(y);
+  } else {
+    multi_array.data.push_back(0);  // Add 0 for x position
+    multi_array.data.push_back(0);  // Add 0 for y position
+  }
+
+  multi_array.data.push_back(lookahead_.transform.translation.x);  // this may be the goal in the tractor frame
+  multi_array.data.push_back(lookahead_.transform.translation.y);
+  multi_array.data.push_back(tf.transform.translation.x); // current x position
+  multi_array.data.push_back(tf.transform.translation.y); // current y position
+  multi_array.data.push_back(cmd_acker_.drive.steering_angle);
+  multi_array.data.push_back(cmd_vel_.angular.z);
+  pub_multi_array_.publish(multi_array);
+}
+
+
 
 int main(int argc, char**argv)
 {

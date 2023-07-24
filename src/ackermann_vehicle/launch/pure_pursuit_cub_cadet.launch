@@ -11,7 +11,8 @@
   <arg name="name" default="tractor"/>
   
   <!-- Pure pursuit path tracking -->
-  <node pkg="pure_pursuit" type="pure_pursuit" name="controller"  clear_params="true">
+  <node pkg="pure_pursuit" type="pure_pursuit" name="controller" clear_params="true">
+  <!-- <node pkg="pure_pursuit" type="pure_pursuit" name="controller" launch-prefix="valgrind" clear_params="true">     -->
     <param name="robot_frame_id" value="base_link"/>
     <param name="global_frame_id" value="odom"/>
     <param name="lookahead_frame_id" value="lookahead"/>
