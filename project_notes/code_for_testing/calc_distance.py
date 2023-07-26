@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''
-calc_distance.py
+
+$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/calc_distance.py
 
 Find the Euclidean distance between one two dimensional points.
 
@@ -11,6 +12,9 @@ ref: https://stackoverflow.com/questions/31735499/calculate-angle-clockwise-betw
 # Import math Library
 import math
 import numpy as np
+from geopy.distance import geodesic
+from geopy import Point
+
 
 def angle_between(p1, p2):
     ang1 = np.arctan2(*p1[::-1])
@@ -79,3 +83,22 @@ dir_radians = angle_rad(p,q)
 dir_degrees = dir_radians * 180 / math.pi
 result_string = "Distance between {0} and {1} is {2:4.1f} units and the direction is: {3:4.3f} in degrees and {4:4.3f} in radians".format(p, q, distance, dir_degrees, dir_radians)
 print(result_string)
+
+# calculate the starting position based on the ending position, angle and distance travelled
+end_position = Point(40.34524742, -80.12890872666667)  # The ending GPS position
+distance = 4.74 / 1000  # The distance travelled in kilometers
+
+# The compass heading
+# Note: In geopy, bearings are measured clockwise from North (i.e., standard compass bearings),
+# so we don't need to adjust the heading.
+heading = 185
+
+# Calculate the starting GPS position
+start_position = geodesic(kilometers=distance).destination(point=end_position, bearing=(heading + 180) % 360)
+
+# Get the latitude and longitude in decimal degrees, rounded to 6 decimal places
+start_latitude = round(start_position.latitude, 7)
+start_longitude = round(start_position.longitude, 7)
+
+print("Latitude:", start_latitude)
+print("Longitude:", start_longitude)

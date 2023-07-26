@@ -30,7 +30,7 @@ class OdomPublisher:
         self.right_delta = 0.0
         self.left_speed = 0
         self.right_speed = 0
-        self.heading_radians_imu = -1.509
+        self.heading_radians_imu = -1.57
         self.heading_radians_wheels = self.heading_radians_imu
         self.prev_yaw = 0.0
         self.angular_vel_z_imu = 0.0
@@ -42,13 +42,8 @@ class OdomPublisher:
         self.last_time = rospy.Time.now()
         self.prev_time_imu = rospy.Time.now()
         self.last_print_time = rospy.Time.now()
-        #self.GPS_origin_lat = 40.345245345   # should represent garage at 435 Pine Valley Dr
-        #self.GPS_origin_lon = -80.128990477
-        #self.GPS_origin_lat = 40.345317290728474
-        #self.GPS_origin_lon = -80.12893737841993
-
-        self.GPS_origin_lat = 40.345357907221724
-        self.GPS_origin_lon = -80.12897250341993
+        self.GPS_origin_lat = 40.3452899
+        self.GPS_origin_lon = -80.1289039
 
         self.x = 0.0
         self.y = 0.0        
@@ -141,6 +136,18 @@ class OdomPublisher:
         if data.status.status == 2:
             #Convert from lat/lon to x/y
             self.x_gps, self.y_gps = gc.ll2xy(data.latitude, data.longitude, self.GPS_origin_lat, self.GPS_origin_lon)
+            # Adjust for the offset of the GPS from base_link
+            x_offset = 0.3  # meters ahead
+            y_offset = 0.1  # meters to the right
+
+            # Rotate the offset by the robot's current heading (e.g. if the GPS is on the front bumper we need to compensat)
+            x_offset_rotated = x_offset * cos(self.heading_radians_imu) - y_offset * sin(self.heading_radians_imu)
+            y_offset_rotated = x_offset * sin(self.heading_radians_imu) + y_offset * cos(self.heading_radians_imu)
+
+            # Subtract the offset from the GPS coordinates
+            self.x_gps -= x_offset_rotated
+            self.y_gps -= y_offset_rotated            
+
             self.RTK_fix = True
             self.non_RTK_fix = 0
                       
