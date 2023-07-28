@@ -75,9 +75,11 @@ def write_USB2TTL():
     global left_speed, right_speed, linear_x, angular_z, gps_status, gpsStatusAge
     while progControlFlag and not rospy.is_shutdown():
         current_time = rospy.get_time()
-        if current_time - prev_time_twist > 2.0:  # more than 750 milliseconds
+        age_of_cmd_vel = current_time - prev_time_twist
+        if age_of_cmd_vel > 2.0:  
             linear_x = 0
             angular_z = 0
+            print("Age of cmd_vel message: ", age_of_cmd_vel, " Current Unix timestamp: ", current_time)            
         if gpsStatusAge > 1:
             gps_status = 9
 

@@ -102,3 +102,12 @@ start_longitude = round(start_position.longitude, 7)
 
 print("Latitude:", start_latitude)
 print("Longitude:", start_longitude)
+
+
+# Define the radian values
+radians = [0.001, 1.569, 1.571, 3.139, -3.139, -1.571, -1.569, -0.001]
+
+# Convert radians to degrees
+degrees = [round(math.degrees(rad), 2) for rad in radians]
+
+print(degrees)
