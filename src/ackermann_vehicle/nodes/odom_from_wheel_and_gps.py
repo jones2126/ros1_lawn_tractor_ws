@@ -30,6 +30,8 @@ class OdomPublisher:
         self.right_delta = 0.0
         self.left_speed = 0
         self.right_speed = 0
+        # either set to zero or remove entirely
+        # the odom statement need quat.  That can come from the raw IMU data.
         self.heading_radians_imu = -1.57
         self.heading_radians_wheels = self.heading_radians_imu
         self.prev_yaw = 0.0
@@ -37,6 +39,8 @@ class OdomPublisher:
         self.angular_vel_z_wheel = 0.0
         self.imu_calls = 0
         self.imu_skips = 0
+        # the initial quat is calculated based on the pre-defined yaw.  Maybe
+        # I don't need this or just use what is in the IMU callback
         self.quat = quaternion_from_euler(0.0, 0.0, self.heading_radians_imu)
         self.wheelbase = 1.27
         self.last_time = rospy.Time.now()
@@ -100,7 +104,9 @@ class OdomPublisher:
             delta_yaw  = delta_yaw + (2 * PI)
         else:
             delta_yaw = delta_yaw 
-        self.heading_radians_imu = self.heading_radians_imu + delta_yaw
+        # heading_radians_imu can be set to yaw since it is now useable without adjustement
+        self.heading_radians_imu = yaw      
+        #self.heading_radians_imu = self.heading_radians_imu + delta_yaw
 
         # check if zero otherwise calculate angular z            
         if delta_time_imu == 0:
@@ -116,14 +122,19 @@ class OdomPublisher:
                 self.angular_vel_z_imu = PI
             elif self.angular_vel_z_imu < -PI:
                 self.angular_vel_z_imu = -PI
-
+        # I won't need this check because I will rely on IMU data
         if self.heading_radians_imu   > PI:
             self.heading_radians_imu = self.heading_radians_imu  - ( 2 * PI)
         elif self.heading_radians_imu  < -PI:
             self.heading_radians_imu  = self.heading_radians_imu + (2 * PI)
         else:
             self.heading_radians_imu = self.heading_radians_imu 
-        self.quat = quaternion_from_euler(0.0, 0.0, self.heading_radians_imu)
+
+        # for the next statement I think I need to use yaw instead of heading_radians_imu or 
+        # maybe delete the statement since self.quat was calculated earlier
+        # or replace it with self.quat = orientation_list which comes from the IMU
+        #self.quat = quaternion_from_euler(0.0, 0.0, self.heading_radians_imu)
+        self.quat = orientation_list
         self.prev_yaw = yaw
         self.prev_time_imu = current_time_imu
 

@@ -55,7 +55,8 @@
   <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/cub_cadet_real_world.rviz"/>   -->
 
   <node pkg="pure_pursuit" type="pure_pursuit" name="controller"  clear_params="true">
-    <param name="robot_frame_id" value="base_link"/>
+    <!-- <param name="robot_frame_id" value="base_link"/> -->
+    <param name="robot_frame_id" value="base_footprint"/>
     <param name="global_frame_id" value="odom"/>
     <param name="lookahead_frame_id" value="lookahead"/>
     <rosparam file="$(find pure_pursuit)/cfg/pure_pursuit_cub_cadet.yaml" command="load"/>    

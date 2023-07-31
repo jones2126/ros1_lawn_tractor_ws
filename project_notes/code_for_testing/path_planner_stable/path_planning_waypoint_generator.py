@@ -29,8 +29,8 @@ start_yaw = 0.0
 def generate_path(x0,y0,x1,y1,theta0,theta1):
     q0 = (x0, y0, theta0)
     q1 = (x1, y1, theta1)
-    turning_radius = 2   # originally 2
-    step_size = 1       # originally 1
+    turning_radius = 1.8   # originally 2
+    step_size = .5       # originally 1
 
     path = dubins.shortest_path(q0, q1, turning_radius)
     configurations, _ = path.sample_many(step_size)

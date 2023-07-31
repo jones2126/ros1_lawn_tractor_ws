@@ -13,7 +13,8 @@ using namespace imu_sensor;
 
 /* Private function prototypes*/
 bool openConnection(imu_sensor::IMUSerial &serial); 
-void publishImuMessage(ros::Publisher& imu_pub, IMUData& data, double initial_yaw, double& previous_yaw);
+//void publishImuMessage(ros::Publisher& imu_pub, const IMUData& data);
+void publishImuMessage(ros::Publisher& imu_pub, const IMUData& data, double initial_yaw);
 
 std::string port;
 int32_t baud;
@@ -21,8 +22,14 @@ int32_t baud;
 int main(int argc, char *argv[])
 {
   ros::init(argc, argv, "chip_imu_driver");
+  
+  //ros::NodeHandle node;
   ros::Time::init();
+
+  /* Node */
   ros::NodeHandle node("imu");
+  
+  /* publisher */
   ros::Publisher imu_pub = node.advertise<sensor_msgs::Imu>("data", 1);
 
   port = "/dev/ttyUSB0";
@@ -30,11 +37,13 @@ int main(int argc, char *argv[])
   ros::NodeHandle nh("~");
   nh.param<std::string>("port", port, port);
 
-  double initial_yaw = 0.0;
-  nh.param<double>("initial_yaw", initial_yaw, 0.0);    /* Get initial heading from launch file */
-  double previous_yaw = 0;
 
-  imu_sensor::IMUSerial serial(port.c_str(), baud);    /* Open serial connection */
+  /* Get initial heading from launch file */
+  double initial_yaw = 0.0;
+  nh.param<double>("initial_yaw", initial_yaw, 0.0);
+
+  /* Open serial connection */
+  imu_sensor::IMUSerial serial(port.c_str(), baud);
   if (openConnection(serial)) {
     ROS_INFO("Connection Succesful");
   } else {
@@ -43,14 +52,13 @@ int main(int argc, char *argv[])
   }
 
   /* Main cycle */
-  //ros::Rate r(500); // 500 hz
-  ros::Rate r(20); // 20 hz
+  ros::Rate r(500); // 500 hz
   while (ros::ok())
   {
     serial.readAndParse();
     if (serial.hasNewData()) {
-      IMUData data = serial.getData();
-      publishImuMessage(imu_pub, data, initial_yaw, previous_yaw);
+      //publishImuMessage(imu_pub, serial.getData());
+      publishImuMessage(imu_pub, serial.getData(), initial_yaw);
     }
     ros::spinOnce();
     r.sleep();
@@ -76,13 +84,15 @@ bool openConnection(imu_sensor::IMUSerial &serial)
   return false;
 }
 
-
-void publishImuMessage(ros::Publisher& imu_pub, IMUData& data, double initial_yaw, double& previous_yaw)
+/**
+ * @brief Publish imu message 
+ */
+void publishImuMessage(ros::Publisher& imu_pub, const IMUData& data, double initial_yaw)
+//void publishImuMessage(ros::Publisher& imu_pub, const IMUData& data)
 {
   double linear_acceleration_stddev = 0;
   double angular_velocity_stddev = 0;
   double orientation_stddev = 0;
-  double adjusted_yaw = 0;
   string frame_id = "base_link";
 
   // calculate measurement time
@@ -112,22 +122,20 @@ void publishImuMessage(ros::Publisher& imu_pub, IMUData& data, double initial_ya
 
   /* Orientation */
   tf::Quaternion orientation;
-  previous_yaw = data.yaw;
-
-
-// The raw data.yaw is then added to the initial_yaw to calculate the true, current yaw.
-  adjusted_yaw = data.yaw + initial_yaw;
-
-//if adjusted_yaw is outside -180 to +180, it is brought into range by adding or subtracting 360
-  if (adjusted_yaw > 180) {
-      adjusted_yaw -= 360;
-  } else if (adjusted_yaw < -180) {
-      adjusted_yaw += 360;
+/*
+  double yaw_adjusted;
+  if (data.yaw >= initial_yaw) {
+      yaw_adjusted = data.yaw - 90.0;
+  } else {
+      yaw_adjusted = data.yaw + 270.0;
   }
 
-  orientation.setRPY(data.roll*M_PI/180, data.pitch*M_PI/180, adjusted_yaw * M_PI / 180);
-
-  //ROS_INFO("IMU raw yaw: %.2f, initial_yaw: %.2f, yaw_adjusted: %.2f, previous_yaw: %.2f", data.yaw, initial_yaw, adjusted_yaw, previous_yaw);  
+  //double yaw_adjusted = initial_yaw - (data.yaw * M_PI / 180);
+  orientation.setRPY(data.roll*M_PI/180, data.pitch*M_PI/180, yaw_adjusted);
+*/
+  orientation.setRPY(data.roll*M_PI/180, data.pitch*M_PI/180, data.yaw * M_PI / 180);
+  //ROS_INFO("setRPY: data.Yaw: %.2f , initial_yaw: %.2f, yaw_adjusted: %.2f", data.yaw, initial_yaw, yaw_adjusted);  
+  //orientation.setRPY(data.roll*M_PI/180, data.pitch*M_PI/180, data.yaw*M_PI/180);
 
   // Convert Quaternion to Quaternion msg
   tf::quaternionTFToMsg(orientation, imu.orientation);
