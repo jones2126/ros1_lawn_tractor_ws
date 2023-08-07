@@ -72,7 +72,9 @@ def load_file():
     global content
     try:
         #with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/box_turn.txt', 'r') as file:  # this file is drawn from the folder where the program is started
-        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/generated_points.txt', 'r') as file:  # this file is drawn from the folder where the program is started
+        #with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/generated_points.txt', 'r') as file:  # this file is drawn from the folder where the program is started
+        #with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pv_square.txt', 'r') as file:
+        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output.txt', 'r') as file:                     
         #with open('7pts.txt', 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]
@@ -96,6 +98,7 @@ def print_path_callback(msg):
 
         # Print the x, y, and yaw values of each pose
         print(f"X: {x}, Y: {y}, Yaw: {yaw}")
+    print(f"Total number of poses: {len(msg.poses)}")
 
 
 

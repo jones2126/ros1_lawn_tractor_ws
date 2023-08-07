@@ -7,7 +7,7 @@
 
   <joint name="gps0_joint" type="fixed">
     <axis xyz="1 0 0"/> <!-- 0 1 0 -->
-    <origin xyz="0.3 -0.1 0.368" rpy= "0 0 0"/>  <!-- copied from vehicle_dimensions_helper.ods -->
+    <origin xyz="0.51 0.03 0.368" rpy= "0 0 0"/>  <!-- copied from vehicle_dimensions_helper.ods -->
     <parent link="base_link"/>
     <child link="gps0_link"/>
   </joint>

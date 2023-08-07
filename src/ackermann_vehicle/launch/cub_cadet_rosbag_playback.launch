@@ -2,8 +2,8 @@
 <launch>
 
   <!-- <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-04-11-11-41-14.bag"/> -->
-  <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-07-24-08-27-51_field_test.bag"/>  
-  
+  <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-08-02-17-46-56.bag"/> 
+
   <!-- Launch map_server to use the same map as in the original launch file -->
   <node name="map_server" pkg="map_server" type="map_server"
        args="$(find ackermann_vehicle)/maps/435_pine_valley.yaml" output="screen">

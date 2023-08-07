@@ -25,13 +25,13 @@ drive_points = []
 start_x = 0.0
 start_y = 0.0
 start_yaw = 0.0
+total_count = 0 
+turning_radius = 2.0    # originally 2
+step_size = 1.0         # originally 1
 
 def generate_path(x0,y0,x1,y1,theta0,theta1):
     q0 = (x0, y0, theta0)
     q1 = (x1, y1, theta1)
-    turning_radius = 1.8   # originally 2
-    step_size = .5       # originally 1
-
     path = dubins.shortest_path(q0, q1, turning_radius)
     configurations, _ = path.sample_many(step_size)
     return configurations
@@ -50,10 +50,18 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):  # pragma: no 
 
 # main routine
 #
-# input_file_waypoints = "/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/waypoint.txt"
-# output_file_waypoints = "/home/al/ros1_lawn_tractor_ws/src/ackermann_vehicle/paths/generated_points.txt"
-input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pine_valley_test2.txt"
-output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/generated_points.txt"
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/square.txt"
+#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/generated_points_for_square.txt"
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pine_valley_test2.txt"
+#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_PV_test2_GP.txt"
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pine_valley_square.txt"
+#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pv_square.txt"
+
+input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_input.txt"
+output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output.txt"
+
+print("Output file:", output_file_waypoints)
+
 
 with open(input_file_waypoints, 'r') as file:
     content = file.readlines()
@@ -95,16 +103,17 @@ with open(input_file_waypoints, 'r') as file:
         with open(output_file_waypoints, 'w') as file:
             count = 0
             for p in drive_path:
-                if count > 20:
+                if count > 20:     # I think this is done to declutter the visualization
                     px.append(p[0])
                     py.append(p[1])
                     pyaw.append(p[2])
                     count = 0
                 count += 1
+                total_count += 1 
 
                 drive_points.append([p[0],p[1]])
                 file.write(str(p[0]) + " " + str(p[1]) + " " + str(p[2]) + "\n")
-
+        print("Record count:", total_count, "turning_radius:", turning_radius, "step_size:", step_size)
         plt.plot(0,0, label="final course")
         plt.plot(*zip(*drive_points))
 

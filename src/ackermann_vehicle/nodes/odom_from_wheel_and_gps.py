@@ -9,6 +9,9 @@ from tf2_ros import TransformBroadcaster, TransformStamped
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from math import cos, sin, pi
 import time
+import math
+
+from std_msgs.msg import Float64MultiArray
 
 # Import geonav tranformation module
 import sys
@@ -56,7 +59,16 @@ class OdomPublisher:
         self.x_wheel = 0.0
         self.y_wheel = 0.0
         self.RTK_fix = False
-        self.non_RTK_fix = 0   
+        self.non_RTK_fix = 0
+        self.COG = 0
+        self.COG_smoothed = 0
+        self.COG_deg = 0
+        self.prev_lat = 0
+        self.current_lat = 0
+        self.prev_lon = 0
+        self.current_lon = 0
+        self.yaw = 0
+
 
         rospy.Subscriber('/left_meters_travelled_msg', Float32, self.left_distance_cb)
         rospy.Subscriber('/right_meters_travelled_msg', Float32, self.right_distance_cb)
@@ -68,8 +80,19 @@ class OdomPublisher:
         rospy.Subscriber("fix", NavSatFix, self.gps_callback)
         self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=1)
         self.hdg_from_imu_pub = rospy.Publisher('hdg_from_imu', Float64, queue_size=1)
-        self.hdg_from_wheels_pub = rospy.Publisher('hdg_from_wheels', Float64, queue_size=1)        
+        self.hdg_from_wheels_pub = rospy.Publisher('hdg_from_wheels', Float64, queue_size=1)
+        self.gps_array_pub = rospy.Publisher('gps_array_data', Float64MultiArray, queue_size=1)        
         
+    def check_angle_wrap_radians(self, new_angle, old_angle):
+        # if new =  3.1 and old is -3.1, old_angle will be set to  3.1 (turning clockwise)
+        # if new = -3.1 and old is  3.1, old_angle will be set to -3.1 (turning counter clockwise)
+        diff = new_angle - old_angle
+        if diff > math.pi:
+            old_angle = new_angle
+        elif diff < -math.pi:
+            old_angle = new_angle
+        return old_angle
+
     def left_distance_cb(self, msg):
         self.left_distance = msg.data
                       
@@ -87,6 +110,7 @@ class OdomPublisher:
         orientation_q = msg.orientation
         orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
         _, _, yaw = euler_from_quaternion(orientation_list)
+        self.yaw = yaw
         current_time_imu = rospy.Time.now()
         delta_time_imu_raw = current_time_imu - self.prev_time_imu
         delta_time_imu = delta_time_imu_raw.to_sec()
@@ -130,11 +154,8 @@ class OdomPublisher:
         else:
             self.heading_radians_imu = self.heading_radians_imu 
 
-        # for the next statement I think I need to use yaw instead of heading_radians_imu or 
-        # maybe delete the statement since self.quat was calculated earlier
-        # or replace it with self.quat = orientation_list which comes from the IMU
-        #self.quat = quaternion_from_euler(0.0, 0.0, self.heading_radians_imu)
-        self.quat = orientation_list
+        # I'm going to test building self.quat from GPS COG
+        # self.quat = orientation_list
         self.prev_yaw = yaw
         self.prev_time_imu = current_time_imu
 
@@ -142,25 +163,45 @@ class OdomPublisher:
         # Check to see if we are in GPS FIX mode
         if data.status.status != 2:
             self.non_RTK_fix = self.non_RTK_fix  + 1
-            #rospy.loginfo("Bad GPS status - data.status.status: %s", data.status.status)   # for debugging
             self.RTK_fix = False    
         if data.status.status == 2:
-            #Convert from lat/lon to x/y
+            self.prev_lat = self.current_lat
+            self.prev_lon = self.current_lon
+            self.current_lat = data.latitude
+            self.current_lon = data.longitude
+            delta_lon = self.current_lon - self.prev_lon
+            delta_lat = self.current_lat - self.prev_lat               
+            self.COG = math.atan2(delta_lat, delta_lon)
+            self.COG_smoothed = self.check_angle_wrap_radians(self.COG, self.COG_smoothed)
+            gain = 0.1  # Adjust this value as needed
+            self.COG_smoothed = (1 - gain) * self.COG_smoothed + gain * self.COG
+
+            self.quat = quaternion_from_euler(0.0, 0.0, self.COG_smoothed)
+
+            self.COG_deg = math.degrees(self.COG) 
             self.x_gps, self.y_gps = gc.ll2xy(data.latitude, data.longitude, self.GPS_origin_lat, self.GPS_origin_lon)
-            # Adjust for the offset of the GPS from base_link
-            x_offset = 0.3  # meters ahead
-            y_offset = 0.1  # meters to the right
+            x_offset = 0.51  # 20 inches in front of the rear axle
+            y_offset = 0.03  # 1 inch to the right of the center line
+            #x_offset_rotated = x_offset * cos(self.heading_radians_imu) - y_offset * sin(self.heading_radians_imu)
+            #y_offset_rotated = x_offset * sin(self.heading_radians_imu) + y_offset * cos(self.heading_radians_imu)
+# testing using GPS COG as heading data
+            x_offset_rotated = x_offset * cos(self.COG_smoothed) - y_offset * sin(self.COG_smoothed)
+            y_offset_rotated = x_offset * sin(self.COG_smoothed) + y_offset * cos(self.COG_smoothed)
 
-            # Rotate the offset by the robot's current heading (e.g. if the GPS is on the front bumper we need to compensat)
-            x_offset_rotated = x_offset * cos(self.heading_radians_imu) - y_offset * sin(self.heading_radians_imu)
-            y_offset_rotated = x_offset * sin(self.heading_radians_imu) + y_offset * cos(self.heading_radians_imu)
 
-            # Subtract the offset from the GPS coordinates
-            self.x_gps -= x_offset_rotated
-            self.y_gps -= y_offset_rotated            
-
+            #self.x_gps -= x_offset_rotated
+            #self.y_gps -= y_offset_rotated            
             self.RTK_fix = True
             self.non_RTK_fix = 0
+            delta_lat = round(delta_lat, 2)
+            delta_lon = round(delta_lon, 2)
+            self.COG_deg = round(self.COG_deg, 2)
+            self.COG = round(self.COG, 2)
+            self.yaw = round(self.yaw, 2)
+            self.heading_radians_wheels = round(self.heading_radians_wheels, 2) 
+            heading_data_array = Float64MultiArray()            
+            heading_data_array.data = [delta_lat, delta_lon, self.COG_deg, self.COG, self.yaw, self.heading_radians_wheels, self.COG_smoothed]
+            self.gps_array_pub.publish(heading_data_array)
                       
     def publish_odom(self):
         current_time_odom = rospy.Time.now()
@@ -226,7 +267,8 @@ class OdomPublisher:
         self.odom_pub.publish(odom_msg)
 
         self.hdg_from_imu_pub.publish(self.heading_radians_imu)
-        self.hdg_from_wheels_pub.publish(self.heading_radians_wheels)        
+        self.hdg_from_wheels_pub.publish(self.heading_radians_wheels)
+    
 
         # Broadcast transform between odom and base_footprint frames
         br = TransformBroadcaster()

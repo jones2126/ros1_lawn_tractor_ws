@@ -86,6 +86,7 @@ private:
   nav_msgs::Path path_;
   unsigned idx_;
   bool goal_reached_;
+  double yt = 0.0;
   geometry_msgs::Twist cmd_vel_;
   ackermann_msgs::AckermannDriveStamped cmd_acker_;
   std_msgs::Float64 got_path_;
@@ -243,7 +244,7 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
       
       // Compute the angular velocity.
       // Lateral error is the y-value of the lookahead point (in base_link frame)
-      double yt = lookahead_.transform.translation.y;
+      yt = lookahead_.transform.translation.y;
       double ld_2 = ld_ * ld_;
       //ROS_WARN("Lateral error  %.2f", yt);
       //ROS_INFO("Lateral error (y-value of lookahead point.) to %.2f", yt);
@@ -403,9 +404,11 @@ void PurePursuit::publishLookaheadData()
     double y = path_.poses[idx_].pose.position.y;
     multi_array.data.push_back(x);  // goal in map frame in path_.poses vector 
     multi_array.data.push_back(y);
+    multi_array.data.push_back(idx_);
   } else {
     multi_array.data.push_back(0);  // Add 0 for x position
     multi_array.data.push_back(0);  // Add 0 for y position
+    multi_array.data.push_back(0);  // Add 0 idx_ position
   }
 
   // Convert lookahead point to map frame
@@ -433,7 +436,9 @@ void PurePursuit::publishLookaheadData()
   multi_array.data.push_back(tf.transform.translation.y); // current y position
   multi_array.data.push_back(cmd_acker_.drive.steering_angle);
   multi_array.data.push_back(cmd_vel_.angular.z);
-
+  multi_array.data.push_back(yt);
+  multi_array.data.push_back(L_);
+  multi_array.data.push_back(ld_);
   pub_multi_array_.publish(multi_array);
 }
 

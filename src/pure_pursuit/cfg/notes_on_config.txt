@@ -1,0 +1,62 @@
+IMU Derived yaw
+1 step_size = 1.0 ; lookahead_distance: 1.0  - results - 11:18 - unacceptable - severe wave
+2 step_size = 1.0 ; lookahead_distance: 1.5 - results - 11:26 - like the one above, missed the target on the first turn
+3 step_size = 1.0 ; lookahead_distance: 2.0 - results - 11:35 - completed the run, a bit wavey, seemed like it started on a line further East than the previous run
+4 step_size = .5 ; lookahead_distance: 2.0 - results - 11:44, completed but wavey worse than above, by a considerable amount
+5 step_size = .5  ; lookahead_distance: 1.0  - results - 11:53, worse than above.  Missed the first turn, then recovered then missed another point and had to be stopped.
+6 step_size = .5  ; lookahead_distance: 2.5  - results - 12:01 - I thought this was going to be better than the one above but on the third circle it seemed to miss a point and had to be stopped.
+7 step_size = .5  ; lookahead_distance: 2.2 - results - 12:11 - better than 6, but not as good as 3
+8 step_size = .33 ; lookahead_distance: 2.0  - results - 12:21 - unacceptable, had to be stopped.  Part of it was good, but after the first turn it became very wavey and then had to be stopped
+
+I want to change the size of the dubins curve to 2.0 and see what happens.
+9 turning_radius = 2.0, step_size = 1.0, lookahead_distance = 2.0  16:49 - no improvement vs. #3
+10 turning_radius = 1.8, step_size = 1.0, lookahead_distance = 2.0  
+[WARN] [1690923101.311824]: Controller Spawner couldn't find the expected controller_manager ROS interface.
+[INFO] [1690923101.549131]: right_speed sensor - meters_travelled: -0.00, RPM: 0.00,  m/s: 0.00
+[controller_spawner-3] pr
+16:58 - not any better on the straights.  Maybe a little worse.  The turns were a little better.
+11 turning_radius = 1.6, step_size = 1.0, lookahead_distance = 2.0  17:09  - no improvement, maybe worse
+
+
+GPS Derived yaw
+Changes:
+GPS smoothed COG that accomodates wraparound
+
+turning_radius = 2.0 step_size = 1.0 lookahead_distance: 1.55 results
+turning_radius = 2.0 step_size = 1.0 lookahead_distance: 2.0 results
+
+step_size = 1.0 ; lookahead_distance: 1.5 - results -
+step_size = .5  ; lookahead_distance: 1.0  - results -
+step_size = .5  ; lookahead_distance: 1.5  - results -
+step_size = .33 ; lookahead_distance: 1.0  - results -
+step_size =  .1  ; lookahead_distance: 1.0  - results -
+
+Then consider GPS Derived yaw that has been smoothed.
+
+To adjust step size, 
+1. open and edit path_planning_waypoint_generator.py
+2. $ python3 ~/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_planner_stable/path_planning_waypoint_generator.py
+
+To adjust lookahead_distance, open and edit pure_pursuit_cub_cadet.yaml
+
+MAKE SURE TO SAVE FILES AFTER EDITING
+
+
+
+In gps_to_odom.py
+
+In IMU callback
+        _, _, yaw = euler_from_quaternion(orientation_list)
+        self.yaw = yaw
+
+ 
+
+self.COG, self.yaw are on the same range (i.e. -3.14 to + 3.14)
+
+I want self.yaw to be updated from the IMU when RTK is not available.  I will start
+with replacing yaw with COG_smoothed 100% of the time by building self.quat with 
+GPS derived data.  Later I can consider relying on IMU data if speed < .1 or RTK is unavailable.
+
+I should publish COG Smoothed so I can injest it in the IMU driver e.g. read IMU, read COG, if RTK and speed > .1 rely on COG to calculate delta between actual IMU and COG 
+
+when the angle wraps, goes from +3.1 to -3.1 or vice versa I think we should set previous COG to current COG

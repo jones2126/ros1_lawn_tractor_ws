@@ -67,7 +67,7 @@
   </node>  
 
   <!-- <param name="/speed_params" type="yaml" value="[230, 245, 256, 291, 294, 295, 296]" />  -->
-  <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 312, 315, 330]" />   
+  <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 314, 318, 330]" />   
 
 <!-- linear_x >= 1.00 -> transmissionServoValue = transmissionFullForwardPos;  (1.80 m/s) 330
      linear_x >= 0.75 -> transmissionServoValue = transmission075ForwardPos;   (1.00 m/s) 315
