@@ -161,7 +161,7 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
   // Odometry is not used directly, but through the tf tree.
 
   // Get the current robot pose
-  //geometry_msgs::TransformStamped tf;
+  geometry_msgs::TransformStamped tf;
   try
   {
     tf = tf_buffer_.lookupTransform(map_frame_id_, robot_frame_id_, ros::Time(0));
