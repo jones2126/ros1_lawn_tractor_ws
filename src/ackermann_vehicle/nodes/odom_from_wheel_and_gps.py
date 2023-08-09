@@ -181,16 +181,11 @@ class OdomPublisher:
             self.COG_deg = math.degrees(self.COG) 
             self.x_gps, self.y_gps = gc.ll2xy(data.latitude, data.longitude, self.GPS_origin_lat, self.GPS_origin_lon)
             x_offset = 0.51  # 20 inches in front of the rear axle
-            y_offset = 0.03  # 1 inch to the right of the center line
-            #x_offset_rotated = x_offset * cos(self.heading_radians_imu) - y_offset * sin(self.heading_radians_imu)
-            #y_offset_rotated = x_offset * sin(self.heading_radians_imu) + y_offset * cos(self.heading_radians_imu)
-# testing using GPS COG as heading data
-            x_offset_rotated = x_offset * cos(self.COG_smoothed) - y_offset * sin(self.COG_smoothed)
-            y_offset_rotated = x_offset * sin(self.COG_smoothed) + y_offset * cos(self.COG_smoothed)
-
-
-            #self.x_gps -= x_offset_rotated
-            #self.y_gps -= y_offset_rotated            
+            y_offset = -0.03  # 1 inch to the right of the center line
+            x_offset_rotated = x_offset * math.cos(COG_smoothed) - y_offset * math.sin(COG_smoothed)
+            y_offset_rotated = x_offset * math.sin(COG_smoothed) + y_offset * math.cos(COG_smoothed)
+            self.x_gps = self.x_gps - x_offset_rotated  # base_link x
+            self.y_gps = self.y_gps - y_offset_rotated  # base_link y
             self.RTK_fix = True
             self.non_RTK_fix = 0
             delta_lat = round(delta_lat, 2)
