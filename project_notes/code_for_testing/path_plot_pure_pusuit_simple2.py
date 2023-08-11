@@ -19,13 +19,14 @@ def angle_between(v1, v2):
     magnitude_v2 = sqrt(v2[0]**2 + v2[1]**2)
     return acos(dot_product / (magnitude_v1 * magnitude_v2))    
 
-P1 = (21.5, 3.3)     # path point 1
+P1 = (21.5, 3.3)    # path point 1
 P2 = (21.5, 8.3)    # path point 2
-A = (21.0, 6.2)  # current position
+#A = (21.0, 6.2)    # current position
+A = (20.7, 5.5)     # current position
 look_ahead_distance = 2
 wheelbase = 1.27
 #current_yaw = .9
-current_yaw = 1.7
+current_yaw = 1.57
 
 # Calculating the closest point (projecting the current position onto the path)
 if P2[0] - P1[0] == 0:  # Check if the path is a vertical line
@@ -81,85 +82,53 @@ circle_center = (circle_center_x, circle_center_y)
 radius = sqrt((circle_center_x - A[0])**2 + (circle_center_y - A[1])**2)  # Calculate the radius to plot the circle
 
 # Calculate the angle to the goal
-#vector_to_goal = (goal_point[0] - A[0], goal_point[1] - A[1])   # Vector from the current position (A) to the goal position (B)
-#heading_vector = (cos(current_yaw), sin(current_yaw))           # Vector representing the vehicle's current heading direction
-#angle_to_goal = angle_between(vector_to_goal, heading_vector)   # Angle between the vehicle's heading and the line connecting A to B
-
-'''
-# Calculating the yaw of the line segment AB (from A to B)
-yaw_AB = atan2(goal_point[1] - A[1], goal_point[0] - A[0])
-# Creating a heading vector using the yaw of the line segment AB
-heading_vector = (cos(yaw_AB), sin(yaw_AB))
-dir_vector_path = (P2[0] - P1[0], P2[1] - P1[1])
-dir_magnitude_path = sqrt(dir_vector_path[0]**2 + dir_vector_path[1]**2)
-unit_dir_vector_path = (dir_vector_path[0] / dir_magnitude_path, dir_vector_path[1] / dir_magnitude_path)
-angle_to_goal = angle_between(vector_to_goal, unit_dir_vector_path)
-'''
-'''
-# Calculating the yaw of the line segment AB (from A to B)
-yaw_AB = atan2(goal_point[1] - A[1], goal_point[0] - A[0])
-
-# Creating a heading vector using the yaw of the line segment AB
-heading_vector = (cos(yaw_AB), sin(yaw_AB))
-# Calculating the yaw of the current heading of the robot
-current_heading_vector = (cos(current_yaw), sin(current_yaw))
-# Calculating the angle between the current heading and the desired heading (AB)
-angle_to_goal = angle_between(heading_vector, current_heading_vector)
-# Calculate the cross product to determine the turn direction
-cross_product = heading_vector[0] * current_heading_vector[1] - heading_vector[1] * current_heading_vector[0]
-# If the cross product is negative, it means a right turn is required, so we negate the angle_to_goal
-if cross_product < 0:
-    angle_to_goal = -angle_to_goal
-# Calculate steering angle using tricycle-like pure pursuit formula
-steering_angle = atan((2 * wheelbase * sin(angle_to_goal)) / look_ahead_distance)
-
-
-# Calculate the cross product to determine the turn direction
-#cross_product = heading_vector[0] * vector_to_goal[1] - heading_vector[1] * vector_to_goal[0]
-#if cross_product < 0:  # Right turn
-#    angle_to_goal = -angle_to_goal
-
-# Calculate the steering angle using atan, and adjust the sign based on the turn direction
-# Calculate the target steering angle (absolute yaw angle towards B)
-steering_angle = atan2(goal_point[1] - A[1], goal_point[0] - A[0])
-if cross_product < 0:  # Right turn
-    steering_angle = -steering_angle
-
-steering_angle_change = atan((2 * wheelbase * sin(angle_to_goal)) / look_ahead_distance)
-
-print("Delta Change from Current Yaw:", steering_angle_change)
-'''
-
-
-
-'''
-# Calculate steering angle using tricycle-like pure pursuit formula
-steering_angle = atan((2 * wheelbase * sin(angle_to_goal)) / look_ahead_distance)
-
-'''
-# Calculate the vector from the current position (A) to the goal point (B)
+# Calculate the vector from the current position (A) to the goal point (B) and robot
 vector_to_goal = (goal_point[0] - A[0], goal_point[1] - A[1])
+vector_to_robot = (A[0] - closest_point_x, A[1] - closest_point_y)
+# Cross product between the direction vector of the path and the vector_to_robot
+cross_product = dir_vector[0] * vector_to_robot[1] - dir_vector[1] * vector_to_robot[0]
 
 # Calculate the vector representing the direction of the path
 dir_vector_path = (P2[0] - P1[0], P2[1] - P1[1])
-
 # Calculate the angle between these two vectors
 angle_to_goal = angle_between(vector_to_goal, dir_vector_path)
-
 # Determine the sign of the angle based on the relative position of the robot to the path
 # If the robot is to the right of the path, we want a left turn, so we negate the angle
-if A[0] > closest_point_x:
+
+# Calculate the off-track error
+off_track_error = sqrt((closest_point[0] - A[0])**2 + (closest_point[1] - A[1])**2)
+
+#if A[0] > closest_point_x:
+if cross_product > 0:  # Robot is to the right of the path
     angle_to_goal = -angle_to_goal
+    off_track_error = -off_track_error
 
 # Calculate the steering angle using the pure pursuit formula
 steering_angle = atan((2 * wheelbase * sin(angle_to_goal)) / look_ahead_distance)
-print("Target Steering Angle:", steering_angle)
 
+print("Target Steering Angle: {:.3f}".format(steering_angle))
+print("Current Position(A):", A)
+print("Goal Position(B):", goal_point[0], goal_point[1])
+print("Off_Track_Error: {:.2f}".format(off_track_error))
 
-# Plotting the line representing the vehicle's current steering direction
-length = 4  # Length of the line representing the vehicle's steering direction
-steering_line_end = (A[0] + length * cos(current_yaw + steering_angle), A[1] + length * sin(current_yaw + steering_angle))
-plt.plot([A[0], steering_line_end[0]], [A[1], steering_line_end[1]], 'y--', linewidth=2, label="Steering Direction")  # Dotted line
+# Plotting the vehicle's new target steering path
+# Normalize the direction vector of the path
+dir_magnitude = sqrt(dir_vector[0]**2 + dir_vector[1]**2)
+unit_dir_vector = (dir_vector[0] / dir_magnitude, dir_vector[1] / dir_magnitude)
+
+# Compute the steering direction vector by rotating the normalized path's direction vector by the steering angle
+steering_direction_vector = (
+    unit_dir_vector[0] * cos(steering_angle) - unit_dir_vector[1] * sin(steering_angle),
+    unit_dir_vector[0] * sin(steering_angle) + unit_dir_vector[1] * cos(steering_angle)
+)
+
+# Scale the steering direction vector by the desired length
+length = 4  # Length of the line representing the vehicle's steering direction; adjust as needed
+steering_direction_vector_scaled = (steering_direction_vector[0] * length, steering_direction_vector[1] * length)
+
+# Plot the line from the current position (A) to the end of the steering direction vector
+steering_line_end = (A[0] + steering_direction_vector_scaled[0], A[1] + steering_direction_vector_scaled[1])
+plt.plot([A[0], steering_line_end[0]], [A[1], steering_line_end[1]], 'y--', linewidth=2, label="Target steering path")
 
 plt.plot([P1[0], P2[0]], [P1[1], P2[1]], 'b-', label='Path')  # Plotting the path
 plt.plot(A[0], A[1], 'ro', label='Current Position (A)')  # Plotting the current position (A)
@@ -194,10 +163,6 @@ plt.legend()
 plt.title('Pure Pursuit Path Tracking')
 plt.grid(True)
 plt.axis('equal')
-
-
-# Calculate the off-track error
-off_track_error = sqrt((closest_point[0] - A[0])**2 + (closest_point[1] - A[1])**2)
 
 # Calculate the midpoint of the line segment between the closest point and A
 midpoint_error_x = (closest_point[0] + A[0]) / 2
