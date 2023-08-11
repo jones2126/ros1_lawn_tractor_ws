@@ -1,7 +1,7 @@
 # Parameters for the garden tractor
 
 wheelbase: 1.27 # 1.0
-lookahead_distance: 1.55 # 0.5 # 1.0 # 2.0
+lookahead_distance: 2.0 # 0.5 # 1.0 # 2.0
 max_linear_velocity: .51  # 0.25 # 1.00
 steering_angle_limit: 0.96 #.785 # 0.6 # 0.3
 max_rotational_velocity: 0.75 #1.0 # 0.3

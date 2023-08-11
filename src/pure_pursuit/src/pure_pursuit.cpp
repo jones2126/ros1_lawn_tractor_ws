@@ -92,7 +92,8 @@ private:
   std_msgs::Float64 got_path_;
   std_msgs::Float64 off_path_error_;
   
-  geometry_msgs::TransformStamped tf; 
+  geometry_msgs::TransformStamped tf; // defined here so I can print debug messages
+  // later this can be removed and defined in computeVelocities
 
   // Ros infrastructure
   ros::NodeHandle nh_, nh_private_;
@@ -161,7 +162,9 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
   // Odometry is not used directly, but through the tf tree.
 
   // Get the current robot pose
-  geometry_msgs::TransformStamped tf;
+  // geometry_msgs::TransformStamped tf; // commented out here so I can print debug
+  // messages which requires the definition to be class member variable tf throughout the class
+  // later this can be re-enabled
   try
   {
     tf = tf_buffer_.lookupTransform(map_frame_id_, robot_frame_id_, ros::Time(0));
