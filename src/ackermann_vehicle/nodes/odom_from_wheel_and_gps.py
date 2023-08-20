@@ -128,7 +128,7 @@ class OdomPublisher:
             delta_yaw  = delta_yaw + (2 * PI)
         else:
             delta_yaw = delta_yaw 
-        # heading_radians_imu can be set to yaw since it is now useable without adjustement
+        # heading_radians_imu can be set to yaw since it is now useable without adjustment
         self.heading_radians_imu = yaw      
         #self.heading_radians_imu = self.heading_radians_imu + delta_yaw
 
@@ -176,14 +176,17 @@ class OdomPublisher:
             gain = 0.1  # Adjust this value as needed
             self.COG_smoothed = (1 - gain) * self.COG_smoothed + gain * self.COG
 
-            self.quat = quaternion_from_euler(0.0, 0.0, self.COG_smoothed)
+            #yaw_being_used = self.COG_smoothed
+            yaw_being_used = self.heading_radians_imu
 
+
+            self.quat = quaternion_from_euler(0.0, 0.0, yaw_being_used)
             self.COG_deg = math.degrees(self.COG) 
             self.x_gps, self.y_gps = gc.ll2xy(data.latitude, data.longitude, self.GPS_origin_lat, self.GPS_origin_lon)
             x_offset = 0.51  # 20 inches in front of the rear axle
             y_offset = -0.03  # 1 inch to the right of the center line
-            x_offset_rotated = x_offset * math.cos(COG_smoothed) - y_offset * math.sin(COG_smoothed)
-            y_offset_rotated = x_offset * math.sin(COG_smoothed) + y_offset * math.cos(COG_smoothed)
+            x_offset_rotated = x_offset * math.cos(yaw_being_used) - y_offset * math.sin(yaw_being_used)
+            y_offset_rotated = x_offset * math.sin(yaw_being_used) + y_offset * math.cos(yaw_being_used)
             self.x_gps = self.x_gps - x_offset_rotated  # base_link x
             self.y_gps = self.y_gps - y_offset_rotated  # base_link y
             self.RTK_fix = True
@@ -258,7 +261,6 @@ class OdomPublisher:
         odom_msg.twist.twist.linear.x = linear_velocity_from_wheels
         odom_msg.twist.twist.linear.y = 0.0
         odom_msg.twist.twist.angular.z = self.angular_vel_z_imu
-
         self.odom_pub.publish(odom_msg)
 
         self.hdg_from_imu_pub.publish(self.heading_radians_imu)

@@ -2,7 +2,7 @@
 <launch>
 
   <!-- <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-04-11-11-41-14.bag"/> -->
-  <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-08-02-17-46-56.bag"/> 
+  <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-08-13-16-58-11.bag"/> 
 
   <!-- Launch map_server to use the same map as in the original launch file -->
   <node name="map_server" pkg="map_server" type="map_server"

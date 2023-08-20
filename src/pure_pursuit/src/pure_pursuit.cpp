@@ -176,10 +176,16 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
       {
 
         // Transformed lookahead to base_link frame is lateral error
+        // The pose data is the goal from the path data
+        // The tf.transform is the current position
         KDL::Frame F_bl_ld = transformToBaseLink(path_.poses[idx_].pose, tf.transform);
         lookahead_.transform.translation.x = F_bl_ld.p.x();
         lookahead_.transform.translation.y = F_bl_ld.p.y();
         lookahead_.transform.translation.z = F_bl_ld.p.z();
+        /*
+        the GetQuaternion method extracts the rotation part of the frame and represents 
+        it as a quaternion. 
+        */
         F_bl_ld.M.GetQuaternion(lookahead_.transform.rotation.x,
                                 lookahead_.transform.rotation.y,
                                 lookahead_.transform.rotation.z,
@@ -400,52 +406,76 @@ void PurePursuit::reconfigure(pure_pursuit::PurePursuitConfig &config, uint32_t 
 
 void PurePursuit::publishLookaheadData()
 {
-  std_msgs::Float64MultiArray multi_array;
+	std_msgs::Float64MultiArray multi_array;
+	// Convert lookahead point to map frame in order to print x, y position
+	KDL::Frame F_map_robot(KDL::Rotation::Quaternion(tf.transform.rotation.x,
+	                                               tf.transform.rotation.y,
+	                                               tf.transform.rotation.z,
+	                                               tf.transform.rotation.w),
+	                     KDL::Vector(tf.transform.translation.x,
+	                                 tf.transform.translation.y,
+	                                 tf.transform.translation.z));
 
-  if(!path_.poses.empty()) {
-    double x = path_.poses[idx_].pose.position.x;
-    double y = path_.poses[idx_].pose.position.y;
-    multi_array.data.push_back(x);  // goal in map frame in path_.poses vector 
-    multi_array.data.push_back(y);
-    multi_array.data.push_back(idx_);
-  } else {
-    multi_array.data.push_back(0);  // Add 0 for x position
-    multi_array.data.push_back(0);  // Add 0 for y position
-    multi_array.data.push_back(0);  // Add 0 idx_ position
-  }
+	KDL::Vector F_bl_lookahead(lookahead_.transform.translation.x,
+	                         lookahead_.transform.translation.y,
+	                         lookahead_.transform.translation.z);
 
-  // Convert lookahead point to map frame
-  KDL::Frame F_map_robot(KDL::Rotation::Quaternion(tf.transform.rotation.x,
-                                                   tf.transform.rotation.y,
-                                                   tf.transform.rotation.z,
-                                                   tf.transform.rotation.w),
-                         KDL::Vector(tf.transform.translation.x,
-                                     tf.transform.translation.y,
-                                     tf.transform.translation.z));
+	KDL::Vector F_map_lookahead = F_map_robot * F_bl_lookahead;
 
-  KDL::Vector F_bl_lookahead(lookahead_.transform.translation.x,
-                             lookahead_.transform.translation.y,
-                             lookahead_.transform.translation.z);
+	multi_array.data.push_back(F_map_lookahead.x()); // Lookahead x position in map frame
+	multi_array.data.push_back(F_map_lookahead.y()); // Lookahead y position in map frame
 
-  KDL::Vector F_map_lookahead = F_map_robot * F_bl_lookahead;
-  
-  multi_array.data.push_back(F_map_lookahead.x()); // Lookahead x position in map frame
-  multi_array.data.push_back(F_map_lookahead.y()); // Lookahead y position in map frame
-  
-// previously I published the lookahead position in the robot's frame (base_link) 
-  //multi_array.data.push_back(lookahead_.transform.translation.x);  // this may be the goal in the tractor frame
-  //multi_array.data.push_back(lookahead_.transform.translation.y);
-  multi_array.data.push_back(tf.transform.translation.x); // current x position
-  multi_array.data.push_back(tf.transform.translation.y); // current y position
-  multi_array.data.push_back(cmd_acker_.drive.steering_angle);
-  multi_array.data.push_back(cmd_vel_.angular.z);
-  multi_array.data.push_back(yt);
-  multi_array.data.push_back(L_);
-  multi_array.data.push_back(ld_);
-  pub_multi_array_.publish(multi_array);
+	// previously I published the lookahead position in the robot's frame (base_link) 
+	//multi_array.data.push_back(lookahead_.transform.translation.x);  // this may be the goal in the tractor frame
+	//multi_array.data.push_back(lookahead_.transform.translation.y);
+	//multi_array.data.push_back(tf.transform.translation.x); // current x position
+	//multi_array.data.push_back(tf.transform.translation.y); // current y position
+	multi_array.data.push_back(cmd_acker_.drive.steering_angle);
+	multi_array.data.push_back(cmd_vel_.angular.z);
+	multi_array.data.push_back(yt);
+	multi_array.data.push_back(L_);
+	multi_array.data.push_back(ld_);
+
+	if(!path_.poses.empty()) {
+		double x = path_.poses[idx_].pose.position.x;
+		double y = path_.poses[idx_].pose.position.y;
+		multi_array.data.push_back(idx_);
+		multi_array.data.push_back(x);  // goal in map frame in path_.poses vector 
+		multi_array.data.push_back(y);
+		multi_array.data.push_back(path_.poses[idx_].pose.position.z);
+		multi_array.data.push_back(path_.poses[idx_].pose.orientation.x);
+		multi_array.data.push_back(path_.poses[idx_].pose.orientation.y);
+		multi_array.data.push_back(path_.poses[idx_].pose.orientation.z);
+		multi_array.data.push_back(path_.poses[idx_].pose.orientation.w);
+	} else {
+		multi_array.data.push_back(0);  // Add 0 idx_ position
+		multi_array.data.push_back(0);  // Add 0 for x position
+		multi_array.data.push_back(0);  // Add 0 for y position
+		multi_array.data.push_back(0);	// Add 0 for pose.position.z
+		multi_array.data.push_back(0);	// Add 0 for pose.orientation.x
+		multi_array.data.push_back(0);	// Add 0 for pose.orientation.y
+		multi_array.data.push_back(0);	// Add 0 for pose.orientation.z
+		multi_array.data.push_back(0);	// Add 0 for pose.orientation.w
+	}
+
+	multi_array.data.push_back(tf.transform.translation.x);  // current x position 
+	multi_array.data.push_back(tf.transform.translation.y);
+	multi_array.data.push_back(tf.transform.translation.z);
+	multi_array.data.push_back(tf.transform.rotation.x);
+	multi_array.data.push_back(tf.transform.rotation.y);
+	multi_array.data.push_back(tf.transform.rotation.z);
+	multi_array.data.push_back(tf.transform.rotation.w);
+
+  multi_array.data.push_back(lookahead_.transform.translation.x);  // distance and heading to get to goal???
+  multi_array.data.push_back(lookahead_.transform.translation.y);
+  multi_array.data.push_back(lookahead_.transform.translation.z);
+  multi_array.data.push_back(lookahead_.transform.rotation.x);
+  multi_array.data.push_back(lookahead_.transform.rotation.y);
+  multi_array.data.push_back(lookahead_.transform.rotation.z);
+  multi_array.data.push_back(lookahead_.transform.rotation.w);
+
+	pub_multi_array_.publish(multi_array);
 }
-
-
 
 
 int main(int argc, char**argv)
@@ -457,4 +487,3 @@ int main(int argc, char**argv)
 
   return 0;
 }
-

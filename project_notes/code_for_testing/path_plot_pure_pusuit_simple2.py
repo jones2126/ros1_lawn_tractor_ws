@@ -18,11 +18,11 @@ def angle_between(v1, v2):
     magnitude_v1 = sqrt(v1[0]**2 + v1[1]**2)
     magnitude_v2 = sqrt(v2[0]**2 + v2[1]**2)
     return acos(dot_product / (magnitude_v1 * magnitude_v2))    
-
-P1 = (21.5, 3.3)    # path point 1
-P2 = (21.5, 8.3)    # path point 2
+P1 = (0.1, -0.1)    # path point 1
+P2 = (-0.1, 5.1)    # path point 2
 #A = (21.0, 6.2)    # current position
-A = (20.7, 5.5)     # current position
+A = (.2, 1.9)     # current position
+
 look_ahead_distance = 2
 wheelbase = 1.27
 #current_yaw = .9

@@ -42,12 +42,13 @@ catkin_package(
 ###########
 include_directories(${catkin_INCLUDE_DIRS})
 
-## Declare a cpp executable
+# executable for pure_pursuit.cpp
 add_executable(pure_pursuit src/pure_pursuit.cpp)
-# add_executable(pure_pursuit src/pure_pursuit_juan.cpp)
-
-## Specify libraries to link a library or executable target against
 target_link_libraries(pure_pursuit ${catkin_LIBRARIES} ${orocos_kdl_LIBRARIES})
+
+# executable for test_kdl_transformToBaseLink
+add_executable(test_kdl_transformToBaseLink src/test_kdl_transformToBaseLink.cpp)
+target_link_libraries(test_kdl_transformToBaseLink ${catkin_LIBRARIES} orocos-kdl)
 
 ## Make sure configure headers are built before any node using them
 add_dependencies(pure_pursuit ${PROJECT_NAME}_gencfg)

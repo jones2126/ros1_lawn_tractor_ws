@@ -27,7 +27,7 @@ start_y = 0.0
 start_yaw = 0.0
 total_count = 0 
 turning_radius = 2.0    # originally 2
-step_size = 1.0         # originally 1
+step_size = 0.1         # originally 1
 
 def generate_path(x0,y0,x1,y1,theta0,theta1):
     q0 = (x0, y0, theta0)
@@ -58,7 +58,7 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):  # pragma: no 
 #output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pv_square.txt"
 
 input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_input.txt"
-output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output.txt"
+output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output_1tenth.txt"
 
 print("Output file:", output_file_waypoints)
 

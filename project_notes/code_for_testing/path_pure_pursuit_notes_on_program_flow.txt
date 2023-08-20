@@ -1,0 +1,31 @@
+load parameters
+load the path
+
+lastIndex = len(list_of_waypoints) - 1
+while OK_to_proceed and lastIndex > target_idx:
+if distance to goal > look ahead distance
+	calculate a interim goal and break the loop
+if we are on the last waypoint 
+	we need a special look ahead distance goal
+If the goal is reached stop moving
+If the goal is not reached keep calculating steering angle and moving to the goal
+Publish debug data
+
+for waypoints in mission:
+	P1, P2, A = waypoints
+
+	calculate_steer_angle()
+	plot_values()
+
+
+If the current position + look ahead distance > goal then get the next waypoint as the goal.  If you are on the final waypoint then keep steering to that point
+
+
+
+    try:
+        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output_trimmed.txt', 'r') as file:
+            content = file.readlines()
+            content = [x.strip() for x in content]
+            print(content)
+    except:
+        rospy.loginfo("File failed to load")
