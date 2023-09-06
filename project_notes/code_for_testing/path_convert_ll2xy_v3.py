@@ -4,7 +4,7 @@
 '''
 Used to convert known lat lon positions to x, y coordinates based on a known origin lat / lon.
 
-$ python3 ~/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_convert_ll2xy_v2.py
+$ python3 ~/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_convert_ll2xy_v3.py
 
 '''
 
@@ -12,17 +12,12 @@ from geonav_transform.geonav_conversions import ll2xy
 from math import cos, pi, radians, sqrt
 
 def cmurphy_ll2xy(lat, long, lat0, lon0):
-    # Returns a tuple: (x,y) where...
-    #     x is Easting 
-    #     y is Northing 
+    # This code appears in the paper, "Rectilinear Coordinate Frames for Deep Sea Navigation" by:
+    # Chris Murphy, Deep Submergence Laboratory referenced here: https://wiki.nps.edu/display/RC/Local+Coordinate+Frames    
+    # It returns a tuple: (x,y) where... x is Easting and y is Northing 
     x = (long-lon0) * mdeglon(lat0)
     y = (lat-lat0) * mdeglat(lat0)
     return x, y
-
-def xy2latlon(x, y, lat0, lon0):
-    lon = x/mdeglon(lat0) + lon0
-    lat = y/mdeglat(lat0) + lat0
-    return lat, lon    
 
 def mdeglon(latitude_in_decimal_degrees):
     # Provides meters-per-degree longitude at a given latitude
@@ -36,30 +31,23 @@ def mdeglat(latitude_in_decimal_degrees):
     meters_per_degree_latitude = 111132.09 - 566.05 * cos(2.0*latrad) + 1.20 * cos(4.0*latrad) - 0.002 * cos(6.0*latrad)
     return meters_per_degree_latitude
 
+def latlon_to_xy(lat, lon, origin_lat, origin_lon):
+    # Convert latitude and longitude to x and y coordinates using the provided origin point with a flat Earth approximation.
+    R_earth = 6378137  # Radius of Earth in meters (WGS-84)
+    lat_rad, lon_rad = radians(lat), radians(lon)  # Convert degrees to radians
+    origin_lat_rad, origin_lon_rad = radians(origin_lat), radians(origin_lon)
+    x_diff = R_earth * (lon_rad - origin_lon_rad) * cos(origin_lat_rad)  # Compute x and y differences from the origin
+    y_diff = R_earth * (lat_rad - origin_lat_rad)
+    return x_diff, y_diff
+
 def calculate_distance(x1, y1, x2, y2):
-    """Calculate the distance between two points"""
+    #Calculate the distance between two points using the Euclidean formula
     x_diff = x2 - x1
     y_diff = y2 - y1
     x_diff_squared = x_diff**2
     y_diff_squared = y_diff**2
-    distance = sqrt(x_diff_squared + y_diff_squared)  # Compute the distance using the Euclidean formula
-    return distance
-
-def latlon_to_xy(lat, lon, origin_lat, origin_lon):
-    """
-    Convert latitude and longitude to x and y coordinates using the provided origin point.
-    Uses a flat Earth approximation.
-    """
-    R_earth = 6378137  # Radius of Earth in meters (WGS-84)
-    
-    # Convert degrees to radians
-    lat_rad, lon_rad = radians(lat), radians(lon)
-    origin_lat_rad, origin_lon_rad = radians(origin_lat), radians(origin_lon)
-    
-    # Compute x and y differences from the origin
-    x_diff = R_earth * (lon_rad - origin_lon_rad) * cos(origin_lat_rad)
-    y_diff = R_earth * (lat_rad - origin_lat_rad)
-    return x_diff, y_diff      
+    distance = sqrt(x_diff_squared + y_diff_squared)
+    return distance        
 
 # Displaying the latitude, longitude and the corresponding x, y coordinates
 print("Lat, Lon and corresponding X, Y coordinates:")
@@ -68,9 +56,9 @@ print("=============================================")
 previous_x1, previous_y1 = None, None
 previous_x2, previous_y2 = None, None
 
-origin_lat = 40.34534080; origin_lon = -80.12894600
+origin_lat = 40.34534080; origin_lon = -80.12894600  # represents the starting point of my tractor inside the garage
 
-# Given averaged_positions list
+# I averaged these positions for three minutes with RTK GPS fix and marked the locations on the ground
 averaged_positions = [
     (40.345300971941796, -80.1289413912553),
     (40.34530662627222, -80.12887740598163),
