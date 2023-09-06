@@ -18,6 +18,11 @@ L = 2.9  # [m] wheel base of vehicle
 
 show_animation = True
 
+# Global variable to keep track of the last waypoint that the robot was tracking
+current_waypoint_index = 0
+complexity_sw = 0  # used to disinguish whether to adjust lookahead based on speed
+threshold = .3
+
 class State:
 
     def __init__(self, x=0.0, y=0.0, yaw=0.0, v=0.0):
@@ -42,8 +47,10 @@ def PIDControl(target, current):
     return a
 
 def pure_pursuit_control(state, cx, cy, pind):
+    global complexity_sw
     #print("in pure_pursuit_control")
-    ind = calc_target_index(state, cx, cy)
+    #ind = calc_target_index(state, cx, cy)
+    ind = simplified_calc_target_index(state, cx, cy)
 
     if pind >= ind:
         ind = pind
@@ -60,10 +67,14 @@ def pure_pursuit_control(state, cx, cy, pind):
 
     if state.v < 0:  # back
         alpha = math.pi - alpha
+    if complexity_sw == 1:
+        Lf = k * state.v + Lfc
+        print("dynamic lookahead = {:.2f}".format(Lf))
+        delta = math.atan2(2.0 * L * math.sin(alpha) / Lf, 1.0)
+    else:
+        delta = math.atan2(2.0 * L * math.sin(alpha) / Lfc, 1.0)
 
-    Lf = k * state.v + Lfc
-
-    delta = math.atan2(2.0 * L * math.sin(alpha) / Lf, 1.0)
+ #steering_angle = atan((2 * wheelbase * sin(angle_to_goal)) / look_ahead_distance)        
 
     return delta, ind
 
@@ -125,9 +136,25 @@ def calc_target_index(state, cx, cy):
 
     return ind
 
+def close_enough_to_waypoint(state, waypoint_x, waypoint_y):
+    global threshold
+    """Check if the robot is close enough to the given waypoint."""
+    distance = math.sqrt((state.x - waypoint_x) ** 2 + (state.y - waypoint_y) ** 2)
+    return distance < threshold
+
+def simplified_calc_target_index(state, cx, cy):
+    global current_waypoint_index
+    
+    # Check if the robot is close enough to the current target waypoint
+    if close_enough_to_waypoint(state, cx[current_waypoint_index], cy[current_waypoint_index]):
+        # If we haven't reached the end of the path, move to the next waypoint
+        if current_waypoint_index < len(cx) - 1:
+            current_waypoint_index += 1
+        
+    return current_waypoint_index    
 
 def main():
-    # define a path  - tjere are also a couple of example paths at the bottom of the script commented out
+    # define a path  - there are also a couple of example paths at the bottom of the script commented out
 
     try:
         with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output_trimmed.txt', 'r') as file:
@@ -170,7 +197,8 @@ def main():
     yaw = [state.yaw]
     v = [state.v]
     t = [0.0]
-    target_ind = calc_target_index(state, cx, cy)
+    #target_ind = calc_target_index(state, cx, cy)
+    target_ind = simplified_calc_target_index(state, cx, cy)
     print("taget_ind =", target_ind)
     print("lastIndex =", lastIndex)
 
@@ -178,6 +206,15 @@ def main():
         ai = PIDControl(target_speed, state.v)
         #print("ai =", ai)
         di, target_ind = pure_pursuit_control(state, cx, cy, target_ind)
+        #print("steer angle = {:.2f}".format(di))
+        #distance_to_last_waypoint = math.sqrt((state.x - cx[-1]) ** 2 + (state.y - cy[-1]) ** 2)
+        #print(f"Current target_ind: {target_ind}, Distance to last waypoint: {distance_to_last_waypoint:.2f}")
+        
+
+        if target_ind == len(cx) - 1 and close_enough_to_waypoint(state, cx[-1], cy[-1]):
+            print("Reached the final waypoint!")
+            break
+
         state = update(state, ai, di)
 
         time = time + dt

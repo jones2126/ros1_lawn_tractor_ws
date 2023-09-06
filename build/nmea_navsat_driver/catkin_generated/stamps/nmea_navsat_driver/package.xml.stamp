@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>nmea_navsat_driver</name>
+  <version>0.6.1</version>
+  <description>
+    Package to parse NMEA strings and publish a very simple GPS message. Does not
+    require or use the GPSD deamon.
+  </description>
+
+  <maintainer email="evenator@gmail.com">Ed Venator</maintainer>
+
+  <license>BSD-3-Clause</license>
+
+  <url type="website">http://ros.org/wiki/nmea_navsat_driver</url>
+
+  <author email="eric@ericperko.com">Eric Perko</author>
+  <author>Steven Martin</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend condition="$ROS_PYTHON_VERSION == 2">python-catkin-pkg</build_depend>
+  <build_depend condition="$ROS_PYTHON_VERSION == 3">python3-catkin-pkg</build_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-serial</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-serial</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-rospkg</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-rospkg</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nmea_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>tf</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-yaml</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-yaml</exec_depend>
+
+  <test_depend condition="$ROS_PYTHON_VERSION == 3">catkin_virtualenv</test_depend>
+
+  <test_depend>roslint</test_depend>
+  <test_depend>rostest</test_depend>
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- This is a pure Python package, so mark it architecture independent -->
+    <architecture_independent/>
+    <pip_requirements>test/requirements.txt</pip_requirements>
+  </export>
+</package>

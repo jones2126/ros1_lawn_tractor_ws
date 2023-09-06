@@ -413,6 +413,9 @@ _gtest_INCLUDES:FILEPATH=/usr/include/gtest/gtest.h
 //Path to a file.
 _gtest_SOURCES:FILEPATH=/usr/src/gtest/src/gtest.cc
 
+//Path to a file.
+_path_name:FILEPATH=/home/tractor/ros1_lawn_tractor_ws/src/nmea_navsat_driver/test/test_driver.py
+
 //The directory containing a CMake configuration file for ackermann_msgs.
 ackermann_msgs_DIR:PATH=/opt/ros/noetic/share/ackermann_msgs/cmake
 
@@ -442,6 +445,9 @@ boost_thread_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/boost_thread-1.71.0
 
 //The directory containing a CMake configuration file for catkin.
 catkin_DIR:PATH=/opt/ros/noetic/share/catkin/cmake
+
+//The directory containing a CMake configuration file for catkin_virtualenv.
+catkin_virtualenv_DIR:PATH=/opt/ros/noetic/share/catkin_virtualenv/cmake
 
 //Value Computed by CMake
 chip_imu_driver_BINARY_DIR:STATIC=/home/tractor/ros1_lawn_tractor_ws/build/chip_imu_driver
@@ -540,6 +546,12 @@ message_runtime_DIR:PATH=/opt/ros/noetic/share/message_runtime/cmake
 //The directory containing a CMake configuration file for nav_msgs.
 nav_msgs_DIR:PATH=/opt/ros/noetic/share/nav_msgs/cmake
 
+//Value Computed by CMake
+nmea_navsat_driver_BINARY_DIR:STATIC=/home/tractor/ros1_lawn_tractor_ws/build/nmea_navsat_driver
+
+//Value Computed by CMake
+nmea_navsat_driver_SOURCE_DIR:STATIC=/home/tractor/ros1_lawn_tractor_ws/src/nmea_navsat_driver
+
 //The directory containing a CMake configuration file for orocos_kdl.
 orocos_kdl_DIR:PATH=/usr/share/orocos_kdl/cmake
 
@@ -566,6 +578,9 @@ rosgraph_DIR:PATH=/opt/ros/noetic/share/rosgraph/cmake
 
 //The directory containing a CMake configuration file for rosgraph_msgs.
 rosgraph_msgs_DIR:PATH=/opt/ros/noetic/share/rosgraph_msgs/cmake
+
+//The directory containing a CMake configuration file for roslint.
+roslint_DIR:PATH=/opt/ros/noetic/share/roslint/cmake
 
 //The directory containing a CMake configuration file for rospy.
 rospy_DIR:PATH=/opt/ros/noetic/share/rospy/cmake
@@ -831,7 +846,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=19
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=20
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

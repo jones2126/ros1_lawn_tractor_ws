@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-'''
-This program is designed to facilitate the communication between ROS and two serial 
-devices '/dev/ttgo_main' and '/dev/USB2TTL'. 
 
-functions read_ttgo_main, write_USB2TTL, and check_speed_params are processed as threads and running continuously
-
-This script is started in the launch file cub_cadet_real_world_june23.launch
-'''
 import rospy
 import serial
 import threading
@@ -33,11 +26,14 @@ gps_status = 0
 prev_time_gps_fix = 0.0
 gpsStatusAge = 0.0
 
-'''
-old program functions:
+# Add threading locks for serial ports
+ser1_lock = threading.Lock()
+ser2_lock = threading.Lock()
 
-    gps status
-'''
+# Global variables for storing the strings
+velocity_str = ""
+numbers_str = ""
+iteration = 0
 
 def twist_callback(twist_msg):
     global linear_x, angular_z, prev_time_twist
@@ -51,35 +47,44 @@ def left_speed_callback(left_speed_msg):
 
 def right_speed_callback(right_speed_msg):
     global right_speed
-    right_speed = right_speed_msg.data    
+    right_speed = right_speed_msg.data
+
+def fix_callback(msg):
+    global prev_time_gps_fix, gpsStatusAge, gps_status
+    gps_status = msg.status.status
+    gpsStatusAge = (rospy.get_time() - prev_time_gps_fix)
+    prev_time_gps_fix = rospy.get_time()    
 
 def read_ttgo_main():
     while progControlFlag and not rospy.is_shutdown():
-        if ser1.in_waiting > 0:
-            #line = ser1.readline()
-            #print("From /dev/ttgo_main:", line.decode('utf-8').strip())
+        with ser1_lock:
+            try:
+                if ser1.in_waiting > 0:
+                    line = ser1.readline().decode('utf-8').strip()
 
-            line = ser1.readline().decode('utf-8').strip()
-            #print("From /dev/ttgo_main:", line)
+                    if line[0] == '3':
+                        components = line.split(',')
+                        msg = Float64MultiArray()
+                        msg.data = [float(x) for x in components[1:]]
+                        pub.publish(msg)
+            except serial.SerialException:
+                print("****************************************")
+                print("read_ttgo_main: SerialException")                
+                ser1.close()
+                time.sleep(1)
+                ser1.open()
+            else:
+                time.sleep(0.1)
 
-            if line[0] == '3':
-                components = line.split(',')
-                msg = Float64MultiArray() # Create a new Float64MultiArray
-                msg.data = [float(x) for x in components[1:]]  # Add each component to the data (excluding the first '3')
-                pub.publish(msg)
-
-        else:
-            time.sleep(0.1)
-
-def write_USB2TTL():
-    global left_speed, right_speed, linear_x, angular_z, gps_status, gpsStatusAge
+def create_record_type_1():
+    global left_speed, right_speed, linear_x, angular_z, gps_status, gpsStatusAge, iteration, prev_time_twist, velocity_str
     while progControlFlag and not rospy.is_shutdown():
         current_time = rospy.get_time()
         age_of_cmd_vel = current_time - prev_time_twist
-        if age_of_cmd_vel > 2.0:  
+        if age_of_cmd_vel > 2.0:
             linear_x = 0
             angular_z = 0
-            print("Age of cmd_vel message: ", age_of_cmd_vel, " Current Unix timestamp: ", current_time)            
+
         if gpsStatusAge > 1:
             gps_status = 9
 
@@ -90,34 +95,45 @@ def write_USB2TTL():
             "{:.4f}".format(right_speed),
             str(gps_status), 
             str(gpsStatusAge)])
-        ser2.write((velocity_str + '\n').encode())  
-        #print("Written to /dev/USB2TTL:", velocity_str)
-        #time.sleep(.2)  # 5 Hz or 200 milliseconds
-        time.sleep(1)  
+        time.sleep(.25)
+        #ser2.write((velocity_str + '\n').encode())
+        #print("write_USB2TTL: writing record type 1") 
+ 
+def create_record_type_2():
+    global numbers_str
+    while progControlFlag and not rospy.is_shutdown():
+        speed_params = rospy.get_param('/speed_params', [])
+        numbers_str = '2,' + ','.join(map(str, speed_params))
+        ser2.write((numbers_str + '\n').encode())
+        time.sleep(20)
+
+def write_to_USB2TTL():
+    global velocity_str, numbers_str, iteration
+    while progControlFlag and not rospy.is_shutdown():
+        with ser2_lock:
+            try:
+                #if velocity_str:
+                ser2.write((velocity_str + '\n').encode())
+                #print("write_to_serial: wrote velocity_str", velocity_str)
+                #if numbers_str:
+                ser2.write((numbers_str + '\n').encode())
+                #print("write_to_serial: wrote numbers_str", numbers_str)
+            except serial.SerialException:
+                print("write_to_serial: SerialException", rospy.get_time())
+                ser2.close()
+                time.sleep(1)
+                ser2.open()
+            else:
+                iteration = iteration + 1
+                #print("write_to_serial: sleeping - iteration:", iteration)
+                time.sleep(.5)
 
 def shutdown():
     global progControlFlag
-    print("..... ROS2portXfer.py is shutting down....please wait...")
     progControlFlag = False
     time.sleep(1)
     ser1.close()
     ser2.close()
-
-def check_speed_params():
-    while progControlFlag and not rospy.is_shutdown():
-        speed_params = rospy.get_param('/speed_params', [])  # Second argument is default value
-        numbers_str = '2,' + ','.join(map(str, speed_params))
-        #ser2.write(numbers_str.encode())
-        ser2.write((numbers_str + '\n').encode())
-        print("Sending message:", numbers_str, "(Length: {})".format(len(numbers_str)))
-        time.sleep(20)  # sleep for 20 seconds
-
-def fix_callback(msg):
-    global prev_time_gps_fix, gpsStatusAge, gps_status
-    gps_status = msg.status.status
-    #print("GPS callback status:", gps_status)
-    gpsStatusAge = (rospy.get_time() - prev_time_gps_fix)  
-    prev_time_gps_fix = rospy.get_time()         
 
 # Initializing the node
 rospy.init_node('ROS2portXfer')
@@ -131,21 +147,19 @@ pub = rospy.Publisher('my_array_topic', Float64MultiArray, queue_size=10)
 # Open the serial ports
 try:
     ser1 = serial.Serial('/dev/ttgo_main', 115200)
-    print("Successfully opened serial port /dev/ttgo_main.")
 except Exception as e:
     print("Failed to open serial port /dev/ttgo_main", e)    
 
 try:
     ser2 = serial.Serial('/dev/USB2TTL', 115200)
-    print("Successfully opened serial port /dev/USB2TTL")
 except Exception as e:
     print("Failed to open serial port /dev/USB2TTL", e)    
 
 rospy.on_shutdown(shutdown)
 
 threading.Thread(target=read_ttgo_main).start()
-threading.Thread(target=write_USB2TTL).start()
-threading.Thread(target=check_speed_params).start()
-print("In ROS2portXfer, completed initialization")
+threading.Thread(target=create_record_type_1).start()
+threading.Thread(target=create_record_type_2).start()
+threading.Thread(target=write_to_USB2TTL).start()
 
 rospy.spin()

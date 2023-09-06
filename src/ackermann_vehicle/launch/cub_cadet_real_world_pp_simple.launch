@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="namespace" default="/"/>
+  <arg name="cmd_timeout" default="0.5"/>
+
+  <include file="$(find ackermann_vehicle)/launch/ackermann_xacro.launch">
+    <arg name="namespace" value="$(arg namespace)"/>
+  </include>
+
+  <group ns="$(arg namespace)">
+    <node name="controller_spawner" pkg="controller_manager" type="spawner"
+          args="$(find ackermann_vehicle)/config/cub_cadet_spawner_params.yaml"/>
+
+    <node name="ackermann_controller" pkg="ackermann_vehicle" type="ackermann_controller.py">
+      <param name="cmd_timeout" value="$(arg cmd_timeout)"/>
+      <rosparam file="$(find ackermann_vehicle)/config/cub_cadet_cntrlpy_params.yaml" command="load"/>
+    </node>
+  </group>
+
+  <node pkg="rosserial_python" type="serial_node.py" name="odom_left_serial_node" output="screen">
+    <param name="port" value="/dev/odom_left"/>
+    <param name="baud" value="57600"/>
+  </node>
+  <node pkg="rosserial_python" type="serial_node.py" name="odom_right_serial_node" output="screen">
+    <param name="port" value="/dev/odom_right"/>
+    <param name="baud" value="57600"/>
+  </node>
+  <arg name="port" default="/dev/rosimu" />
+  <node pkg="chip_imu_driver" type="chip_imu_driver_node" name="chip_imu_driver_node" output="screen">
+    <param name="port" value="$(arg port)" />
+    <param name="initial_yaw" type="double" value="-14.0"/>   <!-- initial yaw is 104 degrees (compass heading) -->
+     <!-- 'value' format is ENU +/- 180 (i.e. South = -90, East = 0, North = 90, West = 180) -->   
+  </node>
+
+  <!-- ****** map server ***** -->
+  <node name="map_server" pkg="map_server" type="map_server"
+       args="$(find ackermann_vehicle)/maps/435_pine_valley.yaml" output="screen">
+    <param name="frame_id" value="map"/>
+  </node>
+
+  <!-- If not running amcl, map odom on top of map -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="0 0 0 0 0 0 map odom" />
+
+  <node name="nmea_serial_driver_node" pkg="nmea_navsat_driver" type="nmea_serial_driver" output="screen">
+    <param name="port" value="/dev/gps"/>
+    <param name="baud" value="115200" />
+    <param name="frame_id" value="gps" />
+    <param name="use_GNSS_time" value="False" />
+    <param name="time_ref_source" value="gps" />
+    <param name="useRMC" value="False" />
+  </node>
+
+  <node name="odom_wheel_node" pkg="ackermann_vehicle" type="odom_from_wheel_and_gps.py" output="screen" />
+
+  <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 314, 318, 330]" />   
+
+  <!-- <node name="serial_xfer" pkg="ackermann_vehicle" type="ROS2portXfer.py" output="screen" />   -->
+  
+  <!-- Custom node for path_pp_v4.py -->
+  <node name="path_pp_v4" pkg="ackermann_vehicle" type="path_pp_v4.py" output="screen">
+  </node>
+      <param name="GPS_origin_lat" value="40.3452982" />
+      <param name="GPS_origin_lon" value="-80.1288761" />    
+      <param name="gps_origin_offset_applied" value="0" />
+</launch>

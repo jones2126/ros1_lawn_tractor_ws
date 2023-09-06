@@ -23,6 +23,15 @@ reload(gc)
 PI = pi
 
 class OdomPublisher:
+
+    def calibrate_lat_lon_origin(self, event):
+        GPS_origin_lat = rospy.get_param("GPS_origin_lat", None)
+        GPS_origin_lon = rospy.get_param("GPS_origin_lon", None)
+        gps_origin_offset_applied = rospy.get_param("gps_origin_offset_applied", None)
+        self.GPS_origin_lat = GPS_origin_lat
+        self.GPS_origin_lon = GPS_origin_lon
+        rospy.loginfo("GPS_origin_lat in odom: %s, GPS_origin_lon: %s", GPS_origin_lat, GPS_origin_lon)
+
     def __init__(self):
         rospy.init_node('odometry_publisher')
         self.left_distance = 0.0
@@ -49,8 +58,9 @@ class OdomPublisher:
         self.last_time = rospy.Time.now()
         self.prev_time_imu = rospy.Time.now()
         self.last_print_time = rospy.Time.now()
-        self.GPS_origin_lat = 40.3452899
-        self.GPS_origin_lon = -80.1289039
+        self.GPS_origin_lat = 40.34529723  
+        self.GPS_origin_lon = -80.1288761   
+        rospy.Timer(rospy.Duration(60), self.calibrate_lat_lon_origin)        
 
         self.x = 0.0
         self.y = 0.0        
@@ -58,6 +68,8 @@ class OdomPublisher:
         self.y_gps = 0.0
         self.x_wheel = 0.0
         self.y_wheel = 0.0
+        self.x_base_link = 0.0
+        self.y_base_link = 0.0        
         self.RTK_fix = False
         self.non_RTK_fix = 0
         self.COG = 0
@@ -187,8 +199,8 @@ class OdomPublisher:
             y_offset = -0.03  # 1 inch to the right of the center line
             x_offset_rotated = x_offset * math.cos(yaw_being_used) - y_offset * math.sin(yaw_being_used)
             y_offset_rotated = x_offset * math.sin(yaw_being_used) + y_offset * math.cos(yaw_being_used)
-            self.x_gps = self.x_gps - x_offset_rotated  # base_link x
-            self.y_gps = self.y_gps - y_offset_rotated  # base_link y
+            self.x_base_link = self.x_gps - x_offset_rotated  # base_link x
+            self.y_base_link = self.y_gps - y_offset_rotated  # base_link y
             self.RTK_fix = True
             self.non_RTK_fix = 0
             delta_lat = round(delta_lat, 2)
@@ -238,21 +250,21 @@ class OdomPublisher:
         self.y_wheel += delta_y
 
         if self.RTK_fix == True:
-            self.x = self.x_gps
-            self.y = self.y_gps
+            self.x_base_link = self.x_gps
+            self.y_base_link = self.y_gps
             self.x_wheel = self.x_gps
             self.y_wheel = self.y_gps
         else:
-            self.x = self.x_wheel
-            self.y = self.y_wheel
+            self.x_base_link = self.x_wheel
+            self.y_base_link = self.y_wheel
         # Create and publish Odometry message
         # to publish this I need x,y, quat, linear x and angular z
         odom_msg = Odometry()
         odom_msg.header.stamp = current_time_odom
         odom_msg.header.frame_id = "odom"
         odom_msg.child_frame_id = "base_footprint"
-        odom_msg.pose.pose.position.x = self.x
-        odom_msg.pose.pose.position.y = self.y
+        odom_msg.pose.pose.position.x = self.x_base_link
+        odom_msg.pose.pose.position.y = self.y_base_link
         odom_msg.pose.pose.position.z = 0.0
         odom_msg.pose.pose.orientation.x = self.quat[0]  # currently defined by IMU, not GPS or wheels
         odom_msg.pose.pose.orientation.y = self.quat[1]
@@ -273,8 +285,8 @@ class OdomPublisher:
         t.header.stamp = current_time_odom
         t.header.frame_id = "odom"
         t.child_frame_id = "base_footprint"
-        t.transform.translation.x = self.x
-        t.transform.translation.y = self.y
+        t.transform.translation.x = self.x_base_link
+        t.transform.translation.y = self.y_base_link
         t.transform.translation.z = 0.0
         t.transform.rotation.x = self.quat[0]  # currently defined by IMU, not GPS or wheels
         t.transform.rotation.y = self.quat[1]

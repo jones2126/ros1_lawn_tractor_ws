@@ -22,7 +22,7 @@ Al Jones
 
 
 import matplotlib.pyplot as plt
-from math import sqrt, acos, atan, sin, cos
+from math import sqrt, acos, atan, sin, cos, atan2
 import numpy as np
 
 # Function to calculate the angle between two 2D points (aka vectors)
@@ -81,6 +81,17 @@ def calculate_steer_angle():
     if dist_to_center_squared < 0:
         print("Error: Cannot find a suitable circle center. Try increasing the look-ahead distance or correcting the initial position.")
         # in the real world I would have to have a more elegant way to handle this
+        dx = P2[0] - A[0]  # difference in x-coordinates
+        dy = P2[1] - A[1]  # difference in y-coordinates
+        
+        # Calculate the steering angle using atan2 for better quadrant determination
+        steering_angle = atan2(dy, dx)
+        print("current position - self.A:", A)
+        print("path P1 self.P1:", P1)
+        print("path P2 self.P2:", P2) 
+        print("steering_angle:", steering_angle)
+        dist_to_center = 5.0    # this is an abritary value.  Testing required.  
+
     else:
         dist_to_center = sqrt(dist_to_center_squared)
 
@@ -194,11 +205,13 @@ def plot_values():
 
 # Given mission data
 mission = [
+    ((5.0, 2.0), (6.0,  2.1),   (2.5,   1.7)),
     ((0.1, -0.1), (-0.1,  5.1),   (.2,   1.9)),
     ((0.1, -0.1), (-5.1,  0.1), (-1.9,   0.2)),
     ((0.1, -0.1), (-0.1, -5.1),   (.2,  -1.9))
 ]
 '''
+
 # more elaborate test data
 mission = [((0, 0), (5.0, 0.0), (0.0, 1.0)),
  ((0, 0), (5.0, 0.0), (0.0, -1.0)),
