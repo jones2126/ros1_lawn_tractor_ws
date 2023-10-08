@@ -14,11 +14,11 @@ import math
 from std_msgs.msg import Float64MultiArray
 
 # Import geonav tranformation module
-import sys
-sys.path.append('/home/tractor/catkin_ws/src/geonav_transform/src/')
+# import sys
+# sys.path.append('/home/tractor/catkin_ws/src/geonav_transform/src/')
 import geonav_transform.geonav_conversions as gc
-from imp import reload
-reload(gc)
+# from imp import reload
+# reload(gc)
 
 PI = pi
 
@@ -30,7 +30,7 @@ class OdomPublisher:
         gps_origin_offset_applied = rospy.get_param("gps_origin_offset_applied", None)
         self.GPS_origin_lat = GPS_origin_lat
         self.GPS_origin_lon = GPS_origin_lon
-        rospy.loginfo("GPS_origin_lat in odom: %s, GPS_origin_lon: %s", GPS_origin_lat, GPS_origin_lon)
+        rospy.loginfo("GPS_origin_lat in odom: %s, GPS_origin_lon: %s", self.GPS_origin_lat, self.GPS_origin_lon)
 
     def __init__(self):
         rospy.init_node('odometry_publisher')
@@ -58,9 +58,11 @@ class OdomPublisher:
         self.last_time = rospy.Time.now()
         self.prev_time_imu = rospy.Time.now()
         self.last_print_time = rospy.Time.now()
-        self.GPS_origin_lat = 40.34529723  
-        self.GPS_origin_lon = -80.1288761   
-        rospy.Timer(rospy.Duration(60), self.calibrate_lat_lon_origin)        
+        self.GPS_origin_lat = 40.34534080  
+        self.GPS_origin_lon = -80.12894600   
+        rospy.Timer(rospy.Duration(60), self.calibrate_lat_lon_origin)
+        #origin_lat = 40.34534080; origin_lon = -80.12894600  # represents the starting point of my tractor inside the garage - averaged on 20230904
+
 
         self.x = 0.0
         self.y = 0.0        
@@ -210,7 +212,8 @@ class OdomPublisher:
             self.yaw = round(self.yaw, 2)
             self.heading_radians_wheels = round(self.heading_radians_wheels, 2) 
             heading_data_array = Float64MultiArray()            
-            heading_data_array.data = [delta_lat, delta_lon, self.COG_deg, self.COG, self.yaw, self.heading_radians_wheels, self.COG_smoothed]
+            heading_data_array.data = [delta_lat, delta_lon, self.COG_deg, self.COG, self.yaw, self.heading_radians_wheels, \
+                self.COG_smoothed, self.x_base_link, self.y_base_link]
             self.gps_array_pub.publish(heading_data_array)
                       
     def publish_odom(self):

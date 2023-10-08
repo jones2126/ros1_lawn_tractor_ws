@@ -56,15 +56,18 @@ print("=============================================")
 previous_x1, previous_y1 = None, None
 previous_x2, previous_y2 = None, None
 
-origin_lat = 40.34534080; origin_lon = -80.12894600  # represents the starting point of my tractor inside the garage
+origin_lat = 40.34534080; origin_lon = -80.12894600  # represents the starting point of my tractor inside the garage - averaged on 20230904
 
 # I averaged these positions for three minutes with RTK GPS fix and marked the locations on the ground
-averaged_positions = [
-    (40.345300971941796, -80.1289413912553),
-    (40.34530662627222, -80.12887740598163),
-    (40.345268310965714, -80.12887049172689),
-    (40.3452617478205, -80.12895260716566)
-]
+# averaged_positions = [
+#     (40.345300971941796, -80.1289413912553),
+#     (40.34530662627222, -80.12887740598163),
+#     (40.345268310965714, -80.12887049172689),
+#     (40.3452617478205, -80.12895260716566)
+# ]
+
+averaged_positions = [(40.34530215911272, -80.12893947576222), (40.345314858326475, -80.12888316346998), (40.34531428439999, -80.12888852100001), (40.34531285833334, -80.12892637793334)]
+
 
 for lat, lon in averaged_positions:
     x1, y1 = latlon_to_xy(lat, lon, origin_lat, origin_lon)

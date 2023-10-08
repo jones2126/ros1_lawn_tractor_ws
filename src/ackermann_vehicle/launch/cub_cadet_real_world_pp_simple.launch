@@ -28,7 +28,7 @@
   <arg name="port" default="/dev/rosimu" />
   <node pkg="chip_imu_driver" type="chip_imu_driver_node" name="chip_imu_driver_node" output="screen">
     <param name="port" value="$(arg port)" />
-    <param name="initial_yaw" type="double" value="-14.0"/>   <!-- initial yaw is 104 degrees (compass heading) -->
+    <param name="initial_yaw" type="double" value="16.5"/>   <!-- from calc_distance.py using [0.554, -4.301] and [5.331, -2.888] -->    
      <!-- 'value' format is ENU +/- 180 (i.e. South = -90, East = 0, North = 90, West = 180) -->   
   </node>
 
@@ -52,14 +52,16 @@
 
   <node name="odom_wheel_node" pkg="ackermann_vehicle" type="odom_from_wheel_and_gps.py" output="screen" />
 
-  <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 314, 318, 330]" />   
+  <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 312, 318, 330]" />   
 
-  <!-- <node name="serial_xfer" pkg="ackermann_vehicle" type="ROS2portXfer.py" output="screen" />   -->
+  <node name="serial_xfer" pkg="ackermann_vehicle" type="ROS2portXfer.py" output="screen" />  
   
   <!-- Custom node for path_pp_v4.py -->
   <node name="path_pp_v4" pkg="ackermann_vehicle" type="path_pp_v4.py" output="screen">
   </node>
-      <param name="GPS_origin_lat" value="40.3452982" />
-      <param name="GPS_origin_lon" value="-80.1288761" />    
+      <param name="GPS_origin_lat" value="40.34534080" />
+      <param name="GPS_origin_lon" value="-80.12894600" />    
+<!-- origin_lat = 40.34534080; origin_lon = -80.12894600  # my tractor inside the garage - averaged on 20230904 -->
+
       <param name="gps_origin_offset_applied" value="0" />
 </launch>

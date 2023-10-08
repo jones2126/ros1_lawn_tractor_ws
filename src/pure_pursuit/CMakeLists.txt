@@ -40,7 +40,10 @@ catkin_package(
 ###########
 ## Build ##
 ###########
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
 
 # executable for pure_pursuit.cpp
 add_executable(pure_pursuit src/pure_pursuit.cpp)

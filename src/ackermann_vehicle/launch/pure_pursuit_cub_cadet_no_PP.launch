@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- pure_persuit.launch 14/12/19 -->
+
+
+<launch>
+<!-- Print an informational message -->
+  <node name="print_info" pkg="rostopic" type="rostopic" args="pub /info std_msgs/String 'data: launch file starting'" />
+
+  <arg name="name" default="tractor"/>
+
+  <!-- Convert AckermannDriveStamp to AckermannDrive -->
+  <node pkg="ackermann_vehicle" type="ackermannstamped2ackermann.py" name="ackermannstamped2ackermann" >
+    <remap from="acker_out" to="/ackermann_cmd"/>
+  </node>
+
+</launch>
+

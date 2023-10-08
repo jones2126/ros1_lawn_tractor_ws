@@ -62,8 +62,8 @@ def point_pos(x0, y0, d, theta):
     #(x2,y2) = (x1 + line_length*cos(angle),y1 + line_length*sin(angle))
 
 # main routine
-p = [0.00, 0.001]
-q = [6.0, 0.008]  # East, just to the North
+p = [0.554, -4.301]  # X: 0.554, Y: -4.301
+q = [5.331, -2.888]  # X: 5.331, Y: -2.888
 distance = math.dist(p, q)
 dir_radians = angle_rad(p,q)
 dir_degrees = dir_radians * 180 / math.pi

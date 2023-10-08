@@ -6,7 +6,7 @@ Script that reads the lat lon data from the bagfile mentioned above
 between a starting and ending point in seconds, converts those positions 
 to x and y coordinates, and then plots them using pyplot.
 
-$python3 ~/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_rosbag_avg_pts.py
+$ python3 ~/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_rosbag_avg_pts_with_dist_v2.py
 
 '''
 
@@ -16,13 +16,14 @@ import rospy
 import geonav_transform.geonav_conversions as gc
 import utm
 
-origin_lat = 40.34534150000275
-origin_lon = -80.12893767286235
+origin_lat = 40.34534080; origin_lon = -80.12894600  # represents the starting point of my tractor inside the garage - averaged on 20230904
 
 # Get UTM zone for the origin
 origin_utm_zone = utm.from_latlon(origin_lat, origin_lon)[2]
 
-bag_path = '/home/tractor/bagfiles/2023-09-03-17-26-42.bag'
+#bag_path = '/home/tractor/bagfiles/2023-09-03-17-26-42.bag'  # used to calculate origin
+#bag_path = '/home/tractor/bagfiles/2023-09-06-11-57-26.bag'  # used to reference_point
+bag_path = '/home/tractor/bagfiles/2023-09-22-10-51-43Stationary_at_reference_point.bag'
 bag = rosbag.Bag(bag_path)
 
 first_timestamp = None
@@ -30,7 +31,7 @@ outside_utm_count = 0
 total_messages = 0
 
 # Define time intervals and data structure to hold accumulated data
-time_intervals = [(7, 276), (328, 546), (594, 788), (826, 1021)]
+time_intervals = [(1, 37), (40, 620), (621, 1997), (2010, 2195)]
 interval_data = [{'lat_sum': 0, 'lon_sum': 0, 'count': 0} for _ in time_intervals]
 
 def adjust_heading_to_enu(adjusted_heading_rad):

@@ -36,13 +36,15 @@ potential ref: https://github.com/pasrom/pure_pursuit/blob/866b70b3b5fea1f94a3a1
 
 #include <dynamic_reconfigure/server.h>
 #include <pure_pursuit/PurePursuitConfig.h>
+#include <fstream>
+#include <tf/tf.h>
+#include <iostream>
 
 using std::string;
 
 class PurePursuit
 {
 public:
-
   //! Constructor
   PurePursuit();
 
@@ -50,7 +52,7 @@ public:
   void computeVelocities(nav_msgs::Odometry odom);
 
   //! Receive path to follow.
-  void receivePath(nav_msgs::Path path);
+  void loadPathFromFile();
 
   //! Compute transform that transforms a pose into the robot frame (base_link)
   KDL::Frame transformToBaseLink(const geometry_msgs::Pose& pose,
@@ -68,6 +70,8 @@ public:
   
 private:
 
+  ros::Publisher path_pub_; 
+
   //! Dynamic reconfigure callback.
   void reconfigure(pure_pursuit::PurePursuitConfig &config, uint32_t level);
 
@@ -78,6 +82,7 @@ private:
   // Algorithm variables
   // Position tolerace is measured along the x-axis of the robot!
   double ld_, pos_tol_;
+  double ld_2; //moving the definition here to see if I can publish it in the info array
   // Generic control variables
   double v_max_, v_, w_max_, ld_cfg_;
   // Control variables for Ackermann steering
@@ -86,6 +91,11 @@ private:
   nav_msgs::Path path_;
   unsigned idx_;
   bool goal_reached_;
+  int num_records;
+
+  std::vector<double> lookahead_values_;
+  std::vector<double> speed_values_;
+
   double yt = 0.0;
   geometry_msgs::Twist cmd_vel_;
   ackermann_msgs::AckermannDriveStamped cmd_acker_;
@@ -104,6 +114,7 @@ private:
   tf2_ros::TransformListener tf_listener_;
   tf2_ros::TransformBroadcaster tf_broadcaster_;
   geometry_msgs::TransformStamped lookahead_;
+  nav_msgs::Path loaded_path;  
   string map_frame_id_, robot_frame_id_, lookahead_frame_id_, acker_frame_id_;
 
   dynamic_reconfigure::Server<pure_pursuit::PurePursuitConfig> reconfigure_server_;
@@ -116,6 +127,7 @@ PurePursuit::PurePursuit() : ld_(1.0), v_max_(0.1), v_(v_max_), w_max_(1.0), pos
                              map_frame_id_("map"), robot_frame_id_("base_link"),
                              lookahead_frame_id_("lookahead")
 {
+  ROS_INFO("In PurePursuit::PurePursuit");
   // Get parameters from the parameter server
   nh_private_.param<double>("wheelbase", L_, 1.0);
   nh_private_.param<double>("lookahead_distance", ld_, 1.0);
@@ -145,15 +157,20 @@ PurePursuit::PurePursuit() : ld_(1.0), v_max_(0.1), v_(v_max_), w_max_(1.0), pos
   cmd_acker_.drive.acceleration = acc_;
   cmd_acker_.drive.jerk = jerk_;
   
-  sub_path_ = nh_.subscribe("path_segment", 1, &PurePursuit::receivePath, this);
+  //sub_path_ = nh_.subscribe("path_segment", 1, &PurePursuit::receivePath, this);
   sub_odom_ = nh_.subscribe("odometry", 1, &PurePursuit::computeVelocities, this);
   pub_vel_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
   pub_acker_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>("cmd_acker", 1);
   pub_got_path_ = nh_.advertise<std_msgs::Float64>("got_path", 1);
   pub_off_path_error_ = nh_.advertise<std_msgs::Float64>("off_path_error", 1);
+  path_pub_ = nh_.advertise<nav_msgs::Path>("/drive_path", 1);  
 
   reconfigure_callback_ = boost::bind(&PurePursuit::reconfigure, this, _1, _2);
   reconfigure_server_.setCallback(reconfigure_callback_);
+
+
+  ROS_INFO("Loading the path file");
+  loadPathFromFile();
 }
 
 void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
@@ -172,6 +189,10 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
     // path information and lookahead distance.
     for (; idx_ < path_.poses.size(); idx_++)
     {
+      v_ = speed_values_[idx_];
+      ld_ = lookahead_values_[idx_];
+      ROS_INFO("inside idx loop: idx_ = %d, v_ = %f, ld_ = %f", idx_, v_, ld_);
+
       if (distance(path_.poses[idx_].pose.position, tf.transform.translation) > ld_)
       {
 
@@ -249,12 +270,13 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
 
       // Compute linear velocity.
       // Right now,this is not very smart :)
-      v_ = copysign(v_max_, v_);
+      //v_ = copysign(v_max_, v_);
       
       // Compute the angular velocity.
       // Lateral error is the y-value of the lookahead point (in base_link frame)
       yt = lookahead_.transform.translation.y;
-      double ld_2 = ld_ * ld_;
+      //double ld_2 = ld_ * ld_;
+      ld_2 = ld_ * ld_;
       //ROS_WARN("Lateral error  %.2f", yt);
       //ROS_INFO("Lateral error (y-value of lookahead point.) to %.2f", yt);
       off_path_error_.data = yt;
@@ -277,7 +299,7 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
       //ROS_WARN("angular z to %.2f", cmd_vel_.angular.z);
 
       // Compute desired Ackermann steering angle
-      cmd_acker_.drive.steering_angle = std::min( atan2(2 * yt * L_, ld_2), delta_max_ );  // original
+      //cmd_acker_.drive.steering_angle = std::min( atan2(2 * yt * L_, ld_2), delta_max_ );  // original
       cmd_acker_.drive.steering_angle = atan2(2 * yt * L_, ld_2);
       if (cmd_acker_.drive.steering_angle > delta_max_){
           cmd_acker_.drive.steering_angle = delta_max_;
@@ -331,40 +353,66 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
   }
 }
 
-void PurePursuit::receivePath(nav_msgs::Path new_path)
-{
-  // When a new path received, the previous one is simply discarded
-  // It is up to the planner/motion manager to make sure that the new
-  // path is feasible.
-  // Callbacks are non-interruptible, so this will
-  // not interfere with velocity computation callback.
-  
-  if (new_path.header.frame_id == map_frame_id_)
-  {
-    // Let path navigator know we have the path
-    got_path_.data = -1.0;
-    pub_got_path_.publish(got_path_);
+void PurePursuit::loadPathFromFile() {
+    std::string input_file = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt";   
+    std::ifstream file(input_file);
 
-    path_ = new_path;
+    if (!file.is_open()) {
+        ROS_ERROR("Failed to open path file: %s", input_file.c_str());
+        return;
+    }
+
+    double x, y, yaw, lookahead, speed;
+    loaded_path.poses.clear();
+    loaded_path.header.frame_id = "map";
+    loaded_path.header.stamp = ros::Time::now();
+    int seq = 0;
+
+    while (file >> x >> y >> yaw >> lookahead >> speed) {
+        geometry_msgs::PoseStamped pose;
+        pose.header.frame_id = "map";
+        pose.header.seq = seq;
+        pose.header.stamp = loaded_path.header.stamp;        
+        pose.pose.position.x = x;
+        pose.pose.position.y = y;
+        tf::Quaternion q = tf::createQuaternionFromYaw(yaw);
+        pose.pose.orientation.x = q.x();
+        pose.pose.orientation.y = q.y();
+        pose.pose.orientation.z = q.z();
+        pose.pose.orientation.w = q.w();
+        loaded_path.poses.push_back(pose);
+        seq++;
+
+        lookahead_values_.push_back(lookahead);
+        speed_values_.push_back(speed);        
+    }
+
+    file.close();
+    path_ = loaded_path;  // Assign the loaded path to your class member
+
+    // Publish the path
+    ROS_INFO("publishing path, 1st attempt");
+    path_pub_.publish(loaded_path);
+    ros::Duration(1.0).sleep();  // Sleep for 1 second
+    ROS_INFO("publishing path, 2nd attempt");
+    path_pub_.publish(loaded_path);
+    ROS_INFO("publishing path done");    
+
+    num_records = path_.poses.size();
     idx_ = 0;
-    if (new_path.poses.size() > 0)
+    if (num_records > 0)
     {
+      ROS_INFO("Number of records in path_: %d", num_records);
       goal_reached_ = false;
     }
     else
     {
       goal_reached_ = true;
       ROS_WARN_STREAM("Received empty path!");
-    }
-  }
-  else
-  {
-    ROS_WARN_STREAM("The path must be published in the " << map_frame_id_
-                    << " frame! Ignoring path in " << new_path.header.frame_id
-                    << " frame!");
-  }
-  
+    }    
 }
+
+
 
 KDL::Frame PurePursuit::transformToBaseLink(const geometry_msgs::Pose& pose,
                                             const geometry_msgs::Transform& tf)
@@ -435,7 +483,8 @@ void PurePursuit::publishLookaheadData()
 	multi_array.data.push_back(yt);
 	multi_array.data.push_back(L_);
 	multi_array.data.push_back(ld_);
-
+  multi_array.data.push_back(ld_2);
+//cmd_acker_.drive.steering_angle = atan2(2 * yt * L_, ld_2);
 	if(!path_.poses.empty()) {
 		double x = path_.poses[idx_].pose.position.x;
 		double y = path_.poses[idx_].pose.position.y;
@@ -480,6 +529,7 @@ void PurePursuit::publishLookaheadData()
 
 int main(int argc, char**argv)
 {
+  std::cout << "pure_pursuit.cpp program initiating..." << std::endl;
   ros::init(argc, argv, "pure_pursuit");
 
   PurePursuit controller;

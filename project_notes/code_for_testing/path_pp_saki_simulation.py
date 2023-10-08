@@ -4,7 +4,7 @@ Path tracking simulation with pure pursuit steering control and PID speed contro
 
 author: Atsushi Sakai (@Atsushi_twi)
 
-$ pythong3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_pp_saki_simulation.py
+$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_pp_saki_simulation.py
 """
 import numpy as np
 import math
@@ -157,7 +157,8 @@ def main():
     # define a path  - there are also a couple of example paths at the bottom of the script commented out
 
     try:
-        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output_trimmed.txt', 'r') as file:
+        #with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output_trimmed.txt', 'r') as file:
+        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_green_marks2_output.txt', 'r') as file:            
             content = file.readlines()
 
             # Initialize empty lists for x and y coordinates

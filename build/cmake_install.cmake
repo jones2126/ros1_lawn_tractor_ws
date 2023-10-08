@@ -147,6 +147,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/tractor/ros1_lawn_tractor_ws/build/rosserial/rosserial_server/cmake_install.cmake")
   include("/home/tractor/ros1_lawn_tractor_ws/build/pure_pursuit/cmake_install.cmake")
   include("/home/tractor/ros1_lawn_tractor_ws/build/chip_imu_driver/cmake_install.cmake")
+  include("/home/tractor/ros1_lawn_tractor_ws/build/geonav_transform/cmake_install.cmake")
 
 endif()
 

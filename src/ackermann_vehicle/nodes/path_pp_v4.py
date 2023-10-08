@@ -24,9 +24,9 @@ import rospy
 #import matplotlib.pyplot as plt
 from math import sqrt, acos, atan, atan2, sin, cos, pi, degrees
 import numpy as np
-from tf.transformations import quaternion_from_euler
+from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from geometry_msgs.msg import Twist
-from sensor_msgs.msg import NavSatFix, NavSatStatus, TimeReference
+from sensor_msgs.msg import NavSatFix, NavSatStatus, TimeReference, Imu
 from std_msgs.msg import Float64MultiArray
 import geonav_transform.geonav_conversions as gc
 
@@ -49,8 +49,10 @@ class Robot:
             # calculate the origin value adjustments; This assumes the robot is at the reference point
             #print("lat, lon before:", self.GPS_origin_lat, self.GPS_origin_lon)
             #print("x, y before:", steer_angle.x_base_link, steer_angle.y_base_link)
-            reference_x = 1.8
-            reference_y = 1.7
+            #reference_x = 7.4
+            #reference_y = -4.1
+            reference_x = 7.7
+            reference_y = -3.0            
             offset_x = reference_x - self.x_base_link
             offset_y = reference_y - self.y_base_link
             
@@ -106,14 +108,15 @@ class Robot:
         # I don't need this or just use what is in the IMU callback
         self.quat = quaternion_from_euler(0.0, 0.0, self.heading_radians_imu)
         self.wheelbase = 1.27
-        self.threshold = 1.0
+        # self.threshold = 1.0 # tested on 9/8/23 - a left hand curve had the tractor turning right in the middle
+        self.threshold = 1.5
         self.last_time = rospy.Time.now()
         self.prev_time_imu = rospy.Time.now()
         self.last_print_time = rospy.Time.now()
 
         # Fetch parameters from parameter server
-        self.GPS_origin_lat = rospy.get_param("GPS_origin_lat", 40.3452968)
-        self.GPS_origin_lon = rospy.get_param("GPS_origin_lon", -80.12887930)
+        self.GPS_origin_lat = rospy.get_param("GPS_origin_lat", 40.34534080)
+        self.GPS_origin_lon = rospy.get_param("GPS_origin_lon", -80.12894600)
         self.gps_origin_offset_applied = rospy.get_param("gps_origin_offset_applied", 0)
         rospy.Timer(rospy.Duration(30), self.calibrate_lat_lon_origin)
 
@@ -144,13 +147,64 @@ class Robot:
         self.goal_point = []
 
 
-        #rospy.Subscriber('/imu/data', Imu, self.imu_callback)
+        rospy.Subscriber('/imu/data', Imu, self.imu_callback)
         rospy.Subscriber("fix", NavSatFix, self.gps_callback)
         #self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=1)
         #self.hdg_from_imu_pub = rospy.Publisher('hdg_from_imu', Float64, queue_size=1)
         #self.hdg_from_wheels_pub = rospy.Publisher('hdg_from_wheels', Float64, queue_size=1)
         self.gps_array_pub = rospy.Publisher('gps_array_data', Float64MultiArray, queue_size=1)  
         self.pp_array_pub = rospy.Publisher('pp_array_data', Float64MultiArray, queue_size=1)      
+
+    def imu_callback(self, msg):
+        self.imu_calls = self.imu_calls + 1
+        orientation_q = msg.orientation
+        orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
+        _, _, yaw = euler_from_quaternion(orientation_list)
+        self.yaw = yaw
+        # current_time_imu = rospy.Time.now()
+        # delta_time_imu_raw = current_time_imu - self.prev_time_imu
+        # delta_time_imu = delta_time_imu_raw.to_sec()
+        # if delta_time_imu_raw.to_nsec() < 1:  # check if the time difference is less than 1 nanosecond
+        #     #rospy.loginfo("Ignoring callback due to very small time difference")
+        #     self.imu_skips = self.imu_skips + 1  # keep track to monitor how often this is happening
+        #     return
+        # delta_yaw = yaw - self.prev_yaw
+        # if delta_yaw   > PI:
+        #     delta_yaw = delta_yaw  - ( 2 * PI)
+        # elif delta_yaw  < -PI:
+        #     delta_yaw  = delta_yaw + (2 * PI)
+        # else:
+        #     delta_yaw = delta_yaw 
+        # heading_radians_imu can be set to yaw since it is now useable without adjustment
+        self.heading_radians_imu = yaw      
+        #self.heading_radians_imu = self.heading_radians_imu + delta_yaw
+
+        # # check if zero otherwise calculate angular z            
+        # if delta_time_imu == 0:
+        #     self.angular_vel_z_imu = 0
+        #     rospy.loginfo("delta_time_imu = 0")
+        #     rospy.loginfo("current_time_imu: %s, prev_time_imu: %s, delta_time_imu: %s", \
+        #                   current_time_imu, self.prev_time_imu, delta_time_imu)            
+        # else:
+        #     self.angular_vel_z_imu = delta_yaw / delta_time_imu
+        #     # I was having some issues with self.angular_vel_z_imu being way out of bounds
+        #     # this is a stop gap measure until I can figure out why
+        #     if self.angular_vel_z_imu > PI:
+        #         self.angular_vel_z_imu = PI
+        #     elif self.angular_vel_z_imu < -PI:
+        #         self.angular_vel_z_imu = -PI
+        # # I won't need this check because I will rely on IMU data
+        # if self.heading_radians_imu   > PI:
+        #     self.heading_radians_imu = self.heading_radians_imu  - ( 2 * PI)
+        # elif self.heading_radians_imu  < -PI:
+        #     self.heading_radians_imu  = self.heading_radians_imu + (2 * PI)
+        # else:
+        #     self.heading_radians_imu = self.heading_radians_imu 
+
+        # I'm going to test building self.quat from GPS COG
+        # self.quat = orientation_list
+        # self.prev_yaw = yaw
+        # self.prev_time_imu = current_time_imu
 
     def gps_callback(self, data):
         #print("GPS Callback executed. self.A:", self.A)
@@ -174,7 +228,7 @@ class Robot:
 
             #yaw_being_used = self.COG_smoothed
             yaw_being_used = self.heading_radians_imu
-
+            self.yaw = yaw_being_used
 
             self.quat = quaternion_from_euler(0.0, 0.0, yaw_being_used)
             self.COG_deg = degrees(self.COG) 
@@ -192,7 +246,7 @@ class Robot:
             delta_lon = round(delta_lon, 2)
             self.COG_deg = round(self.COG_deg, 2)
             self.COG = round(self.COG, 2)
-            self.yaw = round(self.yaw, 2)
+            self.yaw = round(self.yaw, 3)
             self.heading_radians_wheels = round(self.heading_radians_wheels, 2) 
             heading_data_array = Float64MultiArray()            
             heading_data_array.data = [delta_lat, delta_lon, self.COG_deg, self.COG, self.yaw, self.heading_radians_wheels, self.COG_smoothed]
@@ -325,7 +379,7 @@ class Robot:
         This is the way the program 'path_planning_waypoint_generator.py' creates
         paths that follow a dubins path.
         '''
-        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pv_square.txt', 'r') as file:
+        with open('/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_green_marks2_output.txt', 'r') as file:
             content = file.readlines()
 
             # Convert content into a list of (x, y) pairs
@@ -348,6 +402,7 @@ if __name__ == '__main__':
     cmd_vel = Twist()
     cmd_vel.linear.x = 0.51
     rate = rospy.Rate(10)
+    distance_to_waypoint = 0
 
     # Load the mission data
     mission = steer_angle.load_mission_data()
@@ -356,25 +411,26 @@ if __name__ == '__main__':
     for index, waypoints in enumerate(mission):
         # Extract the next P1 and P2 values
         steer_angle.P1, steer_angle.P2 = waypoints
+        proceed_to_next_waypoint = False 
 
         # Publish the steer angle at a rate of 10 Hz until you're close enough to the waypoint
-        while not rospy.is_shutdown():
+        while not rospy.is_shutdown() and not proceed_to_next_waypoint:
             # If close enough to the waypoint or at the final waypoint, break out of the loop
             #distance_to_waypoint = sqrt((steer_angle.x_base_link - steer_angle.P2[0]) ** 2 + (steer_angle.y_base_link - steer_angle.P2[1]) ** 2)
 
             #print("Before line 361 - steer_angle.goal_point:", steer_angle.goal_point)
+            #print("distance_to_waypoint:", distance_to_waypoint, "index: ", index)
 
             distance_to_waypoint = sqrt((steer_angle.x_base_link - steer_angle.goal_point[0]) ** 2 + (steer_angle.y_base_link - steer_angle.goal_point[1]) ** 2)
  
-
-
             if distance_to_waypoint < steer_angle.threshold:
                 if index == len(mission) - 1:
                     print("Reached the final waypoint!")
                     # Stop moving.
-                    cmd_vel_.linear.x = 0.0
+                    cmd_vel.linear.x = 0.0
                     steering_angle = 0.0
-                break
+                    break
+                proceed_to_next_waypoint = True
             current_time_main = rospy.Time.now()
             #calculate_steer_angle()
             steer_angle.calculate_steer_angle()
@@ -386,8 +442,11 @@ if __name__ == '__main__':
                 round(steer_angle.P1[0], 2), round(steer_angle.P1[1], 2), 
                 round(steer_angle.P2[0], 2), round(steer_angle.P2[1], 2),
                 steer_angle.A[0], steer_angle.A[1],
-                round(steering_angle, 3), round(distance_to_waypoint, 2), 
-                round(steer_angle.goal_point[0], 2), round(steer_angle.goal_point[1], 2)
+                round(steering_angle, 3), 
+                round(distance_to_waypoint, 2), 
+                round(steer_angle.goal_point[0], 2), round(steer_angle.goal_point[1], 2),
+                index,
+                len(mission)
             ]
 
             steer_angle.pp_array_pub.publish(pp_data_array)            

@@ -1,0 +1,7 @@
+set(geonav_transform_SETUP_PY_SETUP_MODULE "distutils.core")
+set(geonav_transform_SETUP_PY_VERSION "0.0.1")
+set(geonav_transform_SETUP_PY_SCRIPTS "")
+set(geonav_transform_SETUP_PY_PACKAGES "geonav_transform;alvinxy")
+set(geonav_transform_SETUP_PY_PACKAGE_DIRS "src/geonav_transform;src/alvinxy")
+set(geonav_transform_SETUP_PY_MODULES "")
+set(geonav_transform_SETUP_PY_MODULE_DIRS "")

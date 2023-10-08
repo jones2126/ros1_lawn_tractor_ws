@@ -1,0 +1,8 @@
+prefix=/home/tractor/ros1_lawn_tractor_ws/devel
+
+Name: geonav_transform
+Description: Description of geonav_transform
+Version: 0.0.1
+Cflags: -I/home/tractor/ros1_lawn_tractor_ws/src/geonav_transform/include
+Libs: -L${prefix}/lib -lgeonav_transform
+Requires: roscpp cmake_modules geographic_msgs geometry_msgs nav_msgs sensor_msgs std_msgs tf2 tf2_geometry_msgs tf2_ros

@@ -76,7 +76,7 @@ class Steps_to_Process(tk.Frame):
             for line in content:
                 results = line.split()
                 github_comment = results[0]
-        input_comment_file = "/home/tractor/github_token.txt"
+        input_comment_file = "/home/tractor/github_token_exp_20240105.txt"
         with open(input_comment_file, 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]
@@ -93,9 +93,9 @@ class Steps_to_Process(tk.Frame):
         subprocess.check_output(["xdotool", "type", "git push origin master" + "\n"])
         time.sleep(10)
         subprocess.check_output(["xdotool", "type", "jones2126" + "\n"])
-        #time.sleep(3)
-        #subprocess.check_output(["xdotool", "type", github_token + "\n"])
-        #time.sleep(1)
+        time.sleep(3)
+        subprocess.check_output(["xdotool", "type", github_token + "\n"])
+        time.sleep(1)
 
     def step_2_actions(self):   # placeholder
         self.step_0_actions()

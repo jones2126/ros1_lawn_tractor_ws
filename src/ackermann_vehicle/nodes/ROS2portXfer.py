@@ -65,7 +65,9 @@ def read_ttgo_main():
                     if line[0] == '3':
                         components = line.split(',')
                         msg = Float64MultiArray()
-                        msg.data = [float(x) for x in components[1:]]
+                        #msg.data = [float(x) for x in components[1:]]
+                        msg.data = [float(x) for x in components[1:] if x.strip() != '']   # I had an issue with an empty string
+
                         pub.publish(msg)
             except serial.SerialException:
                 print("****************************************")

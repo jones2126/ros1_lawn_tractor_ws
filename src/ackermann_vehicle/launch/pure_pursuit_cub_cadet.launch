@@ -3,6 +3,9 @@
 
 
 <launch>
+<!-- Print an informational message -->
+  <node name="print_info" pkg="rostopic" type="rostopic" args="pub /info std_msgs/String 'data: launch file starting'" />
+
 
   <!-- Run the map server -->
   <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find jeff)/maps/farm.yaml"/> -->
@@ -11,7 +14,7 @@
   <arg name="name" default="tractor"/>
   
   <!-- Pure pursuit path tracking -->
-  <node pkg="pure_pursuit" type="pure_pursuit" name="controller" clear_params="true">
+  <node pkg="pure_pursuit" type="pure_pursuit" name="controller" clear_params="true" output="screen">  
   <!-- <node pkg="pure_pursuit" type="pure_pursuit" name="controller" launch-prefix="valgrind" clear_params="true">     -->
     <param name="robot_frame_id" value="base_link"/>
     <param name="global_frame_id" value="odom"/>

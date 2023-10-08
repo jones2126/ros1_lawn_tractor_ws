@@ -6,6 +6,8 @@
 # there is a spreadsheet (vehicle_dimensions_helper.ods) to help with simple paths (e.g. for testing)
 # there is additional explanation in the document Path Planning - Creating a waypoint plan using path_generator.odt
 # all can be found at https://github.com/jones2126/ros1_lawn_tractor_ws
+#
+# $ python3 ~/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_planner_stable/path_planning_waypoint_generator.py
 import dubins
 import math
 import matplotlib.pyplot as plt
@@ -26,8 +28,8 @@ start_x = 0.0
 start_y = 0.0
 start_yaw = 0.0
 total_count = 0 
-turning_radius = 2.0    # originally 2
-step_size = 1.0         # originally 1
+turning_radius = 1.3    # originally 2
+step_size = 0.1         # originally 1
 
 def generate_path(x0,y0,x1,y1,theta0,theta1):
     q0 = (x0, y0, theta0)
@@ -54,12 +56,17 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):  # pragma: no 
 #output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/generated_points_for_square.txt"
 #input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pine_valley_test2.txt"
 #output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_PV_test2_GP.txt"
-input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_square_2.txt"
-output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pv_square.txt"
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_square_2.txt"
+#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_green_marks2_output_01.txt"
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_green_marks2.txt"
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_input_v2.txt"
+#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output_v2.txt"
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_1_uturn.txt"
+#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_1_uturn_output.txt"
 
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_input.txt"
-#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output_1tenth.txt"
-
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_squar_input3.txt"
+input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_uturn_input4.txt"
+output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_uturn_output.txt"
 print("Output file:", output_file_waypoints)
 
 
@@ -112,7 +119,7 @@ with open(input_file_waypoints, 'r') as file:
                 total_count += 1 
 
                 drive_points.append([p[0],p[1]])
-                file.write(str(p[0]) + " " + str(p[1]) + " " + str(p[2]) + "\n")
+                file.write(str(p[0]) + " " + str(p[1]) + " " + str(p[2]) + str(p[3]) + "\n")
         print("Record count:", total_count, "turning_radius:", turning_radius, "step_size:", step_size)
         plt.plot(0,0, label="final course")
         plt.plot(*zip(*drive_points))
