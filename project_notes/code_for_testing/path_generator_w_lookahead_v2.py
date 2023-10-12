@@ -1,6 +1,6 @@
 
 #!/usr/bin/env python3
-# python3 ~/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_generator_w_lookahead.py
+# python3 ~/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_generator_w_lookahead_v2.py
 import dubins
 import math
 import matplotlib.pyplot as plt
@@ -112,6 +112,15 @@ with open(input_file_waypoints, 'r') as file:
                 total_count += 1 
                 drive_points.append([p[0],p[1]])
                 file.write(str(p[0]) + " " + str(p[1]) + " " + str(p[2]) + " " + str(p[3]) + " " + str(p[4]) +"\n")
+        
+        # Plotting small red dots for each record in 'content'
+        record_x = []
+        record_y = []
+        for line in content:
+            points = line.split()
+            record_x.append(float(points[0]))
+            record_y.append(float(points[1]))
+        plt.scatter(record_x, record_y, color='red', s=20, label='Records')
         plt.plot(0,0, label="final course")
         plt.plot(*zip(*drive_points))
 
