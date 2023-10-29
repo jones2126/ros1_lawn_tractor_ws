@@ -54,13 +54,9 @@ def callback(data):
         rospy.loginfo("rosparam set GPS_origin_lat %s", updated_origin_lat)
         rospy.loginfo("rosparam set GPS_origin_lon %s", updated_origin_lon)
 
-  #614  rosparam set GPS_origin_lat 40.345298
-  #613  rosparam set GPS_origin_lon -80.128946
-  # data: [7.7163467918289825, -3.5679386565461755,
-  # data: [7.769423488527536, -3.595980806276202,
-  # data: [7.778599630459212, -3.611017727293074
-# data: [7.778599630459212, -3.611017727293074
-
+        # Execute the commands
+        subprocess.run(["rosparam", "set", "GPS_origin_lat", updated_origin_lat], check=True)
+        subprocess.run(["rosparam", "set", "GPS_origin_lon", updated_origin_lon], check=True)        
 
         # Print ending message
         rospy.loginfo("Averaging and updating completed. Shutting down the node.")

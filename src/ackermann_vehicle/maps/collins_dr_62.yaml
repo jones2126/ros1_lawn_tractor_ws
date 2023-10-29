@@ -1,12 +1,9 @@
-#image: 435_pine_valley_rviz.png
-image: Screenshot_of_backyard_120x211_gray2.png
-#resolution: 0.05187452
-resolution: 0.091753
+image: collins_62_192X198.png
+resolution: 0.170339
 # resolution is calculated using 
 # $ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/calc_map_resolution.py
-
 # [x, y, z]  x is East/West; y is North/South
-origin: [-18.1, -8.7, 0.0] 
+origin: [-12.2, -15.4, 0.0] 
 #origin: [0.0, 0.0, 0.0] # need y to come down a .5 more
 negate: 0
 occupied_thresh: 0.65

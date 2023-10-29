@@ -55,8 +55,8 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):
 
 # main routine
 #input_file_waypoints = "input_file.txt"
-input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_first_polygon_wFinishingCircles.txt"
-output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt"
+input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/collins_62_step1.txt"
+output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/collins_62_step2.txt"
 print("Output file:", output_file_waypoints)
 
 with open(input_file_waypoints, 'r') as file:

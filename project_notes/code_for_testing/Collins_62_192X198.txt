@@ -1,0 +1,3 @@
+Image Name: Collins_62_192X198
+Map Resolution Average: 0.17033883342091435
+Image height and width in pixels: 352 x 346

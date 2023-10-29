@@ -20,11 +20,11 @@ class Steps_to_Process(tk.Frame):
 
         step_1_button = ttk.Button(self, text="1. Gazebo", width=50, command=self.step_1_actions)
         step_2_button = ttk.Button(self, text="2. teb_planner", width=50, command=self.step_2_actions)
-        step_3_button = ttk.Button(self, text="3. RVIZ", width=50, command=self.step_3_actions)
+        step_3_button = ttk.Button(self, text="3. RVIZ @ 435", width=50, command=self.step_3_actions)
         step_4_button = ttk.Button(self, text="rostopic echo /move_base_simple/goal", width=50, command=self.step_4_actions)
         step_5_button = ttk.Button(self, text="rostopic echo /cmd_vel", width=50, command=self.step_5_actions)
         step_6_button = ttk.Button(self, text="rosbag record -a", width=50, command=self.step_6_actions)
-        step_7_button = ttk.Button(self, text="tbd", width=50, command=self.step_7_actions)
+        step_7_button = ttk.Button(self, text="3. RVIZ @ 62 Collins", width=50, command=self.step_7_actions)
         step_8_button = ttk.Button(self, text="tbd", width=50, command=self.step_8_actions)
         step_9_button = ttk.Button(self, text="Run mmbf mission", width=50, command=self.step_9_actions)        
 
@@ -98,8 +98,9 @@ class Steps_to_Process(tk.Frame):
         
     def step_7_actions(self):   # open
         self.step_0_actions()
-        subprocess.check_output(["xdotool", "type", "cd ~/ros1_lawn_tractor_ws" + "\n"])
-        time.sleep(1)
+        time.sleep(2)        
+        subprocess.check_output(["xdotool", "type", "rviz -d /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/maps/map_testing.rviz" + "\n"])
+        time.sleep(1) 
    
     def step_8_actions(self):   # open      
         self.step_0_actions()

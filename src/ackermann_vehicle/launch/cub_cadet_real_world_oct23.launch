@@ -28,14 +28,14 @@
   <arg name="port" default="/dev/rosimu" />
   <node pkg="chip_imu_driver" type="chip_imu_driver_node" name="chip_imu_driver_node" output="screen">
     <param name="port" value="$(arg port)" />
-    <param name="initial_yaw" type="double" value="16.5"/>
+    <param name="initial_yaw" type="double" value="0.05"/>
     <!-- <param name="initial_yaw" type="double" value="-90.94"/>  -->
     <!-- initial yaw is 184 degrees (compass heading) -->    
   </node>
 
   <!-- ****** map server ***** -->
   <node name="map_server" pkg="map_server" type="map_server"
-       args="$(find ackermann_vehicle)/maps/435_pine_valley.yaml" output="screen">
+       args="$(find ackermann_vehicle)/maps/collins_dr_62.yaml" output="screen">
     <param name="frame_id" value="map"/>
   </node>
 
@@ -53,28 +53,15 @@
 
   <node name="odom_wheel_node" pkg="ackermann_vehicle" type="odom_from_wheel_and_gps.py" output="screen" />
 
-  <!-- ****** rvis ***** -->
-  <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/cub_cadet_real_world.rviz"/>   -->
-
-  <node pkg="pure_pursuit" type="pure_pursuit" name="controller"  clear_params="true">
-    <param name="robot_frame_id" value="base_link"/>
-    <!-- <param name="robot_frame_id" value="base_footprint"/>  -->
-    <!-- change to base_link instead of base_footprint -->
-    <param name="global_frame_id" value="odom"/>
-    <param name="lookahead_frame_id" value="lookahead"/>
-    <rosparam file="$(find pure_pursuit)/cfg/pure_pursuit_cub_cadet.yaml" command="load"/>    
-    <remap from="path_segment" to="/drive_path"/>
-    <remap from="odometry" to="odom"/>
-    <remap from="cmd_vel" to="cmd_vel"/>
-    <remap from="cmd_acker" to="/acker_in"/>
-  </node>  
 
   <!-- <param name="/speed_params" type="yaml" value="[230, 245, 256, 291, 294, 295, 296]" />  -->
   <!-- <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 312, 318, 330]" />  -->
   <!-- 312 = .75 m/s; 310 = ~ .35 m/s -->
-  <param name="/speed_params" type="yaml" value="[250, 258, 266, 306, 307, 312, 314]" /> 
-  <param name="GPS_origin_lat" value="40.34534080" />
-  <param name="GPS_origin_lon" value="-80.12894600" />
+  <param name="/speed_params" type="yaml" value="[250, 258, 266, 306, 307, 311, 314]" /> 
+  <param name="GPS_origin_lat" value="40.48524688166667" />
+  <param name="GPS_origin_lon" value="-80.332720941667" />
+
+  
 
 <!-- linear_x >= 1.00 -> transmissionServoValue = transmissionFullForwardPos;  (1.80 m/s) 330
      linear_x >= 0.75 -> transmissionServoValue = transmission075ForwardPos;   (1.00 m/s) 315

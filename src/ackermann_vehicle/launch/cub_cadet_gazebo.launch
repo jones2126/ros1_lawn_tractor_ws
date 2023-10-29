@@ -49,7 +49,8 @@ limitations under the License.
   <arg name="roll" default="0.0"/>
   <arg name="pitch" default="0.0"/>
     <!-- originally yaw was 0.0; When I use the map for 435_pine_valley I want the tractor pointing magnetic South -->
-  <arg name="yaw" default="-1.57"/>
+  <!-- <arg name="yaw" default="-1.57"/> -->
+  <arg name="yaw" default="0.0"/>    <!-- for 62 Collins Dr -->
 
   <include file="$(find ackermann_vehicle)/launch/ackermann_xacro.launch">
     <arg name="namespace" value="$(arg namespace)"/>

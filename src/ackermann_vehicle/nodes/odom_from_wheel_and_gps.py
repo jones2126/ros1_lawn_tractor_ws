@@ -44,7 +44,8 @@ class OdomPublisher:
         self.right_speed = 0
         # either set to zero or remove entirely
         # the odom statement need quat.  That can come from the raw IMU data.
-        self.heading_radians_imu = -1.57
+        #self.heading_radians_imu = -1.57   # 435 Pine Valley, in the garage pointing South
+        self.heading_radians_imu = 0.0      # 62 Collins Dr, pointing East
         self.heading_radians_wheels = self.heading_radians_imu
         self.prev_yaw = 0.0
         self.angular_vel_z_imu = 0.0
@@ -58,8 +59,12 @@ class OdomPublisher:
         self.last_time = rospy.Time.now()
         self.prev_time_imu = rospy.Time.now()
         self.last_print_time = rospy.Time.now()
-        self.GPS_origin_lat = 40.34534080  
-        self.GPS_origin_lon = -80.12894600   
+        # self.GPS_origin_lat = 40.34534080  #435 Pine Valley
+        # self.GPS_origin_lon = -80.12894600 
+
+        self.GPS_origin_lat = 40.48524688166667  #62 Collins Dr
+        self.GPS_origin_lon = -80.332720941667
+
         rospy.Timer(rospy.Duration(60), self.calibrate_lat_lon_origin)
         #origin_lat = 40.34534080; origin_lon = -80.12894600  # represents the starting point of my tractor inside the garage - averaged on 20230904
 
