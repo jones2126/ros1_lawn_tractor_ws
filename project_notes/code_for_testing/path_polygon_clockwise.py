@@ -18,8 +18,9 @@ def calculate_angle(x1, y1, x2, y2):
 def adjust_angle(angle):
     return angle if angle >= 0 else (2 * math.pi + angle)
 
+# the math is unique to calculate the first inside point after the 4 provided points
 def calculate_point_five(points, path_width):
-    x1, y1 = points[0]  # point 1
+    x1, y1 = points[0]  # point 2 in the finished path (first point of the 4 provided corners)
     x4, y4 = points[3]  # point 4
     
     if x1 != x4:
@@ -101,7 +102,7 @@ def plot_graph(points):
 
 def main():
     # points = [[19.2, -40.9], [-6.9, -52.3], [-29.8, -22.7], [4.3, -4.5]]
-    points = [[4.0, -4.6], [29.5, 2.7], [21.0, 35.0], [-9.1, 26.3]]    
+    points = [[4.0, -4.6], [29.5, 2.7], [21.0, 35.0], [-9.1, 26.3]]             # point 2, 3, 4, 5
     path_width = 1  # my cutting deck is 42" wide (1.067 meters)
     points = calculate_point_five(points, path_width)
     slopes = calculate_slopes(points)
@@ -114,44 +115,44 @@ def main():
     points = calculate_generic_point(points, slopes, path_width, 1, [6, 7])     # point 12
     points = calculate_generic_point(points, slopes, path_width, 2, [7, 8])     # point 13
     points = calculate_generic_point(points, slopes, path_width, 3, [8, 9])     # point 14   
-    points = calculate_generic_point(points, slopes, path_width, 0, [9, 10])    # point 15
-    points = calculate_generic_point(points, slopes, path_width, 1, [10, 11])   # point 16
-    points = calculate_generic_point(points, slopes, path_width, 2, [11, 12])   # point 17
-    points = calculate_generic_point(points, slopes, path_width, 3, [12, 13])   # point 18
-    points = calculate_generic_point(points, slopes, path_width, 0, [13, 14])   # point 19
-    points = calculate_generic_point(points, slopes, path_width, 1, [14, 15])   # point 20
-    points = calculate_generic_point(points, slopes, path_width, 2, [15, 16])   # point 21
-    points = calculate_generic_point(points, slopes, path_width, 3, [16, 17])   # point 22
-    points = calculate_generic_point(points, slopes, path_width, 0, [17, 18])   # point 23
-    points = calculate_generic_point(points, slopes, path_width, 1, [18, 19])   # point 24
-    points = calculate_generic_point(points, slopes, path_width, 2, [19, 20])   # point 25
-    points = calculate_generic_point(points, slopes, path_width, 3, [20, 21])   # point 26
-    points = calculate_generic_point(points, slopes, path_width, 0, [21, 22])   # point 27
-    points = calculate_generic_point(points, slopes, path_width, 1, [22, 23])   # point 28
-    points = calculate_generic_point(points, slopes, path_width, 2, [23, 24])   # point 29
-    points = calculate_generic_point(points, slopes, path_width, 3, [24, 25])   # point 30
-    points = calculate_generic_point(points, slopes, path_width, 0, [25, 26])   # point 31
-    points = calculate_generic_point(points, slopes, path_width, 1, [26, 27])   # point 32
-    points = calculate_generic_point(points, slopes, path_width, 2, [27, 28])   # point 33
-    points = calculate_generic_point(points, slopes, path_width, 3, [28, 29])   # point 34
-    points = calculate_generic_point(points, slopes, path_width, 0, [29, 30])   # point 35
-    points = calculate_generic_point(points, slopes, path_width, 1, [30, 31])   # point 36
-    points = calculate_generic_point(points, slopes, path_width, 2, [31, 32])   # point 37
-    points = calculate_generic_point(points, slopes, path_width, 3, [32, 33])   # point 38
-    points = calculate_generic_point(points, slopes, path_width, 0, [33, 34])   # point 39
-    points = calculate_generic_point(points, slopes, path_width, 1, [34, 35])   # point 40
-    points = calculate_generic_point(points, slopes, path_width, 2, [35, 36])   # point 41
-    points = calculate_generic_point(points, slopes, path_width, 3, [36, 37])   # point 42
-    points = calculate_generic_point(points, slopes, path_width, 0, [37, 38])   # point 43
-    points = calculate_generic_point(points, slopes, path_width, 1, [38, 39])   # point 44
-    points = calculate_generic_point(points, slopes, path_width, 2, [39, 40])   # point 45
-    points = calculate_generic_point(points, slopes, path_width, 3, [40, 41])   # point 46
-    points = calculate_generic_point(points, slopes, path_width, 0, [41, 42])   # point 47
-    points = calculate_generic_point(points, slopes, path_width, 1, [42, 43])   # point 48
-    points = calculate_generic_point(points, slopes, path_width, 2, [43, 44])   # point 49
-    points = calculate_generic_point(points, slopes, path_width, 3, [44, 45])   # point 50
-    points = calculate_generic_point(points, slopes, path_width, 0, [45, 46])   # point 51
-    points = calculate_generic_point(points, slopes, path_width, 1, [46, 47])   # point 52
+    #points = calculate_generic_point(points, slopes, path_width, 0, [9, 10])    # point 15
+    #points = calculate_generic_point(points, slopes, path_width, 1, [10, 11])   # point 16
+    #points = calculate_generic_point(points, slopes, path_width, 2, [11, 12])   # point 17
+    #points = calculate_generic_point(points, slopes, path_width, 3, [12, 13])   # point 18
+    #points = calculate_generic_point(points, slopes, path_width, 0, [13, 14])   # point 19
+    #points = calculate_generic_point(points, slopes, path_width, 1, [14, 15])   # point 20
+    #points = calculate_generic_point(points, slopes, path_width, 2, [15, 16])   # point 21
+    #points = calculate_generic_point(points, slopes, path_width, 3, [16, 17])   # point 22
+    #points = calculate_generic_point(points, slopes, path_width, 0, [17, 18])   # point 23
+    #points = calculate_generic_point(points, slopes, path_width, 1, [18, 19])   # point 24
+    #points = calculate_generic_point(points, slopes, path_width, 2, [19, 20])   # point 25
+    #points = calculate_generic_point(points, slopes, path_width, 3, [20, 21])   # point 26
+    #points = calculate_generic_point(points, slopes, path_width, 0, [21, 22])   # point 27
+    #points = calculate_generic_point(points, slopes, path_width, 1, [22, 23])   # point 28
+    #points = calculate_generic_point(points, slopes, path_width, 2, [23, 24])   # point 29
+    #points = calculate_generic_point(points, slopes, path_width, 3, [24, 25])   # point 30
+    #points = calculate_generic_point(points, slopes, path_width, 0, [25, 26])   # point 31
+    #points = calculate_generic_point(points, slopes, path_width, 1, [26, 27])   # point 32
+    #points = calculate_generic_point(points, slopes, path_width, 2, [27, 28])   # point 33
+    #points = calculate_generic_point(points, slopes, path_width, 3, [28, 29])   # point 34
+    #points = calculate_generic_point(points, slopes, path_width, 0, [29, 30])   # point 35
+    #points = calculate_generic_point(points, slopes, path_width, 1, [30, 31])   # point 36
+    #points = calculate_generic_point(points, slopes, path_width, 2, [31, 32])   # point 37
+    #points = calculate_generic_point(points, slopes, path_width, 3, [32, 33])   # point 38
+    #points = calculate_generic_point(points, slopes, path_width, 0, [33, 34])   # point 39
+    #points = calculate_generic_point(points, slopes, path_width, 1, [34, 35])   # point 40
+    #points = calculate_generic_point(points, slopes, path_width, 2, [35, 36])   # point 41
+    #points = calculate_generic_point(points, slopes, path_width, 3, [36, 37])   # point 42
+    #points = calculate_generic_point(points, slopes, path_width, 0, [37, 38])   # point 43
+    #points = calculate_generic_point(points, slopes, path_width, 1, [38, 39])   # point 44
+    #points = calculate_generic_point(points, slopes, path_width, 2, [39, 40])   # point 45
+    #points = calculate_generic_point(points, slopes, path_width, 3, [40, 41])   # point 46
+    #points = calculate_generic_point(points, slopes, path_width, 0, [41, 42])   # point 47
+    #points = calculate_generic_point(points, slopes, path_width, 1, [42, 43])   # point 48
+    #points = calculate_generic_point(points, slopes, path_width, 2, [43, 44])   # point 49
+    #points = calculate_generic_point(points, slopes, path_width, 3, [44, 45])   # point 50
+    #points = calculate_generic_point(points, slopes, path_width, 0, [45, 46])   # point 51
+    #points = calculate_generic_point(points, slopes, path_width, 1, [46, 47])   # point 52
     # points = calculate_generic_point(points, slopes, path_width, 2, [47, 48])   # point 53
     # points = calculate_generic_point(points, slopes, path_width, 3, [48, 49])   # point 54
     # points = calculate_generic_point(points, slopes, path_width, 0, [49, 50])   # point 55
@@ -180,14 +181,21 @@ def main():
    # points = calculate_generic_point(points, slopes, path_width, 3, [72, 73])   # point 78        
 
     # Add the origin coordinate
-    origin = [0.0, 0.0]
+    origin = [0.0, 0.0]  # point 1
     points.insert(0, origin)
 
     print("List of waypoints:")
     for coord in points:
         print(coord)
 
-    # Iterate over the waypoints list and calculate the angle for each point except the last one
+'''
+Iterate over the waypoints list "points" and calculate the angle between the current point and the next point in the list
+except the last one. Each point is epresented as a tuple (x,y). The angle is calculated using the atan2 function from the 
+math library, which returns a value in radians between −π and π.
+
+The result is a list of tuples, where each tuple contains the x and y coordinates of a point and the angle to 
+the next point. The angle is measured in radians and is updated to be between 0 and 2π.
+'''
     extended_coordinates_list = []
     print('Numbr of points:', len(points))
     for idx in range(len(points) - 1):

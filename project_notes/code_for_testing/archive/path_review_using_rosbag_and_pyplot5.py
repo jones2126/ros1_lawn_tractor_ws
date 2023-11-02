@@ -12,17 +12,23 @@ import rospy
 import geonav_transform.geonav_conversions as gc
 import utm
 
-origin_lat = 40.3452899
-origin_lon = -80.1289039
+# 435 Pine Valley Dr
+# origin_lat = 40.3452899
+# origin_lon = -80.1289039
+
+# 62 Collins Dr
+origin_lat = 40.48528569166667
+origin_lon = -80.33262521333333
+
 
 # Get UTM zone for the origin
 origin_utm_zone = utm.from_latlon(origin_lat, origin_lon)[2]
 
-bag_path = '/home/tractor/Downloads/2023-08-04-10-31-33_simple_square.bag'
+bag_path = '/home/tractor/bagfiles/2023-11-01-14-51-56.bag'
 bag = rosbag.Bag(bag_path)
 
-start_time = 130
-end_time = 500
+start_time = 100
+end_time = 690
 
 first_timestamp = None
 outside_utm_count = 0
