@@ -1,5 +1,22 @@
-
 #!/usr/bin/env python3
+'''
+A module for generating and plotting a path based on Dubins paths, which are the shortest curves that connect two 
+points in the plane with a constraint on the curvature of the path. The script reads an input file containing waypoints from 
+a hardcoded file path, generates a path connecting these waypoints with the specified parameters, and saves the result to an output file.
+
+Functions:
+1. generate_path(x0, y0, x1, y1, theta0, theta1): Generates a path from point (x0, y0) with orientation theta0 to point (x1, y1) 
+   with orientation theta1.
+2. plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"): Plots an arrow on a graph, which could represent orientation and position.
+3. get_lookahead(theta0, theta1): Determines the lookahead based on the orientations theta0 and theta1, which might be used to 
+   adjust the calculation for the next path segment depending on the current orientation of the path.
+
+Configuration parameters are set for the path generation, such as turning_radius, step_size, and lookahead distances for straight lines and curves.   
+
+'''
+
+
+
 # python3 ~/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/path_step4_v1.py
 import dubins
 import math
@@ -56,8 +73,8 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):
 
 # main routine
 #input_file_waypoints = "input_file.txt"
-input_file_waypoints = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/collins_dr_62_A_step3.txt'
-output_file_waypoints = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/collins_dr_62_A_step4.txt'
+input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/collins_62_step1.txt"
+output_file_waypoints = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/collins_dr_62_A_step4.txt'
 print("Output file:", output_file_waypoints)
 
 with open(input_file_waypoints, 'r') as file:

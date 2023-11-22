@@ -31,8 +31,7 @@
     <param name="GPS_ref_lon" value="$(arg ref_lon)"/>
 
     <!-- Start the Python Script Node -->
-    <node name="path_update_origin_lat_lon" pkg="ackermann_vehicle" type="path_update_origin_lat_lon.py" output="screen">
-        <!-- If you have any additional parameters or configurations, add them here -->
-    </node>
+<!--     <node name="path_update_origin_lat_lon" pkg="ackermann_vehicle" type="path_update_origin_lat_lon.py" output="screen">
+    </node> -->
 
   </launch>

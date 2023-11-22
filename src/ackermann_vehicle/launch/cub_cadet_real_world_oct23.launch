@@ -57,7 +57,7 @@
   <!-- <param name="/speed_params" type="yaml" value="[230, 245, 256, 291, 294, 295, 296]" />  -->
   <!-- <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 312, 318, 330]" />  -->
   <!-- 312 = .75 m/s; 310 = ~ .35 m/s -->
-  <param name="/speed_params" type="yaml" value="[250, 258, 266, 306, 307, 311, 314]" /> 
+  <param name="/speed_params" type="yaml" value="[250, 258, 266, 306, 307, 310, 314]" /> 
   <param name="GPS_origin_lat" value="40.48524688166667" />
   <param name="GPS_origin_lon" value="-80.332720941667" />
 

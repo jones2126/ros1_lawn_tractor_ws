@@ -10,13 +10,24 @@ import matplotlib.pyplot as plt
 from shapely.geometry import Polygon
 import numpy as np
 
+# def read_points_from_csv(file_path):
+#     points = []
+#     with open(file_path, 'r') as file:
+#         reader = csv.reader(file)
+#         next(reader)  # Skip the header row
+#         for row in reader:
+#             x, y = map(float, row)
+#             points.append((x, y))
+#     return points
+
 def read_points_from_csv(file_path):
     points = []
     with open(file_path, 'r') as file:
         reader = csv.reader(file)
         next(reader)  # Skip the header row
         for row in reader:
-            x, y = map(float, row)
+            # Columns J and K correspond to indices 9 and 10
+            x, y = map(float, [row[9], row[10]])
             points.append((x, y))
     return points
 
@@ -52,7 +63,8 @@ def plot_innermost_ring(innermost_ring_points):
     plt.show()    
 
 # File path to the CSV file
-file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/collins_dr_62_A_step2.csv'
+file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01.csv'
+
 
 # Read points from CSV
 original_points = read_points_from_csv(file_path)
@@ -61,7 +73,7 @@ original_points = read_points_from_csv(file_path)
 polygon = Polygon(original_points)
 
 # Number of inner rings
-num_inner_rings = 5
+num_inner_rings = 2
 
 # Create inner rings and store them in a list
 inner_rings = []

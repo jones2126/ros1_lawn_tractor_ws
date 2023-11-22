@@ -1,5 +1,4 @@
 #!/usr/bin/env python3  
-# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/path_step3_v1.py
 '''
 This script reads points from a CSV file, calculates the angle between consecutive points, and writes the points along with the calculated angles to a text file. 
 
@@ -9,6 +8,8 @@ math library, which returns a value in radians between −π and π.
 
 The result is a list of tuples, where each tuple contains the x and y coordinates of a point and the angle to 
 the next point. The angle is measured in radians and is updated to be between 0 and 2π.
+
+$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/path_step3_v1.py
 '''
 import csv
 import math

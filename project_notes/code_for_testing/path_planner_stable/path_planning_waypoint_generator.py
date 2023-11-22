@@ -66,8 +66,13 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):  # pragma: no 
 
 #input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_squar_input3.txt"
 #input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_uturn_input4.txt"
-input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_first_polygon_wFinishingCircles.txt"
-output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_first_polygon_wFinishingCircles_output.txt"
+# /home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/collins_62_test_boustrophen.txt
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_first_polygon_wFinishingCircles.txt"
+input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/archive/collins_62_test_boustrophen.txt"
+output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/collins_62_test_boustrophen_step2.txt"
+
+#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_path_first_60_stripes_input.txt"
+#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_path_first_60_stripes_step2.txt"
 print("Output file:", output_file_waypoints)
 
 
@@ -132,6 +137,8 @@ with open(input_file_waypoints, 'r') as file:
         for (ix, iy, iyaw) in zip(px, py, pyaw):
             plot_arrow(ix, iy, iyaw, fc="b")
 
+        plt.title(f'Continuous Curvature Path from: path_planning_waypoint_generator.py')
+        plt.figtext(0.5, 0.01, f'Input: {input_file_waypoints}', ha='center', fontsize=8, color='gray')
         plt.legend()
         plt.grid(True)
         plt.axis("equal")
