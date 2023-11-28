@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 '''
 The script is designed to process a CSV file containing GPS data
-x. Read the locations database to get key parameters for a site (e.g. Source file name, origin lat, lon)
-1. Calculate cartesian coordinates
-x. Create inner rings based on the origianl polygon in a clockwise path 
-2. Check for duplicates in the data
-x. Determine the intersection points of the obstacles
-x. Calculate the angle (i.e. theta) between points
-x. Add lookahead and speed data
-3. Save the file
-x. Copy the output to the input file for pure pursuit to use
-x. Plot the path coordinates using matplotlib. 
+1. Read the locations database to get key parameters for a site (e.g. Source file name, origin lat, lon)
+2. Calculate cartesian coordinates
+3. Create inner rings based on the origianl polygon in a clockwise path; Save the innermost ring to feed to the Boustrophedon process
+4. Check for duplicates in the data
+5. Determine the intersection points of the obstacles
+6. Calculate the angle (i.e. theta) between points
+7. If this will be the final path, add lookahead and speed data; If its not the final path (e.g. you might want to add the boustrophedon path first) then you can 
+   skip this step or you can save this file and then merge them later.
+8. Save the file
+9. If this will be the final path, copy the output to the input file for pure pursuit to use
+10. Plot the path coordinates using matplotlib. 
 
 There is untested code that is commented out that would add a column to the .csv file indicating whether the point should
 be plotted.  The idea was to reduce the number of plotted points based on a minimum distance.
@@ -20,10 +21,10 @@ $ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/arch
 
 '''
 
-
 import math
 import matplotlib.pyplot as plt
 import pandas as pd
+from shapely.geometry import Polygon
 #from path_load_location_data import load_location_data
 
 def convert_gps_to_cartesian(csv_file_path, origin_lat, origin_lon):
@@ -58,9 +59,11 @@ def convert_gps_to_cartesian(csv_file_path, origin_lat, origin_lon):
 
     gps_data['X'] = [point[0] for point in cartesian_points]  # Add the Cartesian coordinates to the dataframe
     gps_data['Y'] = [point[1] for point in cartesian_points]
+    #print(gps_data.head(10))
+    print(f"There are {len(gps_data)} records in gps_data from the .csv file")
     return gps_data
 
-def create_inner_rings(polygon_points, num_inner_rings, path_size, start_point):
+def create_inner_rings(gps_data, num_inner_rings, path_size, start_point):
     """
     Creates a specified number of inner rings within a given polygon.
 
@@ -86,38 +89,88 @@ def create_inner_rings(polygon_points, num_inner_rings, path_size, start_point):
             return polygon[::-1]        # Reverse to make it clockwise
         return polygon
 
-    polygon = Polygon(polygon_points)   # Create polygon
+    def plot_paths(paths):
+        plt.figure(figsize=(10, 8))
 
-    # Create inner rings
+        # Define a list of colors for the paths
+        colors = ['blue', 'green', 'red', 'purple', 'orange', 'brown']
+        # Ensure there are enough colors for the number of paths
+        if len(colors) < len(paths):
+            # If not, repeat the color list
+            colors *= (len(paths) // len(colors) + 1)  # repeat the list colors to cover the number of elements in paths by multiplying the list colors by the number calculated.  
+
+        for path, color in zip(paths, colors):
+            x_coords, y_coords = zip(*path)  # Separate the x and y coordinates
+            plt.plot(x_coords, y_coords, marker='o', color=color)  # Plot each path with a specific color
+
+        # Plot a green dot at the start of the first path
+        first_path_x, first_path_y = zip(*paths[0])
+        plt.plot(first_path_x[0], first_path_y[0], marker='o', color='green', markersize=10)
+
+        # Plot a red dot at the end of the last path
+        last_path_x, last_path_y = zip(*paths[-1])
+        plt.plot(last_path_x[-1], last_path_y[-1], marker='o', color='red', markersize=10)
+
+        plt.title('Plot of Paths')
+        plt.xlabel('X Coordinate')
+        plt.ylabel('Y Coordinate')
+        plt.grid(True)
+        plt.axis('equal')  # Equal scaling of x and y axes
+        plt.show()        
+
+    DEBUG_MODE = True  # Set to False when not debugging to avoid plotting
+    # strip off the x and y coordinates from the dataframe and start working with a list
+    polygon_points = list(zip(gps_data['X'], gps_data['Y']))  
+    polygon = Polygon(polygon_points)   # Create polygon
+    print(f"There are {len(polygon_points)} records in polygon points extracted from gps_data")
+
+    # Create inner rings in reverse order because we want the robot to start with the inner most ring and work outwards in case the outer ring has issues for testing
     paths = []
-    for i in range(1, num_inner_rings + 1):
+    for i in range(num_inner_rings, 0, -1):
         inner_ring = polygon.buffer(-path_size * i)
         inner_points = list(inner_ring.exterior.coords)
         reordered_ring = reorder_ring(ensure_clockwise(inner_points), start_point)
         paths.append(reordered_ring)
 
-    # Add the original polygon to 'paths' because I want to run this last
+    # Add the original polygon to 'paths' as the last element
     original_polygon_clockwise = reorder_ring(ensure_clockwise(polygon_points)[::-1], start_point)    
     paths.append(original_polygon_clockwise)
 
+
+    # # Create inner rings
+    # paths = []
+    # for i in range(1, num_inner_rings + 1):
+    #     inner_ring = polygon.buffer(-path_size * i)
+    #     inner_points = list(inner_ring.exterior.coords)
+    #     reordered_ring = reorder_ring(ensure_clockwise(inner_points), start_point)
+    #     paths.append(reordered_ring)
+    #     print(f"Number of points in inner ring {i}: {len(reordered_ring)}, Total paths size: {len(paths)}")        
+
+    # # Add the original polygon to 'paths' because I want to run this last
+    # original_polygon_clockwise = reorder_ring(ensure_clockwise(polygon_points)[::-1], start_point)    
+    # paths.append(original_polygon_clockwise)
+
+
+    print(f"There are {len(paths)} records in full ring path created from the initial polygon")
+    if DEBUG_MODE:
+        plot_paths(paths)
     return paths    
 
-def plot_cartesian_points(gps_data):
-    # Convert to NumPy arrays for compatibility with Matplotlib
-    x_coords = gps_data['X'].to_numpy()
-    y_coords = gps_data['Y'].to_numpy()
+# def plot_cartesian_points(ring_path):
+#     x_coords = [point[0] for point in ring_path]  # Extract X coordinates
+#     y_coords = [point[1] for point in ring_path]  # Extract Y coordinates    
 
-    # Plot the X and Y coordinates
-    plt.figure(figsize=(10, 8))
-    plt.scatter(x_coords, y_coords, c='red', label='GPS Points')
-    plt.plot(x_coords, y_coords, 'b-', label='Path')
-    plt.title('Plot of Cartesian Coordinates')
-    plt.xlabel('X Coordinate (meters)')
-    plt.ylabel('Y Coordinate (meters)')
-    plt.legend()
-    plt.axis('equal')  # Ensure equal scaling on both axes
-    plt.grid(True)
-    plt.show()
+#     # Plot the X and Y coordinates
+#     plt.figure(figsize=(10, 8))
+#     plt.scatter(x_coords, y_coords, c='red', label='GPS Points')
+#     plt.plot(x_coords, y_coords, 'b-', label='Path')
+#     plt.title('Plot of Cartesian Coordinates')
+#     plt.xlabel('X Coordinate (meters)')
+#     plt.ylabel('Y Coordinate (meters)')
+#     plt.legend()
+#     plt.axis('equal')  # Ensure equal scaling on both axes
+#     plt.grid(True)
+#     plt.show()
 
 
 #Modify the plot function to plot only the points with 'to_plot' flag as 'y'
@@ -172,8 +225,14 @@ def main():
     # read the locations database to get the name of the file where the outer polygon lat, lon, plus other info is for 'location_name'
     file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/paths_locations.csv'   # The path to the locations file
     locations_data = pd.read_csv(file_path)      # Reading the CSV file into a DataFrame both string and float data
+    #locations_data.columns = locations_data.columns.str.strip() # In case there are any spaces in my header file
+    print(locations_data)
     location_name = 'Collins_Dr_62_Site_01'
-    location_row = locations_data[locations_data['location_name'] == site]  # Finding the specific row for the site
+    location_row = locations_data[locations_data['location_name'] == location_name]  # Finding the specific row for the site
+    csv_file_path = location_row['csv_file_path'].iloc[0]
+    origin_lat = location_row['origin_lat'].iloc[0]
+    print(f"paths_locations.csv file origin_lat: ('{origin_lat}')")
+    print(f"Data type of origin_lat: {type(origin_lat)}")
     if not location_row.empty:
         origin_lat = location_row['origin_lat'].iloc[0]
         origin_lon = location_row['origin_lon'].iloc[0]
@@ -183,38 +242,40 @@ def main():
         start_point_x = location_row['start_point_x'].iloc[0]
         start_point_y = location_row['start_point_y'].iloc[0]
         start_point=(start_point_x, start_point_y)
-        print(f"path and longitude: {location['csv_file_path']}, Longitude: {location['origin_lon']}")
+        print(f"path and longitude: {location_row['csv_file_path']}, Longitude: {location_row['origin_lon']}")
     else:
-        print(f"Error: Site '{site}' not found in the data.")
+        print(f"Error: Site '{location_name}' not found in the data.")
 
     # calculate x, y coordinates using the lat, lon data and the origin lat, lon data that came from the locations database
     print(f"reading file: {csv_file_path} and calculating x and y coordinates...")
     gps_data = convert_gps_to_cartesian(csv_file_path, origin_lat, origin_lon)
 
     # Create inner rings based on the origianl polygon in a clockwise path 
-    polygon_points = list(zip(gps_data['X'], gps_data['Y']))  # strip off the x and y coordinates from the dataframe 
-    paths = create_inner_rings(polygon_points, num_inner_rings, path_size, start_point)
+
+    ring_path = create_inner_rings(gps_data, num_inner_rings, path_size, start_point)
 
 
-# 2. Check for duplicates in the data
-# x. Determine the intersection points of the obstacles
-# x. Calculate the angle (i.e. theta) between points
-# x. Add lookahead and speed data
-# 3. Save the file
-# x. Copy the output to the input file for pure pursuit to use
-# x. Plot the path coordinates using matplotlib. 
+# Save the innermost ring to feed to the Boustrophedon process
+# 4. Check for duplicates in the data
+# 5. Determine the intersection points of the obstacles
+# 6. Calculate the angle (i.e. theta) between points
+# 7. If this will be the final path, add lookahead and speed data; If its not the final path (e.g. you might want to add the boustrophedon path first) then you can 
+#    skip this step or you can save this file and then merge them later.
+# 8. Save the file
+# 9. If this will be the final path, copy the output to the input file for pure pursuit to use
+# 10. Plot the path coordinates using matplotlib. 
 
 
-    plot_cartesian_points(gps_data)
+    #plot_cartesian_points(ring_path)
 
-    # 
-    print(f"Adding angles based on x and y coordinate...")    
-    #gps_data = update_df_with_angle_lookahead_speed(gps_data, lookahead=2.5, speed=0.75)  
-    print(f"Re-writing to the .csv file: {csv_file_path}")
-    #gps_data.to_csv(csv_file_path, index=False)
-    #output_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt' 
-    print(f"Publishing final path to file: {csv_file_path}") 
-    #output_to_pure_pursuit(gps_data, output_file_path)    
+    # # 
+    # print(f"Adding angles based on x and y coordinate...")    
+    # #gps_data = update_df_with_angle_lookahead_speed(gps_data, lookahead=2.5, speed=0.75)  
+    # print(f"Re-writing to the .csv file: {csv_file_path}")
+    # #gps_data.to_csv(csv_file_path, index=False)
+    # #output_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt' 
+    # print(f"Publishing final path to file: {csv_file_path}") 
+    # #output_to_pure_pursuit(gps_data, output_file_path)    
     print(f"End of main function")
 
 def output_to_pure_pursuit(df, output_file_path):

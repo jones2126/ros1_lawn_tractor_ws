@@ -241,7 +241,7 @@ for i in range(0, len(intersection_points), 2):
     point1 = intersection_points[i]
     point2 = intersection_points[i + 1]
     circle_arc = calculate_shortest_path(circle_center, radius, point1, point2, num_points)
-    print("circle_arc: ", circle_arc)    
+    #print("circle_arc: ", circle_arc)    
     # so now I have the shortest path I need to append it to 'revised_path'
     circle_arc_df = pd.DataFrame(circle_arc, columns=['x', 'y'])   # Step 1: Convert circle_arc to a DataFrame
     circle_arc_df['angle'] = 0.0  # Step 2: Add a 'z' column with 0.0 as the placeholder

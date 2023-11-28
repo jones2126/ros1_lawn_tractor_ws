@@ -72,6 +72,7 @@ radius = 5.4 / 2
 num_points = 21  # 21 allows for CCC and CC to be unequal odd near the middle
 
 original_data = pd.read_csv(csv_file_path)  				  	# Read the CSV file into a DataFrame
+print(original_data.head(10))
 revised_path = pd.DataFrame()  								  	# Initialize an empty DataFrame for revised_path
 
 # Segment 1
@@ -115,4 +116,4 @@ revised_path.to_csv(output_file_path, index=False)   			# Save 'revised_path' to
 
 plot_xy_coordinates(output_file_path)
 
-Print("eoj")
+print("eoj")

@@ -1,4 +1,4 @@
-# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/obstacle_handling/test_dubins_around_circle_v4.py
+# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/obstacle_handling/test_dubins_around_circle_v5.py
 import dubins
 import numpy as np
 import matplotlib.pyplot as plt
@@ -34,14 +34,14 @@ def sample_path_points(dubins_path, spacing):
 
     return np.array(sampled_points)
 
-def find_line_circle_intersections(circle_center, radius, start_point, end_point):
+def find_line_circle_intersections(circle_center, radius, point_1, point_4):
     h, k = circle_center
     r = radius
 
     # Calculate the coefficients of the line (y = mx + b)
-    if end_point[0] != start_point[0]:  # Non-vertical line
-        m = (end_point[1] - start_point[1]) / (end_point[0] - start_point[0])
-        b = start_point[1] - m * start_point[0]
+    if point_4[0] != point_1[0]:  # Non-vertical line
+        m = (point_4[1] - point_1[1]) / (point_4[0] - point_1[0])
+        b = point_1[1] - m * point_1[0]
 
         # Quadratic equation coefficients (Ax^2 + Bx + C = 0)
         A = 1 + m**2
@@ -59,7 +59,7 @@ def find_line_circle_intersections(circle_center, radius, start_point, end_point
             y2 = m*x2 + b
             return [(x1, y1), (x2, y2)]
     else:  # Vertical line
-        x = start_point[0]
+        x = point_1[0]
         # Circle equation reduced to (y - k)^2 = r^2 - (x - h)^2
         discriminant = r**2 - (x - h)**2
         if discriminant < 0:  # No real intersections
@@ -75,7 +75,11 @@ def distance(point1, point2):
 def angle_between_points(center, point):
     return np.arctan2(point[1] - center[1], point[0] - center[0])
 
-def plot_path_and_obstacle(circle_center, radius, full_path):
+def plot_path_and_obstacle(circle_center, radius, full_path, segment1, segment2, segment3):
+    # Function to separate x and y coordinates from a list of points
+    def extract_coordinates(segment):
+        return [point[0] for point in segment], [point[1] for point in segment]
+
     print("circle_center:", circle_center)
     fig, ax = plt.subplots()
 
@@ -83,26 +87,28 @@ def plot_path_and_obstacle(circle_center, radius, full_path):
     circle = plt.Circle(circle_center, radius, color='blue', fill=False)
     ax.add_artist(circle)
 
-    # Plot the full path
-    # Extracting x and y coordinates from the path points
-    x_coords = [point[0] for point in full_path]
-    y_coords = [point[1] for point in full_path]
-    ax.plot(x_coords, y_coords, 'r-', label='Path')
+    # Extracting coordinates for each segment
+    x1, y1 = extract_coordinates(segment1)
+    x2, y2 = extract_coordinates(segment2)
+    x3, y3 = extract_coordinates(segment3)
+
+    # Plotting each segment
+    ax.plot(x1, y1, color='red')   # First segment in blue
+    ax.plot(x2, y2, color='yellow') # Circular arc in yellow
+    ax.plot(x3, y3, color='green')  # Last segment in green
+
+    ax.text(x2[0], y2[0],   '1', fontsize=10, color='black', ha='right', va='bottom')
+    ax.text(x2[-1], y2[-1], '2', fontsize=10, color='black', ha='left',  va='top')
 
     # Mark start and end points
     ax.plot(full_path[0][0], full_path[0][1], 'go', label='Start')
     ax.plot(full_path[-1][0], full_path[-1][1], 'mo', label='End')
-
-    # # Setting plot limits for better visualization
-    # ax.set_xlim(min(x_coords) - 1, max(x_coords) + 1)
-    # ax.set_ylim(min(y_coords) - 1, max(y_coords) + 1)
 
     # Setting the plot limits
     ax.set_xlim(0, 11)
     ax.set_ylim(-3, 5)    
 
     # Make axes equal to maintain aspect ratio
-    #ax.set_aspect('equal', adjustable='box')
     ax.set_aspect('equal')    
 
     # Adding labels and legend
@@ -127,10 +133,10 @@ def angle_between_points(center, point):
     return angle
 
 # use the the circle data, plus the start and end points of the intersecting line segment to calculate the shortest path around the circle
-def calculate_shortest_path(circle_center, radius, start_point, end_point, num_points=20):
+def calculate_shortest_path(circle_center, radius, point_1, point_4, num_points=20):
     # Determine the angles between the center of the circle and the intersection points 
-    start_angle = adjust_angle(angle_between_points(circle_center, start_point))
-    end_angle = adjust_angle(angle_between_points(circle_center, end_point))
+    start_angle = adjust_angle(angle_between_points(circle_center, point_1))
+    end_angle = adjust_angle(angle_between_points(circle_center, point_4))
 
     # Circumfrence of a circle is 2*Pi().  If the difference in angles > Pi() then that is more than 1/2 the circle which means it is the longer path
     angular_difference = end_angle - start_angle
@@ -198,33 +204,37 @@ plt.show()
 # calculate the intersection points and plot a path from the start to the first intersection point, around the circle at no more 
 # than .3 meter points, to the second intersection point and then to the end point.
 x, y, _ = start_position
-start_point = (x, y) 
+point_1 = (x, y) 
 x, y, _ = end_position
-end_point = (x, y) 
-intersections = find_line_circle_intersections(circle_center, radius, start_point, end_point)
+point_4 = (x, y) 
+intersections = find_line_circle_intersections(circle_center, radius, point_1, point_4)
 print("intersections:", intersections)
 if len(intersections) == 2:
     print(intersections)
     # find the closest intersection point; Make the path the first point and the first intersection point; then the circle
 
-    # Sort intersections based on distance from start_point so we are working with the correct side of the circle
-    intersections = sorted(intersections, key=lambda p: np.hypot(p[0]-start_point[0], p[1]-start_point[1]))
-    closest_point = intersections[0]
-    farthest_point = intersections[1]
+    # Sort intersections based on distance from point_1 so we are working with the correct side of the circle
+    intersections = sorted(intersections, key=lambda p: np.hypot(p[0]-point_1[0], p[1]-point_1[1]))
+    point_2 = intersections[0]
+    point_3 = intersections[1]
 
 
-    print("Closest intersection point:", closest_point)
-    print("farthest_point:", farthest_point)
-    print("[start_point, closest_point]", [start_point, closest_point])
-    print("[farthest_point, end_point]", [farthest_point, end_point])
-    #circle_path = calculate_shortest_circle_path(circle_center, radius, start_point, end_point, num_points=20)
+    print("Closest intersection point:", point_2)
+    print("point_3:", point_3)
+    print("[point_1, point_2]", [point_1, point_2])
+    print("[point_3, point_4]", [point_3, point_4])
+    #circle_path = calculate_shortest_circle_path(circle_center, radius, point_1, point_4, num_points=20)
 
-    circle_arc = calculate_shortest_path(circle_center, radius, closest_point, farthest_point, num_points=10)
+    circle_arc = calculate_shortest_path(circle_center, radius, point_2, point_3, num_points=10)
 
-    #full_path = [start_point] + circle_arc + [end_point]
-    full_path = [start_point, closest_point] + circle_arc + [farthest_point, end_point]
+    #full_path = [point_1] + circle_arc + [point_4]
+    first_segment = [point_1, point_2]
+    second_segment = circle_arc
+    third_segment = [point_3, point_4]
+    #full_path = [point_1, point_2] + circle_arc + [point_3, point_4]
+    full_path = first_segment + second_segment + third_segment
     #print("circle_arc", circle_arc)
 else:
     # Direct path from start to end as no intersections are found
-    full_path = [start_point, end_point]    
-plot_path_and_obstacle(circle_center, radius, full_path)
+    full_path = [point_1, point_4]    
+plot_path_and_obstacle(circle_center, radius, full_path, first_segment, second_segment, third_segment)

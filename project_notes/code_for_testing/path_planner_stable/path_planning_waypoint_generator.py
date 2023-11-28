@@ -12,6 +12,10 @@ import dubins
 import math
 import matplotlib.pyplot as plt
 
+import os
+script_name = os.path.basename(__file__)
+print(f"running script: {script_name}")
+
 # Vairables
 show_animation = True
 x0 = 0.0
@@ -29,7 +33,7 @@ start_y = 0.0
 start_yaw = 0.0
 total_count = 0 
 turning_radius = 1.3    # originally 2
-step_size = 0.1         # originally 1
+step_size = 0.3        # originally 1
 
 def generate_path(x0,y0,x1,y1,theta0,theta1):
     q0 = (x0, y0, theta0)
@@ -68,8 +72,8 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):  # pragma: no 
 #input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_uturn_input4.txt"
 # /home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/collins_62_test_boustrophen.txt
 #input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_first_polygon_wFinishingCircles.txt"
-input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/archive/collins_62_test_boustrophen.txt"
-output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/collins_62_test_boustrophen_step2.txt"
+input_file_waypoints =  "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophen_generator_input.txt"
+output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophen_generator_output.txt"
 
 #input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_path_first_60_stripes_input.txt"
 #output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_path_first_60_stripes_step2.txt"
@@ -96,8 +100,11 @@ with open(input_file_waypoints, 'r') as file:
             y1 = float(points[1])
             theta1 = float(points[2])
             #speed = float(points[3])
+            speed = 2.5
+            lookahead = 2.5
             path = generate_path(x0,y0,x1,y1,theta0,theta1)
             for i in path:
+                i = i + (lookahead,)
                 i = i + (speed,)
                 drive_path.append(i)
 
@@ -125,7 +132,8 @@ with open(input_file_waypoints, 'r') as file:
                 total_count += 1 
 
                 drive_points.append([p[0],p[1]])
-                file.write(str(p[0]) + " " + str(p[1]) + " " + str(p[2]) + str(p[3]) + "\n")
+                #file.write(str(p[0]) + " " + str(p[1]) + " " + str(p[2]) + str(p[3]) + "\n")
+                file.write(str(p[0]) + " " + str(p[1]) + " " + str(p[2]) + " " + str(p[3]) + " " + str(p[4]) + "\n")
         print("Record count:", total_count, "turning_radius:", turning_radius, "step_size:", step_size)
         plt.plot(0,0, label="final course")
         plt.plot(*zip(*drive_points))
@@ -136,6 +144,16 @@ with open(input_file_waypoints, 'r') as file:
 
         for (ix, iy, iyaw) in zip(px, py, pyaw):
             plot_arrow(ix, iy, iyaw, fc="b")
+
+        # Read the waypoints to plot the x, y points and index number
+        with open(input_file_waypoints, 'r') as file:
+            waypoints = file.readlines()
+        for idx, waypoint in enumerate(waypoints):
+            x, y, _ = map(float, waypoint.split())  # Splitting and converting to float
+            plt.plot(x, y, 'ro', markersize=5)  # Small blue dot
+            plt.text(x + 0.1, y - 0.1, str(idx + 1), fontsize=6, color='green')  # Annotating with offset index
+
+
 
         plt.title(f'Continuous Curvature Path from: path_planning_waypoint_generator.py')
         plt.figtext(0.5, 0.01, f'Input: {input_file_waypoints}', ha='center', fontsize=8, color='gray')

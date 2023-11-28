@@ -1,4 +1,4 @@
-# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/path_boustrophedon_coverage_variable_degree.py
+# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/boustrophedon/path_boustrophedon_coverage_variable_degree.py
 
 import pandas as pd
 import numpy as np
@@ -7,6 +7,10 @@ from shapely.affinity import rotate
 from matplotlib import pyplot as plt, patheffects
 import os
 import csv
+
+import os
+script_name = os.path.basename(__file__)
+print(f"running script: {script_name}")
 
 def boustrophedon_path_corrected(polygon, line_spacing, angle_degrees):
     # Normalize the angle to be within -90 to 90 degrees for intersection purposes
@@ -113,9 +117,12 @@ def write_path_to_csv(path, filename):
 # The main function now correctly handles the angle normalization
 def main(angle_degrees):
     # Sample polygon points
-    hard_coded_points = [(5, 0), (6, 4), (7, 5), (8, 10), (7, 11), (5, 10), (3, 11), (1, 10), (0, 5), (1, 3)]
+    #hard_coded_points = [(5, 0), (6, 4), (7, 5), (8, 10), (7, 11), (5, 10), (3, 11), (1, 10), (0, 5), (1, 3)]
 
-    csv_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01.csv'  # Path to the CSV file
+    # Path to the CSV file
+    #csv_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_innermost_ring.csv'  
+    csv_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_5.csv'
+    print("reading the file: ", csv_path) 
     polygon_data = pd.read_csv(csv_path)
     polygon_points_from_csv = list(zip(polygon_data['X'], polygon_data['Y']))
 
@@ -132,8 +139,9 @@ def main(angle_degrees):
 
 # Run the main function with a corrected angle
 path = main(19)
-write_path_to_csv(path, '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_path2.csv')
-# print(type(path))
-# for point in path[:10]:  # This slices the first 10 elements
-#     print(point)
+# The .csv output file will be read by plotIntersectingPointsV8.py as input
+write_path_to_csv(path, '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophedon_line_segments.csv')
+print("First few lines of boustrophedon line segments")
+for point in path[:5]:
+    print(point)
 print('eoj')

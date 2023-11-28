@@ -1,6 +1,11 @@
+# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/boustrophedon/plotIntersectingPointsV8.py
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+
+import os
+script_name = os.path.basename(__file__)
+print(f"running script: {script_name}")
 
 """
 This program calculates and visualizes perpendicular intercept points between consecutive line segments. It is designed to work with a set 
@@ -33,7 +38,6 @@ Error Handling:
 The program includes logic to handle cases where a valid perpendicular intercept does not exist (i.e., the perpendicular line from a segment endpoint does not intersect the next segment).
 
 
-# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/dubins/plotIntersectingPointsV8.py
 
 
 """
@@ -41,7 +45,7 @@ The program includes logic to handle cases where a valid perpendicular intercept
 
 # Load the CSV file
 
-file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_path2.csv'
+file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophedon_line_segments.csv'
 df = pd.read_csv(file_path)
 
 # Updated script to attempt a secondary intercept calculation if the primary attempt fails
@@ -135,10 +139,10 @@ plt.show()
 
 
 #trim the edges that will be taken care of with paths around the edges
-first_rows_to_remove = 3
+first_rows_to_remove = 2
 df = df.iloc[first_rows_to_remove:]
 
-end_rows_to_remove = 12
+end_rows_to_remove = 9
 end_rows_to_remove = end_rows_to_remove *-1
 df = df[:end_rows_to_remove]
 
@@ -162,5 +166,7 @@ plt.grid(True)
 plt.show()
 
 # Save the updated DataFrame to a new CSV file
-output_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_path_with_intercepts2.csv'
+output_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophedon_line_segments_with_intercepts.csv'
+print("saving the intercept points to file: ", output_path)
+print("Copy these points to the 'helper' spreadsheet")
 df.to_csv(output_path, index=False)

@@ -1,5 +1,5 @@
-location_name, origin_lat, origin_lon, csv_file_path, num_inner_rings, path_size, start_point_x, start_point_y
-Collins_Dr_62_Site_01, 40.48524688166667, -80.332720941667, /home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01.csv, 3, 0.9, -7.6, 2.4
-Collins_Dr_62_Site_02, 40.48524688166667, -80.332720941667, /home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_02.csv, 3, 0.9, 0.0, 0.0
-Collins_Dr_62_Site_03, 40.48524688166667, -80.332720941667, /home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_03.csv, 3, 0.9, 0.0, 0.0
-Collins_Dr_62_Site_04, 40.48524688166667, -80.332720941667, /home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_04.csv, 3, 0.9, 0.0, 0.0
+location_name,origin_lat,origin_lon,latlon_file_path,num_inner_rings,path_size,start_point_x,start_point_y,xy_file_name
+Collins_Dr_62_Site_01,40.4852468816667,-80.332720941667,/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01.csv,5,0.9,-7.6,2.4,/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_paths_coordinates.csv
+Collins_Dr_62_Site_02,40.4852468816667,-80.332720941667,/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_02.csv,3,0.9,0,0,/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_02_paths_coordinates.csv
+Collins_Dr_62_Site_03,40.4852468816667,-80.332720941667,/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_03.csv,3,0.9,0,0,/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_03_paths_coordinates.csv
+Collins_Dr_62_Site_04,40.4852468816667,-80.332720941667,/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_04.csv,3,0.9,0,0,/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_04_paths_coordinates.csv

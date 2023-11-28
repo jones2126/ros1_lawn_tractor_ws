@@ -1,5 +1,5 @@
 #!/usr/bin/env python3  
-# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/path_create_inner_ring_path_v4.py
+# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/path_polygon_rings/path_create_inner_ring_path_v5.py
 '''
 This script reads points from a CSV file containing (x, y) coordinates, calculates the inner rings an offset distance inside
  the polygon, and plots the original and new polygons:
@@ -54,7 +54,7 @@ def calculate_ROS_angle(x1, y1, x2, y2):
 
 # File path to the CSV file
 file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01.csv'
-output_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_inner_ring_continuous_path.csv'
+output_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_inner_ring_continuous_path_testing.csv'
 original_points = read_points_from_csv(file_path)       # Read points from CSV
 polygon = Polygon(original_points)                      # Create Shapely Polygon from points
 
