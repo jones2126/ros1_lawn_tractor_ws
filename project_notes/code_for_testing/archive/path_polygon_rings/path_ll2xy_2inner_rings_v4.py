@@ -15,7 +15,8 @@ $ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/arch
 import math
 import matplotlib.pyplot as plt
 import pandas as pd
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, MultiPolygon
+
 import csv
 import pandas as pd
 import numpy as np
@@ -194,7 +195,16 @@ def create_inner_rings(gps_data, num_inner_rings, path_size, start_point, xy_fil
     paths = []
     for i in range(num_inner_rings, 0, -1):
         inner_ring = polygon.buffer(-path_size * i)
-        inner_points = list(inner_ring.exterior.coords)
+
+        # previous code threw a MultiPolygon error so adding this logic to check.  I'm not sure of this will fix it or not.
+        if isinstance(inner_ring, MultiPolygon):
+            #for polygon in inner_ring:
+            for polygon in inner_ring.geoms:
+                inner_points = list(polygon.exterior.coords)
+        else:
+            inner_points = list(inner_ring.exterior.coords)
+
+        #inner_points = list(inner_ring.exterior.coords)
         reordered_ring = reorder_ring(ensure_clockwise(inner_points), start_point)
         paths.append(reordered_ring)
         # Save each ring to a separate CSV file
@@ -262,7 +272,10 @@ def update_df_with_angle_lookahead_speed(input_file_path, lookahead, speed, outp
     df['lookahead'] = lookahead
     df['speed'] = speed
     df = df.drop('Path_Index', axis='columns')
-    df = df.drop('Source', axis='columns')    
+
+    if 'Source' in df.columns:  # if there are intersections with an obstacle the file will have this column
+        df = df.drop('Source', axis='columns')
+ 
     df.to_csv(output_file_path, index=False, header=False, sep=' ')  # no header row because the file will be read by pure_pursuit in the x, y, angle, lookahead, speed format.
     print(f"Final path published to file: {output_file_path}")
     return
@@ -468,17 +481,39 @@ def find_intersections_with_circle(xy_file_name, circle_center, radius, num_circ
     #print(xy_file_df.head(10))
     revised_path = pd.DataFrame()                                   # Initialize an empty DataFrame for revised_path
 
-    # Beginning Segment
-    temp_path = xy_file_df.iloc[0:intersecting_index[0]].copy()
-    revised_path = pd.DataFrame()  # or however you initialize it
-    temp_path['Source'] = 'temp_path_beg'
-    revised_path = pd.concat([revised_path, temp_path], ignore_index=True)
+    if intersecting_index:  # Checks if the list is not empty
+        # Beginning Segment
+        temp_path = xy_file_df.iloc[0:intersecting_index[0]].copy()
+        revised_path = pd.DataFrame()  # or however you initialize it
+        temp_path['Source'] = 'temp_path_beg'
+        revised_path = pd.concat([revised_path, temp_path], ignore_index=True)
 
-    # Middle Segments
-    qty_of_intersects = len(intersecting_index) - 2
-    print("qty_of_intersects: ", qty_of_intersects)
-    print("looping sequence for obstacle path")
-    for i, path_index in zip(range(0, qty_of_intersects, 2), range(0, 4)):
+        # Middle Segments
+        qty_of_intersects = len(intersecting_index) - 2
+        print("qty_of_intersects: ", qty_of_intersects)
+        print("looping sequence for obstacle path")
+        for i, path_index in zip(range(0, qty_of_intersects, 2), range(0, 4)):
+            point1 = intersection_points[i]
+            point2 = intersection_points[i + 1]
+            print(i, path_index, intersecting_index[i], intersecting_index[i+1], point1, point2)
+            circle_arc = calculate_shortest_path(circle_center, radius, point1, point2, num_circle_points)
+            circle_arc_df = pd.DataFrame(circle_arc, columns=['X', 'Y'])
+            #circle_arc_df = circle_arc_df.iloc[::-1]  # I need to reverse the order of circle_arc_df so the points run from right to left because I'm running a clockwise pattern
+            circle_arc_df['Path_Index'] = path_index
+            circle_arc_df['Source'] = 'circle_arc_df'
+            revised_path = pd.concat([revised_path, circle_arc_df], ignore_index=True)
+
+            temp_path = xy_file_df.iloc[intersecting_index[i+1] + 1:intersecting_index[i+2]].copy()
+            temp_path['Path_Index'] = path_index
+            temp_path['Source'] = 'temp_path'
+            revised_path = pd.concat([revised_path, temp_path], ignore_index=True)
+        print("End of loop:", i, path_index, intersecting_index[i], intersecting_index[i+1], point1, point2)
+
+        # Handle End Segment
+        print("Handling the end segment")
+        path_index = path_index + 1
+        i = i + 2
+        #print(i, path_index, intersecting_index[i])
         point1 = intersection_points[i]
         point2 = intersection_points[i + 1]
         print(i, path_index, intersecting_index[i], intersecting_index[i+1], point1, point2)
@@ -486,38 +521,18 @@ def find_intersections_with_circle(xy_file_name, circle_center, radius, num_circ
         circle_arc_df = pd.DataFrame(circle_arc, columns=['X', 'Y'])
         #circle_arc_df = circle_arc_df.iloc[::-1]  # I need to reverse the order of circle_arc_df so the points run from right to left because I'm running a clockwise pattern
         circle_arc_df['Path_Index'] = path_index
-        circle_arc_df['Source'] = 'circle_arc_df'
+        circle_arc_df['Source'] = 'circle_arc_df_end'
         revised_path = pd.concat([revised_path, circle_arc_df], ignore_index=True)
 
-        temp_path = xy_file_df.iloc[intersecting_index[i+1] + 1:intersecting_index[i+2]].copy()
+        temp_path = xy_file_df.iloc[intersecting_index[i+1] + 1:].copy()
         temp_path['Path_Index'] = path_index
-        temp_path['Source'] = 'temp_path'
+        temp_path['Source'] = 'end_path'
         revised_path = pd.concat([revised_path, temp_path], ignore_index=True)
-    print("End of loop:", i, path_index, intersecting_index[i], intersecting_index[i+1], point1, point2)
-
-    # Handle End Segment
-    print("Handling the end segment")
-    path_index = path_index + 1
-    i = i + 2
-    #print(i, path_index, intersecting_index[i])
-    point1 = intersection_points[i]
-    point2 = intersection_points[i + 1]
-    print(i, path_index, intersecting_index[i], intersecting_index[i+1], point1, point2)
-    circle_arc = calculate_shortest_path(circle_center, radius, point1, point2, num_circle_points)
-    circle_arc_df = pd.DataFrame(circle_arc, columns=['X', 'Y'])
-    #circle_arc_df = circle_arc_df.iloc[::-1]  # I need to reverse the order of circle_arc_df so the points run from right to left because I'm running a clockwise pattern
-    circle_arc_df['Path_Index'] = path_index
-    circle_arc_df['Source'] = 'circle_arc_df_end'
-    revised_path = pd.concat([revised_path, circle_arc_df], ignore_index=True)
-
-    temp_path = xy_file_df.iloc[intersecting_index[i+1] + 1:].copy()
-    temp_path['Path_Index'] = path_index
-    temp_path['Source'] = 'end_path'
-    revised_path = pd.concat([revised_path, temp_path], ignore_index=True)
 
     #output_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_continuous_obstacles.csv'
     revised_path.to_csv(output_file_path, index=False)              # Save 'revised_path' to the CSV file
-    plot_xy_coordinates(output_file_path)
+    if intersecting_index:  # Checks if the list is not empty
+        plot_xy_coordinates(output_file_path)
     return intersection_points, intersecting_segments, intersecting_index, cir_seg_intersects
 
 def main():
@@ -551,16 +566,18 @@ def main():
     circle_center = (17.6, -9.5)
     radius = 5.4 / 2
     num_circle_points = 21
-    xy_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_continuous_obstacles.csv'
-    #finished_xy_file = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_continuous_obstacles_w_angles.csv'
+    xy_file_adjusted_for_obstacles = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_adjusted_for_obstacles.csv'
     finished_xy_file = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt' 
-    intersections, segments, indices, circle_segments = find_intersections_with_circle(xy_file_name, circle_center, radius, num_circle_points, xy_file_path)
+    intersections, segments, indices, circle_segments = find_intersections_with_circle(xy_file_name, circle_center, radius, num_circle_points, xy_file_adjusted_for_obstacles)
 
     # 6. Calculate the angle (i.e. theta) between points, add lookahead and speed data; 
     lookahead=2.5
-    #speed=0.75
-    speed=2.5
-    update_df_with_angle_lookahead_speed(xy_file_path, lookahead, speed, finished_xy_file)  
+    speed=0.75
+    #speed=2.5
+    if indices:  # Checks if the list is not empty
+        update_df_with_angle_lookahead_speed(xy_file_adjusted_for_obstacles, lookahead, speed, finished_xy_file)
+    else:
+        update_df_with_angle_lookahead_speed(xy_file_name, lookahead, speed, finished_xy_file)
   
     print(f"End of main function and the overall program")
 

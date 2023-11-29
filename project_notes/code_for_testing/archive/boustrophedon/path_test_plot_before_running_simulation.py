@@ -7,7 +7,7 @@ print(f"running script: {script_name}")
 
 # File paths
 file_path1 = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophen_generator_output.txt'
-file_path2 = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/ready_to_test/Site_01_4_outer_paths.txt'
+file_path2 = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/ready_to_test/Site_01_rings_input_path.txt'
 
 # Function to read data and return x and y coordinates
 def read_data(file_path):

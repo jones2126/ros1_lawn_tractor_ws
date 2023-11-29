@@ -15,6 +15,20 @@ import os
 script_name = os.path.basename(__file__)
 print(f"running script: {script_name}")
 
+# key program inputs
+# .csv files and structure
+file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_04.csv'
+output_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_04_inner_ring_continuous_path_testing.csv'
+# x_col_ndx = 9     # for Site_01
+# y_col_ndx = 10
+x_col_ndx = 0       # for Site_04
+y_col_ndx = 1    
+PLOT_OBSTACLE = 0
+num_inner_rings = 2
+path_size = 0.9
+start_point = (-12.0, 29.0)
+
+
 def read_points_from_csv(file_path):
     points = []
     with open(file_path, 'r') as file:
@@ -22,7 +36,7 @@ def read_points_from_csv(file_path):
         next(reader)  # Skip the header row
         for row in reader:
             # Columns J and K correspond to indices 9 and 10
-            x, y = map(float, [row[9], row[10]])
+            x, y = map(float, [row[x_col_ndx], row[y_col_ndx]])
             points.append((x, y))
     return points
 
@@ -52,22 +66,17 @@ def calculate_ROS_angle(x1, y1, x2, y2):
     return angle
 
 
-# File path to the CSV file
-file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01.csv'
-output_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_inner_ring_continuous_path_testing.csv'
+# the main function
 original_points = read_points_from_csv(file_path)       # Read points from CSV
 polygon = Polygon(original_points)                      # Create Shapely Polygon from points
 
 # Create inner rings and store them in a list
-num_inner_rings = 2
-path_size = 0.9
 inner_rings = []
 for i in range(1, num_inner_rings + 1):
     inner_ring = polygon.buffer(-path_size * i)  # Set gap for path.  Needs to be negative for inner rings
     inner_points = list(inner_ring.exterior.coords)
     inner_rings.append(inner_points)
 
-start_point = (-7.6, 2.4)
 inner_ring_2 = reorder_ring(ensure_clockwise(inner_rings[1]), start_point)
 inner_ring_1 = reorder_ring(ensure_clockwise(inner_rings[0]), start_point)
 original_polygon_clockwise = reorder_ring(ensure_clockwise(original_points)[::-1], start_point)
@@ -89,24 +98,24 @@ for i, path in enumerate(paths):
     plt.plot(*zip(*path), color=colors[i], label=labels[i])
     plt.scatter(*zip(*path), color=colors[i])
 
-# Draw the circle
-center_x, center_y = 17.6, -9.5
-radius = 5.4 / 2
-circle = plt.Circle((center_x, center_y), radius, color='blue', fill=False)
-plt.gca().add_patch(circle)
+# Draw the circle if the the switch is set
+if PLOT_OBSTACLE == 1:
+    center_x, center_y = 17.6, -9.5
+    radius = 5.4 / 2
+    circle = plt.Circle((center_x, center_y), radius, color='blue', fill=False)
+    plt.gca().add_patch(circle)
+    # Generate and plot points at 30 degree intervals
+    angles = np.arange(0, 360, 30)
+    points_x = center_x + radius * np.cos(np.radians(angles))
+    points_y = center_y + radius * np.sin(np.radians(angles))
+    plt.scatter(points_x, points_y, color='red')
+    # Annotate points
+    for x, y in zip(points_x, points_y):
+        plt.annotate(f'({x:.2f}, {y:.2f})', (x, y), textcoords="offset points", xytext=(0,10), ha='center')
 
-# Generate and plot points at 30 degree intervals
-angles = np.arange(0, 360, 30)
-points_x = center_x + radius * np.cos(np.radians(angles))
-points_y = center_y + radius * np.sin(np.radians(angles))
-plt.scatter(points_x, points_y, color='red')
+    plt.xlim(center_x - radius - 5, center_x + radius + 5)
+    plt.ylim(center_y - radius - 5, center_y + radius + 5)
 
-# Annotate points
-for x, y in zip(points_x, points_y):
-    plt.annotate(f'({x:.2f}, {y:.2f})', (x, y), textcoords="offset points", xytext=(0,10), ha='center')
-
-plt.xlim(center_x - radius - 5, center_x + radius + 5)
-plt.ylim(center_y - radius - 5, center_y + radius + 5)
 plt.gca().set_aspect('equal', adjustable='box')
 plt.title(f'Script: {script_name}\nData source: {file_path}')
 plt.figtext(0.5, 0.01, f'Data saved to: {output_file_path}', ha='center', fontsize=8, color='gray')

@@ -100,7 +100,7 @@ with open(input_file_waypoints, 'r') as file:
             y1 = float(points[1])
             theta1 = float(points[2])
             #speed = float(points[3])
-            speed = 2.5
+            speed = 0.75
             lookahead = 2.5
             path = generate_path(x0,y0,x1,y1,theta0,theta1)
             for i in path:
