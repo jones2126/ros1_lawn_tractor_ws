@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <launch>
+  <!-- roslaunch /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/launch/cub_cadet_rosbag_playback.launch -->
+
 
   <!-- <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-04-11-11-41-14.bag"/> -->
-  <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-08-13-16-58-11.bag"/> 
+  <arg name="rosbag_file" default="/home/tractor/bagfiles/2023-11-30-14-39-06.bag"/> 
 
   <!-- Launch map_server to use the same map as in the original launch file -->
   <node name="map_server" pkg="map_server" type="map_server"

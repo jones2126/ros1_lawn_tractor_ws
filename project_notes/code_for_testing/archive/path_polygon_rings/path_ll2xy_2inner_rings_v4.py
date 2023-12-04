@@ -563,8 +563,9 @@ def main():
     ring_path = create_inner_rings(gps_data, num_inner_rings, path_size, start_point, xy_file_name)
 
     # 5. Determine the intersection points of the obstacles - at the moment this can only accept one obstacle.  An enhancement is to be able to handle more obstacles.
-    circle_center = (17.6, -9.5)
-    radius = 5.4 / 2
+    #additional_circle_center = (17.3, -9.1), additional_radius = 2.4)
+    circle_center = (17.3, -9.1)  # use rosbag_calc_circle_radius_and_center.py to help with this
+    radius = 2.4
     num_circle_points = 21
     xy_file_adjusted_for_obstacles = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_adjusted_for_obstacles.csv'
     finished_xy_file = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt' 

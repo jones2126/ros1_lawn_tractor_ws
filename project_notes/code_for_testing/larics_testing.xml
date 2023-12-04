@@ -3,27 +3,27 @@
  <tabbed_widget name="Main Window" parent="main_window">
   <Tab containers="1" tab_name="tab1">
    <Container>
-    <DockSplitter orientation="-" count="2" sizes="0.50087;0.49913">
-     <DockSplitter orientation="|" count="2" sizes="0.5;0.5">
+    <DockSplitter orientation="-" sizes="0.50087;0.49913" count="2">
+     <DockSplitter orientation="|" sizes="0.5;0.5" count="2">
       <DockArea name="...">
-       <plot flip_x="false" style="Lines" flip_y="false" mode="XYPlot">
-        <range bottom="-21.081037" right="74.166073" left="-61.682560" top="44.276870"/>
+       <plot flip_y="false" flip_x="false" style="Lines" mode="XYPlot">
+        <range bottom="-7.441671" top="6.891361" left="-5.293832" right="25.023157"/>
         <limitY/>
-        <curve name="/lookahead_data/data.[0;1]" color="#1f77b4" curve_y="/lookahead_data/data.1" curve_x="/lookahead_data/data.0"/>
-        <curve name="/odom/pose/pose/position/[x;y]" color="#1ac938" curve_y="/odom/pose/pose/position/y" curve_x="/odom/pose/pose/position/x"/>
+        <curve name="/lookahead_data/data.[0;1]" curve_y="/lookahead_data/data.1" curve_x="/lookahead_data/data.0" color="#1f77b4"/>
+        <curve name="/odom/pose/pose/position/[x;y]" curve_y="/odom/pose/pose/position/y" curve_x="/odom/pose/pose/position/x" color="#1ac938"/>
        </plot>
       </DockArea>
       <DockArea name="...">
-       <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-        <range bottom="-3.298301" right="724.300169" left="-51.884482" top="3.298127"/>
+       <plot flip_y="false" flip_x="false" style="Lines" mode="TimeSeries">
+        <range bottom="-3.291612" top="3.280442" left="186.021999" right="277.006595"/>
         <limitY/>
         <curve name="/hdg_from_imu/data" color="#ff7f0e"/>
        </plot>
       </DockArea>
      </DockSplitter>
      <DockArea name="...">
-      <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-       <range bottom="-1.008000" right="724.300169" left="-51.884482" top="1.008000"/>
+      <plot flip_y="false" flip_x="false" style="Lines" mode="TimeSeries">
+       <range bottom="-0.836280" top="0.229157" left="186.021999" right="277.006595"/>
        <limitY/>
        <curve name="/lookahead_data/data.2" color="#d62728"/>
       </plot>
@@ -33,10 +33,10 @@
   </Tab>
   <Tab containers="1" tab_name="speed">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
+    <DockSplitter orientation="-" sizes="1" count="1">
      <DockArea name="...">
-      <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-       <range bottom="-0.293665" right="724.337257" left="0.102258" top="1.263391"/>
+      <plot flip_y="false" flip_x="false" style="Lines" mode="TimeSeries">
+       <range bottom="-0.030133" top="0.875435" left="186.021999" right="277.006595"/>
        <limitY/>
        <curve name="/left_speed/data" color="#1ac938"/>
        <curve name="/right_speed/data" color="#ff7f0e"/>
@@ -48,13 +48,13 @@
   </Tab>
   <Tab containers="1" tab_name="odom">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
+    <DockSplitter orientation="-" sizes="1" count="1">
      <DockArea name="...">
-      <plot flip_x="false" style="Lines" flip_y="false" mode="XYPlot">
-       <range bottom="-21.081037" right="64.367995" left="-51.884482" top="44.276870"/>
+      <plot flip_y="false" flip_x="false" style="Lines" mode="XYPlot">
+       <range bottom="-8.698770" top="8.148460" left="-5.241571" right="24.970895"/>
        <limitY/>
-       <curve name="/odom/pose/pose/position/[x;y]" color="#1ac938" curve_y="/odom/pose/pose/position/y" curve_x="/odom/pose/pose/position/x"/>
-       <curve name="/lookahead_data/data.[0;1]" color="#ff7f0e" curve_y="/lookahead_data/data.1" curve_x="/lookahead_data/data.0"/>
+       <curve name="/odom/pose/pose/position/[x;y]" curve_y="/odom/pose/pose/position/y" curve_x="/odom/pose/pose/position/x" color="#1ac938"/>
+       <curve name="/lookahead_data/data.[0;1]" curve_y="/lookahead_data/data.1" curve_x="/lookahead_data/data.0" color="#ff7f0e"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -62,10 +62,10 @@
   </Tab>
   <Tab containers="1" tab_name="gps">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
+    <DockSplitter orientation="-" sizes="1" count="1">
      <DockArea name="...">
-      <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-       <range bottom="-0.050000" right="724.227895" left="0.032155" top="2.050000"/>
+      <plot flip_y="false" flip_x="false" style="Lines" mode="TimeSeries">
+       <range bottom="1.900000" top="2.100000" left="186.021999" right="277.006595"/>
        <limitY/>
        <curve name="/fix/status/status" color="#f14cc1"/>
       </plot>
@@ -75,10 +75,10 @@
   </Tab>
   <Tab containers="1" tab_name="servo">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
+    <DockSplitter orientation="-" sizes="1" count="1">
      <DockArea name="...">
-      <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-       <range bottom="256.600000" right="724.204703" left="0.418639" top="315.400000"/>
+      <plot flip_y="false" flip_x="false" style="Lines" mode="TimeSeries">
+       <range bottom="279.250000" top="310.750000" left="186.021999" right="277.006595"/>
        <limitY/>
        <curve name="/my_array_topic/data.1" color="#f14cc1"/>
       </plot>
@@ -88,14 +88,28 @@
   </Tab>
   <Tab containers="1" tab_name="heading">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
+    <DockSplitter orientation="-" sizes="1" count="1">
      <DockArea name="...">
-      <plot flip_x="false" style="Lines" flip_y="false" mode="TimeSeries">
-       <range bottom="-3.298301" right="724.300046" left="0.000000" top="3.298127"/>
+      <plot flip_y="false" flip_x="false" style="Lines" mode="TimeSeries">
+       <range bottom="-3.297000" top="3.297000" left="186.021999" right="277.006595"/>
        <limitY/>
        <curve name="/hdg_from_wheels/data" color="#1f77b4"/>
        <curve name="/hdg_from_imu/data" color="#d62728"/>
        <curve name="/gps_array_data/data.3" color="#1ac938"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab containers="1" tab_name="tab2">
+   <Container>
+    <DockSplitter orientation="-" sizes="1" count="1">
+     <DockArea name="...">
+      <plot flip_y="false" flip_x="false" style="Lines" mode="TimeSeries">
+       <range bottom="-0.831903" top="0.185306" left="186.021999" right="277.006595"/>
+       <limitY/>
+       <curve name="/my_array_topic/data.11" color="#f14cc1"/>
+       <curve name="/lookahead_data/data.2" color="#9467bd"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -141,7 +155,7 @@
  </Plugins>
  <!-- - - - - - - - - - - - - - - -->
  <previouslyLoaded_Datafiles>
-  <fileInfo prefix="" filename="../../../bagfiles/Collins_Dr_62_Site_01_run2_2023-11-01-14-51-56.bag">
+  <fileInfo prefix="" filename="../../../bagfiles/2023-12-02-16-05-58.bag">
    <selected_datasources value="/acker_in;/cmd_vel;/controller/parameter_descriptions;/controller/parameter_updates;/fix;/gps_array_data;/hdg_from_imu;/hdg_from_wheels;/imu/data;/left_meters_travelled_msg;/left_speed;/lookahead_data;/map;/map_metadata;/my_array_topic;/odom;/off_path_error;/right_meters_travelled_msg;/right_speed;/rosout;/rosout_agg;/tf;/tf_static;/time_reference;/vel"/>
    <plugin ID="DataLoad ROS bags">
     <use_header_stamp value="false"/>

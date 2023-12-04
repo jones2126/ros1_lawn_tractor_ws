@@ -62,8 +62,8 @@ class OdomPublisher:
         # self.GPS_origin_lat = 40.34534080  #435 Pine Valley
         # self.GPS_origin_lon = -80.12894600 
 
-        self.GPS_origin_lat = 40.48524688166667  #62 Collins Dr
-        self.GPS_origin_lon = -80.332720941667
+        self.GPS_origin_lat = 40.485284877266  #62 Collins Dr
+        self.GPS_origin_lon = -80.3326256933901
 
         rospy.Timer(rospy.Duration(60), self.calibrate_lat_lon_origin)
         #origin_lat = 40.34534080; origin_lon = -80.12894600  # represents the starting point of my tractor inside the garage - averaged on 20230904
@@ -87,6 +87,7 @@ class OdomPublisher:
         self.prev_lon = 0
         self.current_lon = 0
         self.yaw = 0
+        self.linear_velocity_from_wheels = 0.0
 
 
         rospy.Subscriber('/left_meters_travelled_msg', Float32, self.left_distance_cb)
@@ -96,7 +97,8 @@ class OdomPublisher:
         rospy.Subscriber('/right_speed', Float32, self.right_speed_cb)
 
         rospy.Subscriber('/imu/data', Imu, self.imu_callback)
-        rospy.Subscriber("fix", NavSatFix, self.gps_callback)
+        #rospy.Subscriber("fix", NavSatFix, self.gps_callback)
+        rospy.Subscriber("fix", NavSatFix, self.gps_callback, queue_size=5)
         self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=1)
         self.hdg_from_imu_pub = rospy.Publisher('hdg_from_imu', Float64, queue_size=1)
         self.hdg_from_wheels_pub = rospy.Publisher('hdg_from_wheels', Float64, queue_size=1)
@@ -189,7 +191,13 @@ class OdomPublisher:
             self.current_lat = data.latitude
             self.current_lon = data.longitude
             delta_lon = self.current_lon - self.prev_lon
-            delta_lat = self.current_lat - self.prev_lat               
+            delta_lat = self.current_lat - self.prev_lat
+
+            # Only update self.COG if linear_velocity_from_wheels is greater than 0.1
+            if self.linear_velocity_from_wheels > 0.1:
+                self.COG = math.atan2(delta_lat, delta_lon)
+                self.COG = round(self.COG, 2)
+
             self.COG = math.atan2(delta_lat, delta_lon)
             self.COG_smoothed = self.check_angle_wrap_radians(self.COG, self.COG_smoothed)
             gain = 0.1  # Adjust this value as needed
@@ -231,7 +239,7 @@ class OdomPublisher:
 
         # Calculate the distance travelled and speed by the robot using the average distance of the two wheels
         distance = (self.left_delta + self.right_delta) / 2
-        linear_velocity_from_wheels = (self.left_speed + self.right_speed) / 2
+        self.linear_velocity_from_wheels = (self.left_speed + self.right_speed) / 2
         '''
         if delta_time_odom == 0: # I was having an issue with this, but added another "nanosecond" check above
             linear_velocity = 0
@@ -278,7 +286,7 @@ class OdomPublisher:
         odom_msg.pose.pose.orientation.y = self.quat[1]
         odom_msg.pose.pose.orientation.z = self.quat[2]
         odom_msg.pose.pose.orientation.w = self.quat[3]
-        odom_msg.twist.twist.linear.x = linear_velocity_from_wheels
+        odom_msg.twist.twist.linear.x = self.linear_velocity_from_wheels
         odom_msg.twist.twist.linear.y = 0.0
         odom_msg.twist.twist.angular.z = self.angular_vel_z_imu
         self.odom_pub.publish(odom_msg)

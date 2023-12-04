@@ -7,14 +7,17 @@ file_paths = [
     '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_0.csv',
     '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_1.csv',
     '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_2.csv',
-    '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_3.csv'
+    '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_3.csv',
+    '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_4.csv',
+    '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_5.csv'
 ]
 
 # Colors for each file
-colors = ['red', 'green', 'blue', 'yellow']
+colors = ['red', 'green', 'blue', 'yellow', 'orange', 'grey']
 
 # Plot each file in a different color
 for file_path, color in zip(file_paths, colors):
+    print("reading file")
     x, y = [], []
     with open(file_path, 'r') as file:
         reader = csv.reader(file)

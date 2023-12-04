@@ -54,6 +54,8 @@ public:
   //! Receive path to follow.
   void loadPathFromFile();
 
+  void checkForNewPath();
+
   //! Compute transform that transforms a pose into the robot frame (base_link)
   KDL::Frame transformToBaseLink(const geometry_msgs::Pose& pose,
                                  const geometry_msgs::Transform& tf);
@@ -412,7 +414,20 @@ void PurePursuit::loadPathFromFile() {
     }    
 }
 
+// checkForNewPath method is looking for a parameter named "~new_input_path", you can set this parameter from the command line as follows:
+// $ rosparam set /pure_pursuit/new_input_path "/path/to/your/new/file.txt"
+void PurePursuit::checkForNewPath() {
+  std::string new_input_file;
+  if (ros::param::get("~new_input_path", new_input_file) && !new_input_file.empty()) {
+      // Load the new path
+      //loadPathFromFile(new_input_file);
+      // For testing, just print a message
+      std::cout << "New path file received: " << new_input_file << std::endl;
 
+      // Reset the parameter
+      ros::param::set("~new_input_path", "");
+  }
+}
 
 KDL::Frame PurePursuit::transformToBaseLink(const geometry_msgs::Pose& pose,
                                             const geometry_msgs::Transform& tf)
@@ -441,10 +456,25 @@ KDL::Frame PurePursuit::transformToBaseLink(const geometry_msgs::Pose& pose,
   return F_map_tf.Inverse()*F_map_pose;  // calculates the transformation from the the robot to the pose.
 }
 
-void PurePursuit::run()
-{
-  ros::spin();
+// void PurePursuit::run()
+// {
+//   ros::spin();
+// }
+
+void PurePursuit::run() {
+    ros::Rate rate(10); // Define the frequency of the loop
+
+    while (ros::ok()) {
+        ros::spinOnce();  // Handle incoming messages once
+
+        checkForNewPath(); // Check for a new path file
+
+        // You can add more code here if needed
+
+        rate.sleep(); // Sleep to maintain the loop at a constant rate
+    }
 }
+
 
 void PurePursuit::reconfigure(pure_pursuit::PurePursuitConfig &config, uint32_t level)
 {

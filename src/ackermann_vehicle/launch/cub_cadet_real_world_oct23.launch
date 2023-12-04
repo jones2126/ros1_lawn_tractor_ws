@@ -58,9 +58,10 @@
   <!-- <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 312, 318, 330]" />  -->
   <!-- 312 = .75 m/s; 310 = ~ .35 m/s -->
   <param name="/speed_params" type="yaml" value="[250, 258, 266, 306, 307, 310, 314]" /> 
-  <param name="GPS_origin_lat" value="40.48524688166667" />
-  <param name="GPS_origin_lon" value="-80.332720941667" />
-
+<!--   <param name="GPS_origin_lat" value="40.48524688166667" />
+  <param name="GPS_origin_lon" value="-80.332720941667" /> -->
+  <param name="GPS_origin_lat" value="40.485284877266" />
+  <param name="GPS_origin_lon" value="-80.3326256933901" />
   
 
 <!-- linear_x >= 1.00 -> transmissionServoValue = transmissionFullForwardPos;  (1.80 m/s) 330
