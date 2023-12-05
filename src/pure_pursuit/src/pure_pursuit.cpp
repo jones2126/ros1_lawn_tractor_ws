@@ -10,6 +10,19 @@
 potential ref: https://github.com/6RiverSystems/pure_pursuit/blob/6e54d43e307edcde4a2fac41c0ad5cbb6e47dbae/src/pure_pursuit.cpp
 potential ref: https://github.com/pasrom/pure_pursuit/blob/866b70b3b5fea1f94a3a1279f97fccb47616943f/src/pure_pursuit.cpp
 
+change log:
+12/5/23
+- changed the name 'controller' to 'pure_pursuit_steering_controller' ; line 600, 602
+- comment out ' void run();' - line 77 because that will be done by 'int main()'
+- moved the constructor statements to 'public'
+- Created an 'initialize' function and moved parameter setting and other one time statements here
+- Add timer nh.createTimer(ros::Duration(10.0), std::bind(&PurePursuit::checkForNewPath, &controller)); inside the initialize function
+- Change int main() to 'initialize; and addedd 'ros::spin();' starts the ROS event loop instead of function 'void PurePursuit::run()'
+- Added 'ros::Timer timer_;' inside private class
+- Added callback 'void checkForNewPathTimerCallback(const ros::TimerEvent&) {' inside the private class
+- Added the function 'void PurePursuit::checkForNewPath() {'
+- Change void PurePursuit::loadPathFromFile() { to accept the input file name as an arguement
+
  */
 
 #include <string>
@@ -39,26 +52,84 @@ potential ref: https://github.com/pasrom/pure_pursuit/blob/866b70b3b5fea1f94a3a1
 #include <fstream>
 #include <tf/tf.h>
 #include <iostream>
+#include <std_msgs/String.h>
 
 using std::string;
 
 class PurePursuit
 {
 public:
-  //! Constructor
-  PurePursuit();
 
-  //! Compute velocit commands each time new odometry data is received.
-  void computeVelocities(nav_msgs::Odometry odom);
+  PurePursuit() : ld_(1.0),v_max_(0.1),v_(v_max_),w_max_(1.0),pos_tol_(0.1),idx_(0),goal_reached_(true),nh_private_("~"),
+    tf_listener_(tf_buffer_), map_frame_id_("map"),robot_frame_id_("base_link"),lookahead_frame_id_("lookahead") 
+    {ROS_INFO("In PurePursuit::PurePursuit constructor");} // <- end of constructor
 
-  //! Receive path to follow.
-  void loadPathFromFile();
+  void initialize() {
+    ROS_INFO("In initialize method");
 
-  void checkForNewPath();
+    // Parameter-related statements
+    nh_private_.param<double>("wheelbase", L_, 1.0);
+    nh_private_.param<double>("lookahead_distance", ld_, 1.0);
+    //nh_private_.param<double>("linear_velocity", v_, 0.1);
+    nh_private_.param<double>("max_rotational_velocity", w_max_, 1.0);
+    nh_private_.param<double>("position_tolerance", pos_tol_, 0.1);
+    nh_private_.param<double>("steering_angle_velocity", delta_vel_, 100.0);
+    nh_private_.param<double>("acceleration", acc_, 100.0);
+    nh_private_.param<double>("jerk", jerk_, 100.0);
+    nh_private_.param<double>("steering_angle_limit", delta_max_, 1.57);
+    nh_private_.param<string>("map_frame_id", map_frame_id_, "map");
+    // Frame attached to midpoint of rear axle (for front-steered vehicles).
+    nh_private_.param<string>("robot_frame_id", robot_frame_id_, "base_link");
+    // Lookahead frame moving along the path as the vehicle is moving.
+    nh_private_.param<string>("lookahead_frame_id", lookahead_frame_id_, "lookahead");
+    // Frame attached to midpoint of front axle (for front-steered vehicles).
+    nh_private_.param<string>("ackermann_frame_id", acker_frame_id_, "rear_axle_midpoint");
+    pub_multi_array_ = nh_.advertise<std_msgs::Float64MultiArray>("lookahead_data", 1);
+
+    std::string default_input_file_path = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt";
+    nh_private_.param<std::string>("mission_file_name", input_file_path_, default_input_file_path);
+
+
+    // Populate messages with static data
+    lookahead_.header.frame_id = robot_frame_id_;
+    lookahead_.child_frame_id = lookahead_frame_id_;
+
+    cmd_acker_.header.frame_id = acker_frame_id_;
+    cmd_acker_.drive.steering_angle_velocity = delta_vel_;
+    cmd_acker_.drive.acceleration = acc_;
+    cmd_acker_.drive.jerk = jerk_;
+
+    //sub_path_ = nh_.subscribe("path_segment", 1, &PurePursuit::receivePath, this);
+    sub_odom_ = nh_.subscribe("odometry", 1, &PurePursuit::computeVelocities, this);
+    pub_vel_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
+    pub_acker_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>("cmd_acker", 1);
+    //pub_got_path_ = nh_.advertise<std_msgs::Float64>("got_path", 1);
+    pub_off_path_error_ = nh_.advertise<std_msgs::Float64>("off_path_error", 1);
+    path_pub_ = nh_.advertise<nav_msgs::Path>("/drive_path", 1);  
+
+    debug_info_pub = nh_.advertise<std_msgs::String>("pp_debug_info", 1);
+
+
+    reconfigure_callback_ = boost::bind(&PurePursuit::reconfigure, this, _1, _2);
+    reconfigure_server_.setCallback(reconfigure_callback_);    
+
+    // Timer initialization to check for a new path
+    timer_ = nh_.createTimer(ros::Duration(10.0), &PurePursuit::checkForNewPathTimerCallback, this);
+
+    // Any other initialization tasks
+    ROS_INFO("Loading the initial path file");
+    debug_msg.data = "Loading the path file";
+    debug_info_pub.publish(debug_msg);
+    loadPathFromFile();
+  }
+
+
+  void computeVelocities(nav_msgs::Odometry odom);    // triggers each time new odometry data is received.
+  void loadPathFromFile();                            // Loads path to follow from .txt file
+  void checkForNewPath();                             // based on a timer, checks if there is a new path to follow
 
   //! Compute transform that transforms a pose into the robot frame (base_link)
-  KDL::Frame transformToBaseLink(const geometry_msgs::Pose& pose,
-                                 const geometry_msgs::Transform& tf);
+  KDL::Frame transformToBaseLink(const geometry_msgs::Pose& pose, const geometry_msgs::Transform& tf);
   
   //! Helper founction for computing eucledian distances in the x-y plane.
   template<typename T1, typename T2>
@@ -67,10 +138,17 @@ public:
     return sqrt(pow(pt1.x - pt2.x,2) + pow(pt1.y - pt2.y,2) + pow(pt1.z - pt2.z,2));
   }
 
-  //! Run the controller.
-  void run();
   
 private:
+
+  ros::Timer timer_; // Timer declared as a private member variable
+
+  // callback triggered by the timer
+  void checkForNewPathTimerCallback(const ros::TimerEvent&) {
+    ROS_INFO("callback triggered by timer - checking for new path");
+    checkForNewPath();
+  }
+
 
   ros::Publisher path_pub_; 
 
@@ -101,7 +179,7 @@ private:
   double yt = 0.0;
   geometry_msgs::Twist cmd_vel_;
   ackermann_msgs::AckermannDriveStamped cmd_acker_;
-  std_msgs::Float64 got_path_;
+  //std_msgs::Float64 got_path_;
   std_msgs::Float64 off_path_error_;
   
   geometry_msgs::TransformStamped tf; // defined here so I can print debug messages
@@ -110,8 +188,14 @@ private:
   // Ros infrastructure
   ros::NodeHandle nh_, nh_private_;
   ros::Subscriber sub_odom_, sub_path_;
-  ros::Publisher pub_vel_, pub_acker_, pub_got_path_, pub_off_path_error_;
+  ros::Publisher pub_vel_, pub_acker_, pub_off_path_error_;
   ros::Publisher pub_multi_array_;
+  //ros::Publisher pub_got_path_;
+
+  // for debugging purposes
+  ros::Publisher debug_info_pub;
+  std_msgs::String debug_msg;
+
   tf2_ros::Buffer tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
   tf2_ros::TransformBroadcaster tf_broadcaster_;
@@ -119,61 +203,12 @@ private:
   nav_msgs::Path loaded_path;  
   string map_frame_id_, robot_frame_id_, lookahead_frame_id_, acker_frame_id_;
 
+  std::string input_file_path_;
+
   dynamic_reconfigure::Server<pure_pursuit::PurePursuitConfig> reconfigure_server_;
   dynamic_reconfigure::Server<pure_pursuit::PurePursuitConfig>::CallbackType reconfigure_callback_;
   
-};
-
-PurePursuit::PurePursuit() : ld_(1.0), v_max_(0.1), v_(v_max_), w_max_(1.0), pos_tol_(0.1), idx_(0),
-                             goal_reached_(true), nh_private_("~"), tf_listener_(tf_buffer_),
-                             map_frame_id_("map"), robot_frame_id_("base_link"),
-                             lookahead_frame_id_("lookahead")
-{
-  ROS_INFO("In PurePursuit::PurePursuit");
-  // Get parameters from the parameter server
-  nh_private_.param<double>("wheelbase", L_, 1.0);
-  nh_private_.param<double>("lookahead_distance", ld_, 1.0);
-  //nh_private_.param<double>("linear_velocity", v_, 0.1);
-  nh_private_.param<double>("max_rotational_velocity", w_max_, 1.0);
-  nh_private_.param<double>("position_tolerance", pos_tol_, 0.1);
-  nh_private_.param<double>("steering_angle_velocity", delta_vel_, 100.0);
-  nh_private_.param<double>("acceleration", acc_, 100.0);
-  nh_private_.param<double>("jerk", jerk_, 100.0);
-  nh_private_.param<double>("steering_angle_limit", delta_max_, 1.57);
-  nh_private_.param<string>("map_frame_id", map_frame_id_, "map");
-  // Frame attached to midpoint of rear axle (for front-steered vehicles).
-  nh_private_.param<string>("robot_frame_id", robot_frame_id_, "base_link");
-  // Lookahead frame moving along the path as the vehicle is moving.
-  nh_private_.param<string>("lookahead_frame_id", lookahead_frame_id_, "lookahead");
-  // Frame attached to midpoint of front axle (for front-steered vehicles).
-  nh_private_.param<string>("ackermann_frame_id", acker_frame_id_, "rear_axle_midpoint");
-  pub_multi_array_ = nh_.advertise<std_msgs::Float64MultiArray>("lookahead_data", 1);
-
-
-  // Populate messages with static data
-  lookahead_.header.frame_id = robot_frame_id_;
-  lookahead_.child_frame_id = lookahead_frame_id_;
-
-  cmd_acker_.header.frame_id = acker_frame_id_;
-  cmd_acker_.drive.steering_angle_velocity = delta_vel_;
-  cmd_acker_.drive.acceleration = acc_;
-  cmd_acker_.drive.jerk = jerk_;
-  
-  //sub_path_ = nh_.subscribe("path_segment", 1, &PurePursuit::receivePath, this);
-  sub_odom_ = nh_.subscribe("odometry", 1, &PurePursuit::computeVelocities, this);
-  pub_vel_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-  pub_acker_ = nh_.advertise<ackermann_msgs::AckermannDriveStamped>("cmd_acker", 1);
-  pub_got_path_ = nh_.advertise<std_msgs::Float64>("got_path", 1);
-  pub_off_path_error_ = nh_.advertise<std_msgs::Float64>("off_path_error", 1);
-  path_pub_ = nh_.advertise<nav_msgs::Path>("/drive_path", 1);  
-
-  reconfigure_callback_ = boost::bind(&PurePursuit::reconfigure, this, _1, _2);
-  reconfigure_server_.setCallback(reconfigure_callback_);
-
-
-  ROS_INFO("Loading the path file");
-  loadPathFromFile();
-}
+};  // <-- Semicolon here to end the 'class PurePursuit' definition
 
 void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
 {
@@ -193,7 +228,7 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
     {
       v_ = speed_values_[idx_];
       ld_ = lookahead_values_[idx_];
-      ROS_INFO("inside idx loop: idx_ = %d, v_ = %f, ld_ = %f", idx_, v_, ld_);
+      //ROS_INFO("inside idx loop: idx_ = %d, v_ = %f, ld_ = %f", idx_, v_, ld_);
 
       if (distance(path_.poses[idx_].pose.position, tf.transform.translation) > ld_)
       {
@@ -340,6 +375,7 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
     tf_broadcaster_.sendTransform(lookahead_);
     
     // Publish the velocities
+    //cmd_vel_.linear.y = 9.9;      // only for testing
     pub_vel_.publish(cmd_vel_);
     
     // Publish ackerman steering setpoints
@@ -356,11 +392,21 @@ void PurePursuit::computeVelocities(nav_msgs::Odometry odom)
 }
 
 void PurePursuit::loadPathFromFile() {
-    std::string input_file = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt";   
-    std::ifstream file(input_file);
+
+    debug_msg.data = "In the function loadPathFromFile";
+    debug_info_pub.publish(debug_msg);
+
+    // got_path_.data = 1;
+    // pub_got_path_.publish(got_path_);
+    ROS_INFO("In loadPathFromFile - about to open path file: %s", input_file_path_.c_str());
+    std::ifstream file(input_file_path_);
+
+
+    // std::string input_file = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt";   
+    // std::ifstream file(input_file);
 
     if (!file.is_open()) {
-        ROS_ERROR("Failed to open path file: %s", input_file.c_str());
+        ROS_ERROR("Failed to open path file: %s", input_file_path_.c_str());
         return;
     }
 
@@ -414,18 +460,22 @@ void PurePursuit::loadPathFromFile() {
     }    
 }
 
-// checkForNewPath method is looking for a parameter named "~new_input_path", you can set this parameter from the command line as follows:
-// $ rosparam set /pure_pursuit/new_input_path "/path/to/your/new/file.txt"
+// checkForNewPath method is looking for a parameter named "mission_file_name", you can set
+// this parameter from the command line as follows:
+// $ rosparam set /mission_file_name "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/ready_to_test/test_PID_output.txt"
+
 void PurePursuit::checkForNewPath() {
   std::string new_input_file;
-  if (ros::param::get("~new_input_path", new_input_file) && !new_input_file.empty()) {
+  if (ros::param::get("mission_file_name", input_file_path_) && !input_file_path_.empty()) {
       // Load the new path
-      //loadPathFromFile(new_input_file);
-      // For testing, just print a message
-      std::cout << "New path file received: " << new_input_file << std::endl;
+      loadPathFromFile();
+
+      ROS_INFO("New path file received: %s", new_input_file.c_str());
+      debug_msg.data = "In the function checkForNewPath - New path file received: ";
+      debug_info_pub.publish(debug_msg);
 
       // Reset the parameter
-      ros::param::set("~new_input_path", "");
+      ros::param::set("mission_file_name", "");
   }
 }
 
@@ -455,26 +505,6 @@ KDL::Frame PurePursuit::transformToBaseLink(const geometry_msgs::Pose& pose,
 
   return F_map_tf.Inverse()*F_map_pose;  // calculates the transformation from the the robot to the pose.
 }
-
-// void PurePursuit::run()
-// {
-//   ros::spin();
-// }
-
-void PurePursuit::run() {
-    ros::Rate rate(10); // Define the frequency of the loop
-
-    while (ros::ok()) {
-        ros::spinOnce();  // Handle incoming messages once
-
-        checkForNewPath(); // Check for a new path file
-
-        // You can add more code here if needed
-
-        rate.sleep(); // Sleep to maintain the loop at a constant rate
-    }
-}
-
 
 void PurePursuit::reconfigure(pure_pursuit::PurePursuitConfig &config, uint32_t level)
 {
@@ -559,11 +589,12 @@ void PurePursuit::publishLookaheadData()
 
 int main(int argc, char**argv)
 {
+
   std::cout << "pure_pursuit.cpp program initiating..." << std::endl;
   ros::init(argc, argv, "pure_pursuit");
-
-  PurePursuit controller;
-  controller.run();
-
+  ROS_INFO("PurePursuit controller starting");
+  PurePursuit pure_pursuit_steering_controller;
+  pure_pursuit_steering_controller.initialize(); // Initialize parameters and timer after ros::init()
+  ros::spin();
   return 0;
 }

@@ -1,0 +1,232 @@
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.0 168448 11788 ?        Ss   14:50   0:02 /sbin/init splash
+root           2  0.0  0.0      0     0 ?        S    14:50   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        I<   14:50   0:00 [rcu_gp]
+root           4  0.0  0.0      0     0 ?        I<   14:50   0:00 [rcu_par_gp]
+root           5  0.0  0.0      0     0 ?        I<   14:50   0:00 [slub_flushwq]
+root           6  0.0  0.0      0     0 ?        I<   14:50   0:00 [netns]
+root          10  0.0  0.0      0     0 ?        I<   14:50   0:00 [mm_percpu_wq]
+root          11  0.0  0.0      0     0 ?        S    14:50   0:00 [rcu_tasks_rude_]
+root          12  0.0  0.0      0     0 ?        S    14:50   0:00 [rcu_tasks_trace]
+root          13  0.0  0.0      0     0 ?        S    14:50   0:01 [ksoftirqd/0]
+root          14  0.0  0.0      0     0 ?        I    14:50   0:09 [rcu_sched]
+root          15  0.0  0.0      0     0 ?        S    14:50   0:00 [migration/0]
+root          16  0.0  0.0      0     0 ?        S    14:50   0:00 [idle_inject/0]
+root          18  0.0  0.0      0     0 ?        S    14:50   0:00 [cpuhp/0]
+root          19  0.0  0.0      0     0 ?        S    14:50   0:00 [cpuhp/1]
+root          20  0.0  0.0      0     0 ?        S    14:50   0:00 [idle_inject/1]
+root          21  0.0  0.0      0     0 ?        S    14:50   0:00 [migration/1]
+root          22  0.0  0.0      0     0 ?        S    14:50   0:01 [ksoftirqd/1]
+root          25  0.0  0.0      0     0 ?        S    14:50   0:00 [kdevtmpfs]
+root          26  0.0  0.0      0     0 ?        I<   14:50   0:00 [inet_frag_wq]
+root          27  0.0  0.0      0     0 ?        S    14:50   0:00 [kauditd]
+root          28  0.0  0.0      0     0 ?        S    14:50   0:00 [khungtaskd]
+root          29  0.0  0.0      0     0 ?        S    14:50   0:00 [oom_reaper]
+root          30  0.0  0.0      0     0 ?        I<   14:50   0:00 [writeback]
+root          31  0.0  0.0      0     0 ?        S    14:50   0:00 [kcompactd0]
+root          32  0.0  0.0      0     0 ?        SN   14:50   0:00 [ksmd]
+root          33  0.0  0.0      0     0 ?        SN   14:50   0:00 [khugepaged]
+root          80  0.0  0.0      0     0 ?        I<   14:50   0:00 [kintegrityd]
+root          81  0.0  0.0      0     0 ?        I<   14:50   0:00 [kblockd]
+root          82  0.0  0.0      0     0 ?        I<   14:50   0:00 [blkcg_punt_bio]
+root          84  0.0  0.0      0     0 ?        I<   14:50   0:00 [tpm_dev_wq]
+root          85  0.0  0.0      0     0 ?        I<   14:50   0:00 [ata_sff]
+root          86  0.0  0.0      0     0 ?        I<   14:50   0:00 [md]
+root          87  0.0  0.0      0     0 ?        I<   14:50   0:00 [edac-poller]
+root          88  0.0  0.0      0     0 ?        I<   14:50   0:00 [devfreq_wq]
+root          89  0.0  0.0      0     0 ?        S    14:50   0:00 [watchdogd]
+root          92  0.0  0.0      0     0 ?        S    14:50   0:00 [kswapd0]
+root          93  0.0  0.0      0     0 ?        S    14:50   0:00 [ecryptfs-kthrea]
+root          95  0.0  0.0      0     0 ?        I<   14:50   0:00 [kthrotld]
+root          96  0.0  0.0      0     0 ?        S    14:50   0:00 [irq/24-pciehp]
+root          97  0.0  0.0      0     0 ?        S    14:50   0:00 [irq/25-pciehp]
+root          98  0.0  0.0      0     0 ?        S    14:50   0:00 [irq/26-pciehp]
+root          99  0.0  0.0      0     0 ?        I<   14:50   0:00 [acpi_thermal_pm]
+root         101  0.0  0.0      0     0 ?        I<   14:50   0:00 [vfio-irqfd-clea]
+root         102  0.0  0.0      0     0 ?        I<   14:50   0:00 [mld]
+root         103  0.0  0.0      0     0 ?        I<   14:50   0:00 [ipv6_addrconf]
+root         115  0.0  0.0      0     0 ?        I<   14:50   0:00 [kstrp]
+root         118  0.0  0.0      0     0 ?        I<   14:50   0:00 [zswap-shrink]
+root         124  0.0  0.0      0     0 ?        I<   14:50   0:00 [charger_manager]
+root         171  0.0  0.0      0     0 ?        S    14:50   0:00 [scsi_eh_0]
+root         174  0.0  0.0      0     0 ?        I<   14:50   0:00 [scsi_tmf_0]
+root         175  0.0  0.0      0     0 ?        S    14:50   0:00 [scsi_eh_1]
+root         176  0.0  0.0      0     0 ?        I<   14:50   0:00 [scsi_tmf_1]
+root         177  0.0  0.0      0     0 ?        S    14:50   0:00 [scsi_eh_2]
+root         178  0.0  0.0      0     0 ?        I<   14:50   0:00 [scsi_tmf_2]
+root         180  0.0  0.0      0     0 ?        S    14:50   0:00 [scsi_eh_3]
+root         182  0.0  0.0      0     0 ?        I<   14:50   0:00 [scsi_tmf_3]
+root         183  0.0  0.0      0     0 ?        S    14:50   0:00 [scsi_eh_4]
+root         184  0.0  0.0      0     0 ?        I<   14:50   0:00 [scsi_tmf_4]
+root         211  0.0  0.0      0     0 ?        S    14:51   0:03 [jbd2/sda5-8]
+root         212  0.0  0.0      0     0 ?        I<   14:51   0:00 [ext4-rsv-conver]
+root         251  0.0  0.2  77124 40780 ?        S<s  14:51   0:03 /lib/systemd/systemd-journald
+root         278  0.0  0.0  25132  7768 ?        Ss   14:51   0:00 /lib/systemd/systemd-udevd
+root         340  0.0  0.0      0     0 ?        I<   14:51   0:00 [cfg80211]
+root         354  0.0  0.0      0     0 ?        S    14:51   0:00 [wl_event_handle]
+root         381  0.0  0.0      0     0 ?        S    14:51   0:00 [card0-crtc0]
+root         383  0.0  0.0      0     0 ?        S    14:51   0:00 [card0-crtc1]
+root         384  0.0  0.0      0     0 ?        S    14:51   0:00 [card0-crtc2]
+root         385  0.0  0.0      0     0 ?        S    14:51   0:00 [card0-crtc3]
+root         396  0.0  0.0      0     0 ?        I<   14:51   0:00 [cryptd]
+root         421  0.0  0.0      0     0 ?        I<   14:51   0:00 [kworker/u9:1-hci0]
+root         422  0.0  0.0      0     0 ?        I<   14:51   0:00 [kworker/u9:2-hci0]
+systemd+     620  0.0  0.0  24820 13560 ?        Ss   14:51   0:01 /lib/systemd/systemd-resolved
+root         716  0.0  0.0 238252  7516 ?        Ssl  14:51   0:00 /usr/lib/accountsservice/accounts-daemon
+root         717  0.0  0.0   2548   708 ?        Ss   14:51   0:01 /usr/sbin/acpid
+avahi        719  0.0  0.0   8684  4172 ?        Ss   14:51   0:00 avahi-daemon: running [tractor-HP-ProBook-645-G1.local]
+root         720  0.0  0.0   8368  4960 ?        Ss   14:51   0:00 /usr/lib/bluetooth/bluetoothd
+root         721  0.0  0.0   9424  3072 ?        Ss   14:51   0:00 /usr/sbin/cron -f
+root         724  0.0  0.0  11148  3596 ?        S    14:51   0:00 /usr/sbin/CRON -f
+root         725  0.0  0.0  29060  9648 ?        Ss   14:51   0:00 /usr/sbin/cupsd -l
+message+     726  0.0  0.0   9868  6468 ?        Ss   14:51   0:03 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+root         729  0.0  0.1 336264 20364 ?        Ssl  14:51   0:05 /usr/sbin/NetworkManager --no-daemon
+root         741  0.0  0.0  81936  3764 ?        Ssl  14:51   0:01 /usr/sbin/irqbalance --foreground
+root         744  0.0  0.1  39892 20672 ?        Ss   14:51   0:00 /usr/bin/python3 /usr/bin/networkd-dispatcher --run-startup-triggers
+root         750  0.0  0.0 235184 10356 ?        Ssl  14:51   0:02 /usr/lib/policykit-1/polkitd --no-debug
+syslog       763  0.0  0.0 224352  5356 ?        Ssl  14:51   0:00 /usr/sbin/rsyslogd -n -iNONE
+root         769  0.0  0.2 1393456 31672 ?       Ssl  14:51   0:04 /usr/lib/snapd/snapd
+root         772  0.0  0.0 235608  6168 ?        Ssl  14:51   0:00 /usr/libexec/switcheroo-control
+root         780  0.0  0.0  17488  8368 ?        Ss   14:51   0:00 /lib/systemd/systemd-logind
+root         789  0.0  0.0 393924 13596 ?        Ssl  14:51   0:03 /usr/lib/udisks2/udisksd
+root         790  0.0  0.0  13936  8892 ?        Ss   14:51   0:00 /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant
+avahi        811  0.0  0.0   8348   328 ?        S    14:51   0:00 avahi-daemon: chroot helper
+tractor      812  0.0  0.0   2616   532 ?        Ss   14:51   0:00 /bin/sh -c /bin/sleep 180 && /usr/bin/python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/utility_laptop_data_logger.py
+root         828  0.0  0.0 315120 11676 ?        Ssl  14:51   0:00 /usr/sbin/ModemManager
+root         835  0.0  0.0 177388 14276 ?        Ssl  14:51   0:00 /usr/sbin/cups-browsed
+_chrony      854  0.0  0.0  13024  2768 ?        S    14:51   0:00 /usr/sbin/chronyd -F -1
+_chrony      855  0.0  0.0   4864  2264 ?        S    14:51   0:00 /usr/sbin/chronyd -F -1
+root         877  0.0  0.0 239616  8684 ?        Ssl  14:51   0:00 /usr/sbin/gdm3
+root         886  0.0  0.1 118172 22884 ?        Ssl  14:51   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+rtkit        921  0.0  0.0 152936  3056 ?        SNsl 14:51   0:00 /usr/libexec/rtkit-daemon
+root        1040  0.0  0.0 252408  9860 ?        Ssl  14:51   0:00 /usr/lib/upower/upowerd
+colord      1340  0.0  0.0 246452 14884 ?        Ssl  14:51   0:00 /usr/libexec/colord
+whoopsie    1396  0.0  0.1 326864 15588 ?        Ssl  14:51   0:00 /usr/bin/whoopsie -f
+kernoops    1399  0.0  0.0  11268   440 ?        Ss   14:51   0:00 /usr/sbin/kerneloops --test
+kernoops    1415  0.0  0.0  11268   444 ?        Ss   14:51   0:00 /usr/sbin/kerneloops
+lp          1432  0.0  0.0  15328  6532 ?        S    14:51   0:00 /usr/lib/cups/notifier/dbus dbus://
+root        1441  0.0  0.0 167196  9572 ?        Sl   14:51   0:00 gdm-session-worker [pam/gdm-password]
+tractor     1449  0.0  0.0  19852 10668 ?        Ss   14:51   0:03 /lib/systemd/systemd --user
+tractor     1450  0.0  0.0 169732  3672 ?        S    14:51   0:00 (sd-pam)
+tractor     1455  0.1  0.1 2007384 20552 ?       S<sl 14:51   0:19 /usr/bin/pulseaudio --daemonize=no --log-target=journal
+tractor     1457  0.0  0.1 921140 24852 ?        SNsl 14:51   0:05 /usr/libexec/tracker-miner-fs
+tractor     1459  0.0  0.0 627760  8628 ?        Ssl  14:51   0:00 /usr/bin/ubuntu-report service
+tractor     1461  0.0  0.0 240168  7864 ?        Sl   14:51   0:00 /usr/bin/gnome-keyring-daemon --daemonize --login
+tractor     1469  0.0  0.0   9844  7040 ?        Ss   14:51   0:07 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+tractor     1485  0.0  0.0 239820  7916 ?        Ssl  14:51   0:00 /usr/libexec/gvfsd
+tractor     1490  0.0  0.0 378352  6556 ?        Sl   14:51   0:00 /usr/libexec/gvfsd-fuse /run/user/1000/gvfs -f -o big_writes
+tractor     1499  0.0  0.0 314044  9620 ?        Ssl  14:51   0:01 /usr/libexec/gvfs-udisks2-volume-monitor
+tractor     1504  0.0  0.0 164024  6636 tty2     Ssl+ 14:51   0:00 /usr/lib/gdm3/gdm-x-session --run-script env GNOME_SHELL_SESSION_MODE=ubuntu /usr/bin/gnome-session --systemd --session=ubuntu
+tractor     1506  2.0  0.5 446144 92884 tty2     Sl+  14:51   6:05 /usr/lib/xorg/Xorg vt2 -displayfd 3 -auth /run/user/1000/gdm/Xauthority -background none -noreset -keeptty -verbose 3
+tractor     1511  0.0  0.0 316728  8880 ?        Ssl  14:51   0:01 /usr/libexec/gvfs-afc-volume-monitor
+tractor     1516  0.0  0.0 235836  5644 ?        Ssl  14:51   0:00 /usr/libexec/gvfs-mtp-volume-monitor
+tractor     1520  0.0  0.0 238244  7244 ?        Ssl  14:51   0:00 /usr/libexec/gvfs-gphoto2-volume-monitor
+tractor     1524  0.0  0.0 235884  6572 ?        Ssl  14:51   0:00 /usr/libexec/gvfs-goa-volume-monitor
+tractor     1530  0.0  0.2 553296 35116 ?        Sl   14:51   0:00 /usr/libexec/goa-daemon
+tractor     1537  0.0  0.0 314764  9012 ?        Sl   14:51   0:00 /usr/libexec/goa-identity-service
+root        1546  0.0  0.0      0     0 ?        S<   14:51   0:00 [krfcommd]
+tractor     1571  0.0  0.0 188224 14176 tty2     Sl+  14:51   0:00 /usr/libexec/gnome-session-binary --systemd --systemd --session=ubuntu
+tractor     1638  0.0  0.0   6040   452 ?        Ss   14:51   0:00 /usr/bin/ssh-agent /usr/bin/im-launch env GNOME_SHELL_SESSION_MODE=ubuntu /usr/bin/gnome-session --systemd --session=ubuntu
+tractor     1657  0.0  0.0 305420  6692 ?        Ssl  14:51   0:00 /usr/libexec/at-spi-bus-launcher
+tractor     1662  0.0  0.0   7380  4468 ?        S    14:51   0:00 /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 3
+tractor     1670  0.0  0.0  90068  4368 ?        Ssl  14:51   0:00 /usr/libexec/gnome-session-ctl --monitor
+tractor     1677  0.0  0.1 484192 15712 ?        Ssl  14:51   0:00 /usr/libexec/gnome-session-binary --systemd-service --session=ubuntu
+tractor     1692  3.0  1.6 3808460 261716 ?      Ssl  14:51   9:15 /usr/bin/gnome-shell
+tractor     1712  0.0  0.0 384684  8460 ?        Sl   14:51   0:00 ibus-daemon --panel disable --xim
+tractor     1716  0.0  0.0 162712  6900 ?        Sl   14:51   0:00 /usr/libexec/ibus-memconf
+tractor     1717  0.0  0.2 275756 31736 ?        Sl   14:51   0:02 /usr/libexec/ibus-extension-gtk3
+tractor     1721  0.0  0.1 197972 28232 ?        Sl   14:51   0:00 /usr/libexec/ibus-x11 --kill-daemon
+tractor     1723  0.0  0.0 236512  7580 ?        Sl   14:51   0:00 /usr/libexec/ibus-portal
+tractor     1734  0.0  0.0 162840  7716 ?        Sl   14:51   0:02 /usr/libexec/at-spi2-registryd --use-gnome-session
+tractor     1738  0.0  0.0 235604  4800 ?        Ssl  14:51   0:00 /usr/libexec/xdg-permission-store
+tractor     1743  0.0  0.1 580980 18980 ?        Sl   14:51   0:00 /usr/libexec/gnome-shell-calendar-server
+tractor     1749  0.0  0.1 1070212 25564 ?       Ssl  14:51   0:00 /usr/libexec/evolution-source-registry
+tractor     1758  0.0  0.1 838684 30064 ?        Ssl  14:51   0:00 /usr/libexec/evolution-calendar-factory
+tractor     1767  0.0  0.0 156356  5820 ?        Sl   14:51   0:00 /usr/libexec/dconf-service
+tractor     1772  0.0  0.1 747040 29764 ?        Ssl  14:51   0:00 /usr/libexec/evolution-addressbook-factory
+tractor     1789  0.0  0.1 2598552 26880 ?       Sl   14:51   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+tractor     1795  0.0  0.0 313968  8332 ?        Sl   14:51   0:00 /usr/libexec/gvfsd-trash --spawner :1.3 /org/gtk/gvfs/exec_spaw/0
+tractor     1809  0.0  0.0 309660  5956 ?        Ssl  14:51   0:00 /usr/libexec/gsd-a11y-settings
+tractor     1812  0.0  0.1 578448 30228 ?        Ssl  14:51   0:00 /usr/libexec/gsd-color
+tractor     1815  0.0  0.1 373616 16116 ?        Ssl  14:51   0:00 /usr/libexec/gsd-datetime
+tractor     1820  0.0  0.0 311728  7484 ?        Ssl  14:51   0:01 /usr/libexec/gsd-housekeeping
+tractor     1821  0.0  0.1 345964 28700 ?        Ssl  14:51   0:00 /usr/libexec/gsd-keyboard
+tractor     1825  0.0  0.2 761924 31152 ?        Ssl  14:51   0:00 /usr/libexec/gsd-media-keys
+tractor     1826  0.0  0.1 493912 29500 ?        Ssl  14:51   0:00 /usr/libexec/gsd-power
+tractor     1828  0.0  0.0 248240 11236 ?        Ssl  14:51   0:00 /usr/libexec/gsd-print-notifications
+tractor     1829  0.0  0.0 457108  6092 ?        Ssl  14:51   0:00 /usr/libexec/gsd-rfkill
+tractor     1831  0.0  0.0 235516  5772 ?        Ssl  14:51   0:00 /usr/libexec/gsd-screensaver-proxy
+tractor     1834  0.0  0.0 464776 10340 ?        Ssl  14:51   0:00 /usr/libexec/gsd-sharing
+tractor     1841  0.0  0.0 315160  8116 ?        Ssl  14:51   0:00 /usr/libexec/gsd-smartcard
+tractor     1842  0.0  0.0 319356  9000 ?        Ssl  14:51   0:00 /usr/libexec/gsd-sound
+tractor     1846  0.0  0.3 719732 59240 ?        Sl   14:51   0:00 /usr/libexec/evolution-data-server/evolution-alarm-notify
+tractor     1848  0.0  0.0 458700  7348 ?        Ssl  14:51   0:00 /usr/libexec/gsd-usb-protection
+tractor     1849  0.0  0.0 231808  6148 ?        Sl   14:51   0:00 /usr/libexec/gsd-disk-utility-notify
+tractor     1851  0.0  0.1 345456 28160 ?        Ssl  14:51   0:00 /usr/libexec/gsd-wacom
+tractor     1853  0.0  0.0 314096  8360 ?        Ssl  14:51   0:00 /usr/libexec/gsd-wwan
+tractor     1863  0.0  0.1 346708 29732 ?        Ssl  14:51   0:00 /usr/libexec/gsd-xsettings
+tractor     1901  0.0  0.0 342184 14968 ?        Sl   14:51   0:00 /usr/libexec/gsd-printer
+tractor     1938  0.0  0.7 920032 121352 ?       Sl   14:51   0:09 /snap/snap-store/959/usr/bin/snap-store --gapplication-service
+tractor     1958  0.0  0.0 457540  6496 ?        Ssl  14:51   0:00 /usr/libexec/xdg-document-portal
+tractor     1987  0.0  0.0 162704  7016 ?        Sl   14:51   0:00 /usr/libexec/ibus-engine-simple
+tractor     2080  0.0  0.0 610188 10752 ?        Ssl  14:51   0:01 /usr/libexec/xdg-desktop-portal
+tractor     2084  0.0  0.1 493848 28808 ?        Ssl  14:51   0:01 /usr/libexec/xdg-desktop-portal-gtk
+tractor     2624  0.0  0.0 387836  8292 ?        Sl   14:51   0:00 /usr/libexec/gvfsd-network --spawner :1.3 /org/gtk/gvfs/exec_spaw/1
+tractor     2640  0.0  0.0 314992  8344 ?        Sl   14:51   0:00 /usr/libexec/gvfsd-dnssd --spawner :1.3 /org/gtk/gvfs/exec_spaw/3
+tractor     2656  0.0  0.1 523924 25356 ?        SLl  14:51   0:00 /usr/libexec/gvfsd-smb-browse --spawner :1.3 /org/gtk/gvfs/exec_spaw/4
+tractor     2673  0.0  0.1 523924 25200 ?        SLl  14:52   0:00 /usr/libexec/gvfsd-smb --spawner :1.3 /org/gtk/gvfs/exec_spaw/5
+tractor     2989  0.0  0.0 162296  6608 ?        Ssl  14:52   0:00 /usr/libexec/gvfsd-metadata
+uuidd       2992  0.0  0.0  10600  1000 ?        Ss   14:52   0:00 /usr/sbin/uuidd --socket-activation
+tractor     2996  0.0  0.1 419416 29232 ?        Sl   14:52   0:00 update-notifier
+tractor     3086  0.0  0.0   4932  3444 ?        S    14:52   0:00 /bin/bash /snap/brave/318/opt/brave.com/brave/brave-browser
+tractor     3164  0.0  0.0   3372  1076 ?        S    14:52   0:00 cat
+tractor     3165  0.0  0.0   3372  1076 ?        S    14:52   0:00 cat
+tractor     3166  2.1  2.5 34333712 398724 ?     Sl   14:52   6:18 /snap/brave/318/opt/brave.com/brave/brave
+tractor     3168  0.0  0.0 33576988 3496 ?       Sl   14:52   0:00 /snap/brave/318/opt/brave.com/brave/chrome_crashpad_handler --monitor-self --monitor-self-annotation=ptype=crashpad-handler --database=/home/tractor/snap/brave/318/.config/BraveSoftware/Brave-Browser/Crash Reports --metrics-dir=/home/tractor/snap/brave/318/.config/BraveSoftware/Brave-Browser --url=https://cr.brave.com --annotation=lsb-release=Ubuntu Core 22 --annotation=plat=Linux --annotation=prod=Chrome_Linux --annotation=ver=119.1.60.125 --initial-client-fd=5 --shared-client-connection
+tractor     3170  0.0  0.0 33567752 3304 ?       Sl   14:52   0:00 /snap/brave/318/opt/brave.com/brave/chrome_crashpad_handler --no-periodic-tasks --monitor-self-annotation=ptype=crashpad-handler --database=/home/tractor/snap/brave/318/.config/BraveSoftware/Brave-Browser/Crash Reports --url=https://cr.brave.com --annotation=lsb-release=Ubuntu Core 22 --annotation=plat=Linux --annotation=prod=Chrome_Linux --annotation=ver=119.1.60.125 --initial-client-fd=4 --shared-client-connection
+tractor     3176  0.0  0.4 33873844 68200 ?      S    14:52   0:00 /snap/brave/318/opt/brave.com/brave/brave --type=zygote --no-zygote-sandbox --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --change-stack-guard-on-fork=enable
+tractor     3177  0.0  0.4 33873832 68440 ?      S    14:52   0:00 /snap/brave/318/opt/brave.com/brave/brave --type=zygote --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --change-stack-guard-on-fork=enable
+tractor     3179  0.0  0.1 33873856 18196 ?      S    14:52   0:00 /snap/brave/318/opt/brave.com/brave/brave --type=zygote --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --change-stack-guard-on-fork=enable
+tractor     3209  2.5  1.5 34184564 234716 ?     Sl   14:52   7:44 /snap/brave/318/opt/brave.com/brave/brave --type=gpu-process --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --change-stack-guard-on-fork=enable --gpu-preferences=WAAAAAAAAAAgAAAEAAAAAAAAAAAAAAAAAABgAAAAAAA4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAGAAAAAAAAAAYAAAAAAAAAAgAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --shared-files --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3214  0.8  0.8 33946172 125400 ?     Sl   14:52   2:29 /snap/brave/318/opt/brave.com/brave/brave --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3222  0.0  0.4 33933036 62420 ?      Sl   14:52   0:02 /snap/brave/318/opt/brave.com/brave/brave --type=utility --utility-sub-type=storage.mojom.StorageService --lang=en-US --service-sandbox-type=utility --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3238  0.3  0.8 1186897648 137668 ?   Sl   14:52   1:07 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --extension-process --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=5 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=114904349 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3262  6.6  1.9 1186943032 299848 ?   Sl   14:52  19:49 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=11 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=115579573 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3283  0.0  0.1 1236632 17272 ?       Sl   14:52   0:00 /usr/bin/snap userd
+tractor     3304  0.0  0.7 1186879648 110076 ?   Sl   14:52   0:00 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --extension-process --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=6 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=115956448 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3406  0.4  1.7 1189030492 266844 ?   Sl   14:52   1:25 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --extension-process --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=7 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=116569109 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3417  0.0  0.6 1186879520 96240 ?    Sl   14:52   0:00 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --extension-process --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=8 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=116699568 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3427  0.0  0.7 1186887844 116652 ?   Sl   14:52   0:00 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --extension-process --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=9 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=116871738 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3460  1.7  0.8 753684 133808 ?       Rl   14:52   5:07 /snap/sublime-text/137/opt/sublime_text/sublime_text --detached --launch-or-new-window
+tractor     3466  0.0  0.0 152620  1084 ?        Sl   14:52   0:00 /snap/sublime-text/137/opt/sublime_text/crash_handler --no-rate-limit --database=/home/tractor/.cache/sublime-text/Crash Reports --metrics-dir=/home/tractor/.cache/sublime-text/Crash Reports --url=https://crash-server.sublimehq.com/api/upload --annotation=hash=15478411202926643057 --annotation=ident=sublime_text_4169 --initial-client-fd=15 --shared-client-connection
+tractor     3505  0.0  0.0 109884 14960 ?        Sl   14:53   0:01 /snap/sublime-text/137/opt/sublime_text/plugin_host-3.3 3460 /snap/sublime-text/137/opt/sublime_text/sublime_text 14:3466 /home/tractor/.config/sublime-text /home/tractor/.cache/sublime-text /snap/sublime-text/137/opt/sublime_text/Packages
+tractor     3508  0.0  0.1 118028 24028 ?        Sl   14:53   0:03 /snap/sublime-text/137/opt/sublime_text/plugin_host-3.8 3460 /snap/sublime-text/137/opt/sublime_text/sublime_text 14:3466 /home/tractor/.config/sublime-text /home/tractor/.cache/sublime-text /snap/sublime-text/137/opt/sublime_text/Packages
+tractor     3573  0.0  0.5 34205492 90924 ?      Sl   14:54   0:04 /snap/brave/318/opt/brave.com/brave/brave --type=utility --utility-sub-type=audio.mojom.AudioService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor     3587  0.0  0.0  21240 12392 ?        S    14:54   0:01 /usr/bin/python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/utility_laptop_data_logger.py
+tractor     3933  0.1  0.4 1465728 76236 ?       Sl   15:00   0:18 /usr/bin/nautilus --gapplication-service
+tractor     8066  0.2  0.5 1131592 86272 ?       Sl   15:42   0:31 /usr/bin/python3 /usr/bin/terminator
+tractor     8076  0.0  0.0  11276  5628 pts/0    Ss   15:42   0:00 /bin/bash
+tractor     8119  0.0  0.0  11276  5644 pts/1    Ss+  15:42   0:00 /bin/bash
+tractor     8298  0.0  0.0  11276  5664 pts/2    Ss+  15:44   0:00 /bin/bash
+tractor     9288  0.1  1.4 1191163096 225316 ?   Sl   15:51   0:19 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=73 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=3602385168 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor    10961  0.3  1.8 1186917780 286020 ?   Sl   16:25   0:46 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=97 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=5685744803 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor    11012  0.0  0.8 1186879780 134588 ?   Sl   16:25   0:01 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=99 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=5694087232 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+tractor    18971  0.1  0.3 534784 55372 pts/0    Sl+  17:56   0:11 python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/gui/gui_main_v1.py
+tractor    19418  0.0  0.0  11276  5500 pts/6    Ss+  18:00   0:00 /bin/bash
+root       23034  0.0  0.0      0     0 ?        I<   18:32   0:00 [kworker/0:0H-kblockd]
+root       23795  0.0  0.0      0     0 ?        I<   18:39   0:00 [kworker/0:2H-kblockd]
+root       24256  0.0  0.0      0     0 ?        I    18:52   0:00 [kworker/u8:0-events_power_efficient]
+tractor    30318  1.4  1.5 1189051560 244572 ?   Sl   19:14   0:32 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=175 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=15840165729 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+root       33173  0.0  0.0      0     0 ?        I<   19:21   0:00 [kworker/1:2H-kblockd]
+root       33247  0.0  0.0      0     0 ?        I    19:23   0:00 [kworker/u8:1-events_unbound]
+tractor    33824  0.0  0.0      0     0 pts/0    Z+   19:24   0:00 [gnome-terminal] <defunct>
+root       34201  0.0  0.0      0     0 ?        I    19:27   0:01 [kworker/1:2-cgroup_destroy]
+root       34321  0.0  0.0      0     0 ?        I<   19:30   0:00 [kworker/1:0H-kblockd]
+tractor    34458  0.0  0.4 1186871320 68940 ?    Sl   19:33   0:00 /snap/brave/318/opt/brave.com/brave/brave --type=renderer --crashpad-handler-pid=3168 --enable-crash-reporter=ea084eb1-6309-4b97-bdc6-3d9d22faf826, --origin-trial-public-key=bYUKPJoPnCxeNvu72j4EmPuK7tr1PAC7SHh8ld9Mw3E=,fMS4mpO6buLQ/QMd+zJmxzty/VQ6B1EUZqoCU04zoRU= --change-stack-guard-on-fork=enable --brave_session_token=7218420773550329781 --lang=en-US --num-raster-threads=1 --renderer-client-id=185 --time-ticks-at-unix-epoch=-1701719458530055 --launch-time-ticks=16957353533 --shared-files=v8_context_snapshot_data:100 --field-trial-handle=0,i,8939078295028290731,2923280154523109372,262144
+root       34569  0.1  0.0      0     0 ?        I    19:36   0:01 [kworker/0:1-events]
+root       34618  0.1  0.0      0     0 ?        I    19:37   0:01 [kworker/1:0-events]
+root       34754  0.0  0.0      0     0 ?        I    19:40   0:00 [kworker/u8:2-events_power_efficient]
+root       34941  0.0  0.0      0     0 ?        I    19:45   0:00 [kworker/0:0-events]
+root       34948  0.0  0.0      0     0 ?        I<   19:46   0:00 [kworker/0:1H-kblockd]
+root       35019  0.0  0.0      0     0 ?        I    19:48   0:00 [kworker/u8:3-ext4-rsv-conversion]
+tractor    35663  0.0  0.0  11500  3308 pts/0    R+   19:51   0:00 ps aux

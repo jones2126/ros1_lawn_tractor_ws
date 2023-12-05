@@ -55,6 +55,10 @@ target_link_libraries(test_kdl_transformToBaseLink ${catkin_LIBRARIES} orocos-kd
 
 ## Make sure configure headers are built before any node using them
 add_dependencies(pure_pursuit ${PROJECT_NAME}_gencfg)
+
+# Add the executable for simple_ros_node
+add_executable(simple_ros_node src/simple_ros_node.cpp)
+target_link_libraries(simple_ros_node ${catkin_LIBRARIES})
   
 #############
 ## Install ##

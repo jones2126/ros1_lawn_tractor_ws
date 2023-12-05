@@ -1572,6 +1572,19 @@ topic_tools_generate_messages_py/fast:
 .PHONY : topic_tools_generate_messages_py/fast
 
 #=============================================================================
+# Target rules for targets named simple_ros_node
+
+# Build rule for target.
+simple_ros_node: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 simple_ros_node
+.PHONY : simple_ros_node
+
+# fast build rule for target.
+simple_ros_node/fast:
+	$(MAKE) -f pure_pursuit/CMakeFiles/simple_ros_node.dir/build.make pure_pursuit/CMakeFiles/simple_ros_node.dir/build
+.PHONY : simple_ros_node/fast
+
+#=============================================================================
 # Target rules for targets named test_kdl_transformToBaseLink
 
 # Build rule for target.
@@ -2511,6 +2524,7 @@ help:
 	@echo "... rosserial_server_socket_node"
 	@echo "... rosserial_server_udp_socket_node"
 	@echo "... topic_tools_generate_messages_py"
+	@echo "... simple_ros_node"
 	@echo "... test_kdl_transformToBaseLink"
 	@echo "... pure_pursuit"
 	@echo "... dynamic_reconfigure_generate_messages_py"

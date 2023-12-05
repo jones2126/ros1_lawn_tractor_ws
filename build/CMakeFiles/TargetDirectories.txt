@@ -236,6 +236,7 @@
 /home/tractor/ros1_lawn_tractor_ws/build/pure_pursuit/CMakeFiles/install.dir
 /home/tractor/ros1_lawn_tractor_ws/build/pure_pursuit/CMakeFiles/list_install_components.dir
 /home/tractor/ros1_lawn_tractor_ws/build/pure_pursuit/CMakeFiles/test.dir
+/home/tractor/ros1_lawn_tractor_ws/build/pure_pursuit/CMakeFiles/simple_ros_node.dir
 /home/tractor/ros1_lawn_tractor_ws/build/pure_pursuit/CMakeFiles/test_kdl_transformToBaseLink.dir
 /home/tractor/ros1_lawn_tractor_ws/build/pure_pursuit/CMakeFiles/pure_pursuit.dir
 /home/tractor/ros1_lawn_tractor_ws/build/pure_pursuit/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir

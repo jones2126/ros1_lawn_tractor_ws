@@ -101,6 +101,7 @@ pure_pursuit/CMakeFiles/pure_pursuit.dir/src/pure_pursuit.cpp.o
  /opt/ros/noetic/include/std_msgs/Header.h
  /opt/ros/noetic/include/std_msgs/MultiArrayDimension.h
  /opt/ros/noetic/include/std_msgs/MultiArrayLayout.h
+ /opt/ros/noetic/include/std_msgs/String.h
  /opt/ros/noetic/include/tf/LinearMath/Matrix3x3.h
  /opt/ros/noetic/include/tf/LinearMath/Quaternion.h
  /opt/ros/noetic/include/tf/LinearMath/Transform.h

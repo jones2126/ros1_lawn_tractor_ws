@@ -168,6 +168,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+pure_pursuit/CMakeFiles/simple_ros_node.dir/rule:
+	cd /home/tractor/ros1_lawn_tractor_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit/CMakeFiles/simple_ros_node.dir/rule
+.PHONY : pure_pursuit/CMakeFiles/simple_ros_node.dir/rule
+
+# Convenience name for target.
+simple_ros_node: pure_pursuit/CMakeFiles/simple_ros_node.dir/rule
+
+.PHONY : simple_ros_node
+
+# fast build rule for target.
+simple_ros_node/fast:
+	cd /home/tractor/ros1_lawn_tractor_ws/build && $(MAKE) -f pure_pursuit/CMakeFiles/simple_ros_node.dir/build.make pure_pursuit/CMakeFiles/simple_ros_node.dir/build
+.PHONY : simple_ros_node/fast
+
+# Convenience name for target.
 pure_pursuit/CMakeFiles/test_kdl_transformToBaseLink.dir/rule:
 	cd /home/tractor/ros1_lawn_tractor_ws/build && $(MAKE) -f CMakeFiles/Makefile2 pure_pursuit/CMakeFiles/test_kdl_transformToBaseLink.dir/rule
 .PHONY : pure_pursuit/CMakeFiles/test_kdl_transformToBaseLink.dir/rule
@@ -779,6 +794,33 @@ src/pure_pursuit.cpp.s:
 	cd /home/tractor/ros1_lawn_tractor_ws/build && $(MAKE) -f pure_pursuit/CMakeFiles/pure_pursuit.dir/build.make pure_pursuit/CMakeFiles/pure_pursuit.dir/src/pure_pursuit.cpp.s
 .PHONY : src/pure_pursuit.cpp.s
 
+src/simple_ros_node.o: src/simple_ros_node.cpp.o
+
+.PHONY : src/simple_ros_node.o
+
+# target to build an object file
+src/simple_ros_node.cpp.o:
+	cd /home/tractor/ros1_lawn_tractor_ws/build && $(MAKE) -f pure_pursuit/CMakeFiles/simple_ros_node.dir/build.make pure_pursuit/CMakeFiles/simple_ros_node.dir/src/simple_ros_node.cpp.o
+.PHONY : src/simple_ros_node.cpp.o
+
+src/simple_ros_node.i: src/simple_ros_node.cpp.i
+
+.PHONY : src/simple_ros_node.i
+
+# target to preprocess a source file
+src/simple_ros_node.cpp.i:
+	cd /home/tractor/ros1_lawn_tractor_ws/build && $(MAKE) -f pure_pursuit/CMakeFiles/simple_ros_node.dir/build.make pure_pursuit/CMakeFiles/simple_ros_node.dir/src/simple_ros_node.cpp.i
+.PHONY : src/simple_ros_node.cpp.i
+
+src/simple_ros_node.s: src/simple_ros_node.cpp.s
+
+.PHONY : src/simple_ros_node.s
+
+# target to generate assembly for a file
+src/simple_ros_node.cpp.s:
+	cd /home/tractor/ros1_lawn_tractor_ws/build && $(MAKE) -f pure_pursuit/CMakeFiles/simple_ros_node.dir/build.make pure_pursuit/CMakeFiles/simple_ros_node.dir/src/simple_ros_node.cpp.s
+.PHONY : src/simple_ros_node.cpp.s
+
 src/test_kdl_transformToBaseLink.o: src/test_kdl_transformToBaseLink.cpp.o
 
 .PHONY : src/test_kdl_transformToBaseLink.o
@@ -816,6 +858,7 @@ help:
 	@echo "... install"
 	@echo "... list_install_components"
 	@echo "... test"
+	@echo "... simple_ros_node"
 	@echo "... test_kdl_transformToBaseLink"
 	@echo "... pure_pursuit"
 	@echo "... dynamic_reconfigure_generate_messages_py"
@@ -861,6 +904,9 @@ help:
 	@echo "... src/pure_pursuit.o"
 	@echo "... src/pure_pursuit.i"
 	@echo "... src/pure_pursuit.s"
+	@echo "... src/simple_ros_node.o"
+	@echo "... src/simple_ros_node.i"
+	@echo "... src/simple_ros_node.s"
 	@echo "... src/test_kdl_transformToBaseLink.o"
 	@echo "... src/test_kdl_transformToBaseLink.i"
 	@echo "... src/test_kdl_transformToBaseLink.s"

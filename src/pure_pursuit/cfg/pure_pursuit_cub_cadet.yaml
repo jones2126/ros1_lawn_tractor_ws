@@ -9,3 +9,5 @@ position_tolerance: 0.1
 map_frame_id: map
 robot_frame_id: base_link
 lookahead_frame_id: lookahead
+mission_file_name: "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt"
+

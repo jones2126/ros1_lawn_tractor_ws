@@ -5,7 +5,7 @@
 <!-- /home/tractor/ros1_lawn_tractor_ws/src/pure_pursuit/launch/pure_pursuit_cub_cadet_oct23.launch -->
 <!-- roslaunch pure_pursuit pure_pursuit_cub_cadet_oct23.launch origin_lat:=40.712776 origin_lon:=-74.005974 ref_lat:=40.345308 ref_lon:=-80.128855 -->
 
-  <node pkg="pure_pursuit" type="pure_pursuit" name="controller"  clear_params="true">
+  <node pkg="pure_pursuit" type="pure_pursuit" name="pure_pursuit_steering_controller"  clear_params="true">
     <param name="robot_frame_id" value="base_link"/>
     <!-- <param name="robot_frame_id" value="base_footprint"/>  -->
     <!-- change to base_link instead of base_footprint -->

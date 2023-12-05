@@ -63,6 +63,8 @@ tf/tf.h
 -
 iostream
 -
+std_msgs/String.h
+-
 
 /opt/ros/noetic/include/ackermann_msgs/AckermannDrive.h
 string
@@ -1420,6 +1422,22 @@ ros/builtin_message_traits.h
 ros/message_operations.h
 -
 std_msgs/MultiArrayDimension.h
+-
+
+/opt/ros/noetic/include/std_msgs/String.h
+string
+-
+vector
+-
+memory
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
 -
 
 /opt/ros/noetic/include/tf/LinearMath/Matrix3x3.h

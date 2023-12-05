@@ -1,0 +1,4 @@
+PID	COMMAND
+36116	ps aux
+33247	[kworker/u8:1-events_freezable_power_]
+35664	[gnome-terminal] <defunct>
