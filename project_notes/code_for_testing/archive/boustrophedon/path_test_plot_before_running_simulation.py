@@ -5,9 +5,11 @@ import os
 script_name = os.path.basename(__file__)
 print(f"running script: {script_name}")
 
-# File paths
-file_path1 = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophen_generator_output.txt'
-file_path2 = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/ready_to_test/Site_01_rings_input_path.txt'
+# File paths  'file_path1' will plot in blue; 'file_path2' will plot in green
+#file_path1 = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophen_generator_output.txt'
+file_path1 = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/test_generator_output.txt'
+#file_path2 = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/ready_to_test/site_01_outer_ring_input_path.txt'
+file_path2 = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt'
 
 # Function to read data and return x and y coordinates
 def read_data(file_path):

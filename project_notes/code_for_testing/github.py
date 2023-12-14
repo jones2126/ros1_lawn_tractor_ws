@@ -76,7 +76,7 @@ class Steps_to_Process(tk.Frame):
             for line in content:
                 results = line.split()
                 github_comment = results[0]
-        input_comment_file = "/home/tractor/github_token_exp_20240105.txt"
+        input_comment_file = "/home/tractor/Documents/github_token_validuntil_Mar_4_2024.txt"
         with open(input_comment_file, 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]

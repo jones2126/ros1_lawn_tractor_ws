@@ -1,0 +1,74 @@
+def calculate_turning_points(polygon_points, turning_radius, path_width):
+    field_polygon = Polygon(polygon_points)
+    current_polygon = field_polygon
+    turning_points = []
+
+    direction = 1  # Start with eastward direction
+    while current_polygon.area > 0:
+        # Find the furthest point within the polygon along the current direction
+        bounds = current_polygon.bounds
+        if direction == 1:  # Eastward
+            line_points = [(bounds[0], bounds[1]), (bounds[2], bounds[1])]
+        else:  # Westward
+            line_points = [(bounds[2], bounds[3]), (bounds[0], bounds[3])]
+
+        # Intersect the line with the polygon to find the end point
+        line = LineString(line_points)
+        intersection = current_polygon.intersection(line)
+
+        if intersection.is_empty:
+            break  # No more intersections
+
+        if direction == 1:
+            end_point = max(intersection.coords, key=lambda p: p[0])  # Max x-coordinate for eastward path
+        else:
+            end_point = min(intersection.coords, key=lambda p: p[0])  # Min x-coordinate for westward path
+
+        # Calculate the turning points
+        if direction == 1:
+            turn_start = (end_point[0] - turning_radius, end_point[1])
+            turn_end = (end_point[0] - turning_radius, end_point[1] - path_width)
+        else:
+            turn_start = (end_point[0] + turning_radius, end_point[1])
+            turn_end = (end_point[0] + turning_radius, end_point[1] + path_width)
+
+        # Add turn start and end to the turning points
+        turning_points.append(turn_start)
+        turning_points.append(turn_end)
+
+        # Translate the polygon for the next iteration and change direction
+        current_polygon = translate(current_polygon, 0, -direction * path_width)  # Move up or down for next path
+        direction *= -1  # Change direction
+
+    return turning_points
+
+# Example usage and plotting
+
+# Example usage
+polygon_points = [(0, 0), (10, 0), (10, 10), (0, 10)]  # Define the corners of your field
+turning_radius = 1.5
+path_width = 0.9
+
+turning_points = calculate_turning_points(polygon_points, turning_radius, path_width)
+print(turning_points)
+
+
+# Plotting
+plt.figure(figsize=(10, 8))
+
+# Plot field
+field_polygon = Polygon(polygon_points)
+x, y = field_polygon.exterior.xy
+plt.fill(x, y, alpha=0.3, label='Field')
+
+# Plot turning points
+turning_x, turning_y = zip(*turning_points)
+plt.plot(turning_x, turning_y, 'ro', label='Turning Points')
+
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.title('Field Coverage Path with Turning Points')
+plt.legend()
+plt.grid(True)
+plt.show()
+

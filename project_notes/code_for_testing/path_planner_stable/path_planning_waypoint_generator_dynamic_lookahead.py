@@ -126,6 +126,7 @@ def main():
         count = 0
 
         for i in range(len(drive_path) - 1):
+            print(f"in the loop, i: {i}")
             p1, p2 = drive_path[i], drive_path[i+1]
 
             # Decide color based on lookahead value
@@ -152,6 +153,7 @@ def main():
                 plot_arrow(ix, iy, iyaw, fc="b")
 
         # Plotting waypoints
+        print(f"about to open file: {input_file_waypoints}")
         with open(input_file_waypoints, 'r') as file:
             waypoints = file.readlines()
         
@@ -178,24 +180,26 @@ def main():
     speed=0.75
 
     working_directory = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/"
-    input_file_waypoints = working_directory + "test_PID_input.txt"
+    input_file_waypoints = working_directory + "Site_01_boustrophedon_line_segments_input_path_for_generator.txt"
+    #/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophedon_line_segments_input_path_for_generator.txt
     output_file_curvature_of_waypoints = working_directory + "test_PID_curvature_of_waypoints.csv"
-    output_file_waypoints = working_directory + "test_PID_output.txt"
+    output_file_waypoints = working_directory + "test_generator_output.txt"
     waypoints = read_waypoints(input_file_waypoints)
     drive_path = generate_drive_path(waypoints, turning_radius, step_size, lookahead, speed)    # Process 1: Path Generation
-
+    print("done with generate_drive_path")
     # Call the function to calculate curvature and output to CSV
     drive_path = calculate_curvature_and_output_csv(drive_path, output_file_curvature_of_waypoints, alternate_lookahead, curvature_threshold)
-    
+    print("done with calculate_curvature_and_output_csv")
     total_count = write_output_file(output_file_waypoints, drive_path)                          # Process 2: Output File Creation and Data Appending
     print(f"Output file: {output_file_waypoints}")
     print("Record count:", total_count, "turning_radius:", turning_radius, "step_size:", step_size)
 
 
-    plot_points(input_file_waypoints, drive_path, alternate_lookahead, lookahead)                          # Process 3: Plotting Points
+    #plot_points(input_file_waypoints, drive_path, alternate_lookahead, lookahead)                          # Process 3: Plotting Points
 
     # Call the plotting function
-    plot_path_from_csv('path_data.csv')
+    #plot_path_from_csv('path_data.csv')
+    print("eoj")
 
 if __name__ == "__main__":
     main()
