@@ -1,4 +1,4 @@
-# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/rosbag_utilities/rosbag_calc_circle_radius_and_center.py
+# $ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/rosbag_utilities/rosbag_calc_circle_radius_and_center.py
 
 import rosbag
 import csv
@@ -15,12 +15,13 @@ def save_to_csv(filename, x_data, y_data):
             csvwriter.writerow([x, y])
 
 # Replace with your ROS bag file path
-bag_path = '/home/tractor/bagfiles/2023-11-30-14-39-06.bag'
+folder_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/'
+file_path = '62Collins_perimiter_1_2024-04-17-18-34-40.bag'
+start_time = 300  # Start time in seconds
+end_time = 368   # End time in seconds
 odom_topic = '/odom'
-start_time = 514  # Start time in seconds
-end_time = 550   # End time in seconds
 
-bag = rosbag.Bag(bag_path)
+bag = rosbag.Bag(folder_path + file_path)
 x_data = []
 y_data = []
 count = 0 
@@ -44,7 +45,7 @@ for topic, msg, t in bag.read_messages(topics=[odom_topic]):
 
 bag.close()
 
-csv_filename = '/home/tractor/bagfiles/2023-11-30-14-39-06_extracted_data.csv'
+csv_filename = folder_path + '2024-05-14-extracted_data.csv'
 save_to_csv(csv_filename, x_data, y_data)
 print(f'Data saved to {csv_filename}')
 print(f"count: {count}")

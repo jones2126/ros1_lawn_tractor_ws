@@ -1,4 +1,4 @@
-# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/path_boustrophedon_continuous_line.py
+# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/boustrophedon/path_boustrophedon_continuous_line.py
 
 import matplotlib.pyplot as plt
 from math import sqrt, atan2, pi

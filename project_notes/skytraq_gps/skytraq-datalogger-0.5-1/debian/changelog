@@ -1,0 +1,20 @@
+skytraq-datalogger (0.5-1) unstable; urgency=low
+
+  * 2009-09-09: AGPS upload
+                split tracks if more than one hour lies between two points
+
+ -- Jesper Zedlitz <jesper@zedlitz.de>  Wed, 09 Sep 2009 13:00:01 +0200
+
+skytraq-datalogger (0.4-1) unstable; urgency=low
+
+  * 2009-08-26: GPX output
+                support for devices that have a button to tag waypoints
+
+ -- Jesper Zedlitz <jesper@zedlitz.de>  Wed, 26 Aug 2009 12:49:24 +0200
+
+skytraq-datalogger (0.3-1) unstable; urgency=low
+
+  * 2008-10-23: read status of AGPS data
+                the baud-rate detection routine also uses NMEA output
+
+ -- Jesper Zedlitz <jesper@zedlitz.de>  Thu, 23 Oct 2008 12:38:03 +0200

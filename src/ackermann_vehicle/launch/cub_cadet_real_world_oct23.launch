@@ -58,11 +58,10 @@
   <!-- <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 312, 318, 330]" />  -->
   <!-- 312 = .75 m/s; 310 = ~ .35 m/s -->
   <param name="/speed_params" type="yaml" value="[250, 258, 266, 306, 307, 310, 314]" /> 
-<!--   <param name="GPS_origin_lat" value="40.48524688166667" />
-  <param name="GPS_origin_lon" value="-80.332720941667" /> -->
-  <param name="GPS_origin_lat" value="40.485284877266" />
-  <param name="GPS_origin_lon" value="-80.3326256933901" />
+  <param name="GPS_origin_lat" value="40.485509842" />
+  <param name="GPS_origin_lon" value="-80.332308247" />
   
+<!-- fix position 40.485509842 -80.332308247 357.9  the GPS antennae location -->
 
 <!-- linear_x >= 1.00 -> transmissionServoValue = transmissionFullForwardPos;  (1.80 m/s) 330
      linear_x >= 0.75 -> transmissionServoValue = transmission075ForwardPos;   (1.00 m/s) 315

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# odom_from_wheel_and_gps.py
 import rospy
 from sensor_msgs.msg import Imu, NavSatFix, NavSatStatus, TimeReference
 from nav_msgs.msg import Odometry
@@ -61,9 +61,9 @@ class OdomPublisher:
         self.last_print_time = rospy.Time.now()
         # self.GPS_origin_lat = 40.34534080  #435 Pine Valley
         # self.GPS_origin_lon = -80.12894600 
-
-        self.GPS_origin_lat = 40.485284877266  #62 Collins Dr
-        self.GPS_origin_lon = -80.3326256933901
+# <!-- fix position 40.485509842 -80.332308247 357.9  the GPS antennae location -->
+        self.GPS_origin_lat = 40.485509842  #62 Collins Dr - antennae location
+        self.GPS_origin_lon = -80.332308247
 
         rospy.Timer(rospy.Duration(60), self.calibrate_lat_lon_origin)
         #origin_lat = 40.34534080; origin_lon = -80.12894600  # represents the starting point of my tractor inside the garage - averaged on 20230904

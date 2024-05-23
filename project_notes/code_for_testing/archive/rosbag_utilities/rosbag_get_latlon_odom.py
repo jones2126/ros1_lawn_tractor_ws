@@ -5,7 +5,7 @@ Script that reads the lat, lon data from the /fix topic and x, y positions from
 point in seconds, converts those positions to x, y coordinates and then plots them 
 using pyplot.
 
-$python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/rosbag_get_latlon_odom.py
+$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/rosbag_utilities/rosbag_get_latlon_odom.py
 '''
 import matplotlib.pyplot as plt
 import rosbag
@@ -13,20 +13,20 @@ import rospy
 import geonav_transform.geonav_conversions as gc
 import utm
 
-# 62 Collins Dr
-origin_lat = 40.48528569166667
-origin_lon = -80.33262521333333
+# <!-- fix position 40.485509842 -80.332308247 357.9  the GPS antennae location -->  # 62 Collins Dr
+origin_lat = 40.485509842
+origin_lon = -80.332308247
 
 # Get UTM zone for the origin
 origin_utm_zone = utm.from_latlon(origin_lat, origin_lon)[2]
 
 # Path to the ROS bag file
-bag_path = '/home/tractor/bagfiles/2023-11-01-14-51-56.bag'
+bag_path = '/home/tractor/bagfiles/62Collins_perimiter_1_2024-04-17-18-34-40.bag'
 bag = rosbag.Bag(bag_path)
 
 # Time range for reading messages
-start_time = 100
-end_time = 690
+start_time = 1
+end_time = 9999
 
 first_timestamp = None
 outside_utm_count = 0

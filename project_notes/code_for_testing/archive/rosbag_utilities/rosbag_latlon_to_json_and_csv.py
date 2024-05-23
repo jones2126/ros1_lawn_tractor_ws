@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 '''
-Script that reads the lat, lon data from the /fix topic in a rosbag file and outputs just the lat, lon data into a .json file.
+Script that reads the lat, lon data from the /fix topic in a rosbag file and outputs just the lat, lon data into a .csv file.
 
-$ python /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/rosbag_utilities/rosbag_latlon_to_json_and_csv.py
+$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/rosbag_utilities/rosbag_latlon_to_json_and_csv.py
 '''
 
 import rosbag
 import json
 import math
+import csv
 
 # Haversine formula to calculate the distance between two points on the Earth
 def haversine(lat1, lon1, lat2, lon2):
@@ -35,13 +36,13 @@ def filter_points(points, min_distance):
             prev_point = point
     return filtered_points    
 
-# Collins_Dr_62_Site_01_run2_2023-11-01-14-51-56.bag
-bagfile_path = '/home/tractor/bagfiles/'
-#rosbag_filename = '2023-11-01-14-02-20'
-rosbag_filename = 'Collins_Dr_62_Site_01_run2_2023-11-01-14-51-56'
+bagfile_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/'
+rosbag_filename = '62Collins_perimiter_1_2024-04-17-18-34-40'
+pathfile_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/'
+csv_filename = 'collins_dr_62_A_from_rosbag_step1_20240513'
+#json_filename = 'collins_dr_62_A_from_rosbag_step1_20240513'
 filetype = '.bag'
 rosbag_path = bagfile_path + rosbag_filename + filetype
-
 
 mission_polygon = []
 print(f"Opening the rosbag and extracting all lat/lon records")
@@ -73,25 +74,20 @@ mission_polygon_filtered = filter_points(mission_polygon, 3)
 record_count = len(mission_polygon_filtered)
 print(f"Number of lat/lon records in filtered file: {record_count}")
 
-
 # Create a JSON file from an example form
-pathfile_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/'
-json_filename = 'collins_dr_62_A_step1'
-filetype = '.json'
-example_json_file = pathfile_path + json_filename + filetype
-#example_json_file = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/collins_dr_62_A_step1.json'
-with open(example_json_file, 'r') as file:
-    example_json_data = json.load(file)
-example_json_data['missionPolygon'] = mission_polygon  # Replace the missionPolygon data with the data extracted from the rosbag
-output_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/collins_dr_62_A_from_rosbag.json'
-with open(output_file_path, 'w') as file:
-    json.dump(example_json_data, file, indent=4)
-print(f"Data has been converted to .json file and saved to {output_file_path}")
 
+# filetype = '.json'
+# example_json_file = pathfile_path + json_filename + filetype
+# #example_json_file = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/collins_dr_62_A_step1.json'
+# with open(example_json_file, 'r') as file:
+#     example_json_data = json.load(file)
+# example_json_data['missionPolygon'] = mission_polygon  # Replace the missionPolygon data with the data extracted from the rosbag
+# output_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/collins_dr_62_A_from_rosbag_step1_20240420.json'
+# with open(output_file_path, 'w') as file:
+#     json.dump(example_json_data, file, indent=4)
+# print(f"Data has been converted to .json file and saved to {output_file_path}")
 
-import csv
 print(f"Creating a .csv file of lat, lon data")
-csv_filename = 'collins_dr_62_A_from_rosbag_run2_ver2'
 filetype = '.csv'
 csv_file_path = pathfile_path + csv_filename + filetype
 #csv_header = ['timestamp_seconds', 'timestamp_raw', 'lat', 'lng']

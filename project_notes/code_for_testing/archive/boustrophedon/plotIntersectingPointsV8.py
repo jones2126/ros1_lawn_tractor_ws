@@ -166,7 +166,7 @@ plt.grid(True)
 plt.show()
 
 # Save the updated DataFrame to a new CSV file
-output_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophedon_line_segments_with_intercepts.csv'
+output_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophedon_line_segments_with_intercepts20240502.csv'
 print("saving the intercept points to file: ", output_path)
 print("Copy these points to the 'helper' spreadsheet")
 df.to_csv(output_path, index=False)

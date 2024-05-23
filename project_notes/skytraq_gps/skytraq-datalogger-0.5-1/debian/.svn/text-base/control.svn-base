@@ -1,0 +1,10 @@
+Source: skytraq-datalogger
+Section: contrib/utils
+Priority: optional
+Maintainer: Jesper Zedlitz <jesper@zedlitz.de>
+Standards-Version: 3.5.8
+
+Package: skytraq-datalogger
+Architecture: any
+Description: configuration tool for GPS data loggers based on Skytraq Venus 5 and 6 chipsets
+

@@ -138,6 +138,10 @@ class ROSLauncher(tk.Tk):
         self.process = subprocess.Popen(["gnome-terminal", "--", "roslaunch", "ackermann_vehicle", "cub_cadet_real_world_oct23.launch"])      
         print("In launch_start, gps_listener in 10 seconds")
         time.sleep(10)      
+        # 
+        # the function gps_callback which is setup below is used to update the GUI screen with the GPS status so I know
+        # when RTK fix is achieved
+        #
         rospy.init_node('gps_listener', anonymous=True)
         print("In launch_start, about to subscribe /fix in 10 seconds")
         time.sleep(10)    

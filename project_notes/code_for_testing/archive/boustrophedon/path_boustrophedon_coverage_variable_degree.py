@@ -118,16 +118,21 @@ def write_path_to_csv(path, filename):
 def main(angle_degrees):
     # Sample polygon points
     #hard_coded_points = [(5, 0), (6, 4), (7, 5), (8, 10), (7, 11), (5, 10), (3, 11), (1, 10), (0, 5), (1, 3)]
+    line_segments = [(1.0, -25.3), (-30, -37.2), (-45, -3.4), (-12.3, 14.7)]
 
     # Path to the CSV file
-    #csv_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_innermost_ring.csv'  
-    csv_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_5.csv'  
-    print("reading the file: ", csv_path) 
-    polygon_data = pd.read_csv(csv_path)
-    polygon_points_from_csv = list(zip(polygon_data['X'], polygon_data['Y']))
+    #csv_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_innermost_ring.csv' 
+# '''
+# Commented out to test 'hard coding points'    
+#     csv_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_5.csv'  
+#     print("reading the file: ", csv_path) 
+#     #polygon_data = pd.read_csv(csv_path)
+#     polygon_data = hard_coded_points
+#     polygon_points_from_csv = list(zip(polygon_data['X'], polygon_data['Y']))
+#   polygon = Polygon(polygon_points_from_csv)
+# '''
 
-    polygon = Polygon(polygon_points_from_csv)
-    #polygon = Polygon(hard_coded_points)
+    polygon = Polygon(line_segments)
 
     # Generate the Boustrophedon path with the corrected angle and line spacing
     #path, num_segments = boustrophedon_path_corrected(polygon, line_spacing=0.9, angle_degrees=angle_degrees)
