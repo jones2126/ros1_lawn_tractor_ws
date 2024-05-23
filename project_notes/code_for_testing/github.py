@@ -2,6 +2,21 @@
 #
 # python3 github.py
 # cd /home/al/ros1_lawn_tractor_ws/project_notes/code_for_testing/
+'''
+Generate a new GitHub Token:
+
+Go to GitHub and log in.
+Under your profile picture, navigate to Settings by clicking on your profile picture in the upper right corner.
+In the left sidebar, click Developer settings which is at the bottom of the list.
+Click Personal access tokens and then Tokens (classic).
+Click Generate new token and provide the necessary permissions based on your needs.
+    repo: Full control of private repositories.
+    public_repo: Access to public repositories.
+    workflow: (optional) If you need to manage workflows.
+Copy the generated token and store it securely.
+
+'''
+
 
 import tkinter as tk
 from tkinter import ttk
@@ -76,7 +91,7 @@ class Steps_to_Process(tk.Frame):
             for line in content:
                 results = line.split()
                 github_comment = results[0]
-        input_comment_file = "/home/tractor/Documents/github_token_validuntil_Mar_4_2024.txt"
+        input_comment_file = "/home/tractor/Documents/github_token_validuntil_Aug21_2024.txt"
         with open(input_comment_file, 'r') as file:
             content = file.readlines()
             content = [x.strip() for x in content]
