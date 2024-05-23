@@ -15,12 +15,11 @@ Click Generate new token and provide the necessary permissions based on your nee
 Copy the generated token and store it securely.
 
 '''
-
 import os
 import tkinter as tk
 from tkinter import ttk, simpledialog
-import subprocess
-import time 
+import subprocess  # Import the subprocess module
+import time  # Import the time module
 
 class Steps_to_Process(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -82,19 +81,26 @@ class Steps_to_Process(tk.Frame):
             with open(input_token_file, 'w') as file:
                 file.write(github_token)
 
-        subprocess.check_output(["xdotool", "type", "cd ~/ros1_lawn_tractor_ws" + "\n"])
-        time.sleep(1)
-        subprocess.check_output(["xdotool", "type", "git add ." + "\n"])
-        time.sleep(1)
-        github_cmd ="git commit -m "
-        subprocess.check_output(["xdotool", "type", github_cmd + '"' + github_comment + '"' + "\n"])
-        time.sleep(1)
-        subprocess.check_output(["xdotool", "type", "git push origin master" + "\n"])
-        time.sleep(10)
-        subprocess.check_output(["xdotool", "type", "jones2126" + "\n"])
-        time.sleep(3)
-        subprocess.check_output(["xdotool", "type", github_token + "\n"])
-        time.sleep(1)
+        try:
+            subprocess.check_output(["xdotool", "type", "cd ~/ros1_lawn_tractor_ws" + "\n"])
+            time.sleep(1)
+            subprocess.check_output(["xdotool", "type", "git add ." + "\n"])
+            time.sleep(1)
+            github_cmd = "git commit -m "
+            subprocess.check_output(["xdotool", "type", github_cmd + '"' + github_comment + '"' + "\n"])
+            time.sleep(1)
+            subprocess.check_output(["xdotool", "type", "git push origin master" + "\n"])
+            time.sleep(10)
+            subprocess.check_output(["xdotool", "type", "jones2126" + "\n"])
+            time.sleep(3)
+            subprocess.check_output(["xdotool", "type", github_token + "\n"])
+            time.sleep(1)
+        except subprocess.CalledProcessError:
+            github_token = simpledialog.askstring("Input", "Authentication failed. Enter your new GitHub token:", show='*')
+            with open(input_token_file, 'w') as file:
+                file.write(github_token)
+            subprocess.check_output(["xdotool", "type", github_token + "\n"])
+            time.sleep(1)
 
     def step_2_actions(self):
         self.step_0_actions()
