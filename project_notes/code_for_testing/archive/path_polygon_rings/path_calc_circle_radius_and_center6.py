@@ -157,7 +157,7 @@ def plot_data_and_circle(X, Y, xc, yc, R, R_inflated, segments=None):
 folder_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/'
 xlsx_filename = folder_path + 'collins_dr_62_A_from_rosbag_step1_20240513_2.xlsx'
 tag_reference = 'Obstacle 1'
-result_sheet_name = 'Obstacle'
+result_sheet_name = 'Obstcl_list'  # change to Obstcl_list from Obstacle,  It is too close to the segment data sheet name
 data_sheet_name = 'SiteSurvey'
 inflation = 0.3  # 30% inflation around radius for safety
 

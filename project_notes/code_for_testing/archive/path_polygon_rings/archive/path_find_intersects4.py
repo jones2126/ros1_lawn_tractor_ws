@@ -3,14 +3,15 @@
 '''
 Script to find intersections between a robot's path and a circular obstacle, and modify the path to avoid the obstacle.
 
-$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/path_polygon_rings/path_find_intersects3.py
+$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/path_polygon_rings/path_find_intersects4.py
 '''
 
-print("path_find_intersects3.py starting....")
+print("path_find_intersects4.py starting....")
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from openpyxl import load_workbook
 
 # Function to get ring starting positions
 def get_ring_starting_positions(xlsx_file_path):
@@ -94,7 +95,7 @@ def find_intersections_with_circle(xlsx_file_path, df_raw_inner_rings):
     except ValueError:
         df_new_ring_path = pd.DataFrame(columns=['X', 'Y', 'Path_Index'])
         print(f"NewRingPath sheet does not exist. Using data from RawInnerRings.")
-        df_new_ring_path = df_raw_inner_rings[['X', 'Y', 'Path_Index']].copy()  # Add this line to copy data
+        df_new_ring_path = df_raw_inner_rings[['X', 'Y', 'Path_Index']].copy()
 
     df_obstacle_circle = pd.read_excel(xlsx_file_path, sheet_name='Obstacle', engine='openpyxl')
     print(f"Read Obstacle sheet: {df_obstacle_circle}")
@@ -127,7 +128,7 @@ def find_intersections_with_circle(xlsx_file_path, df_raw_inner_rings):
                 return seg_start + t2 * d
         return None
 
-    revised_path = pd.DataFrame(columns=['X', 'Y', 'Path_Index'])
+    revised_path = pd.DataFrame(columns=['X', 'Y', 'Path_Index'])  # the sequence in sheet RawInnerRings is 'Path_Index', 'X', 'Y'
     intersection_points = []
     intersecting_segments = []
     intersecting_index = []
@@ -158,7 +159,7 @@ def find_intersections_with_circle(xlsx_file_path, df_raw_inner_rings):
             intersection_point = intersection_points[i]
 
             temp_path = df_new_ring_path.iloc[:segment_index + 1].copy()
-            temp_path = temp_path.append({'X': intersection_point[0], 'Y': intersection_point[1], 'Path_Index': df_new_ring_path.at[segment_index, 'Path_Index']}, ignore_index=True)
+            temp_path = pd.concat([temp_path, pd.DataFrame({'X': [intersection_point[0]], 'Y': [intersection_point[1]], 'Path_Index': [df_new_ring_path.at[segment_index, 'Path_Index']]})], ignore_index=True)
             
             revised_path = pd.concat([revised_path, temp_path], ignore_index=True)
     else:
@@ -167,8 +168,11 @@ def find_intersections_with_circle(xlsx_file_path, df_raw_inner_rings):
 
     print(f"Revised path:\n{revised_path}")
 
-    # Add the new sheet 'NewRingPath' to the .xlsx file
-    with pd.ExcelWriter(xlsx_file_path, engine='openpyxl', mode='a', if_sheet_exists='new') as writer:
+    # Add the new sheet 'NewRingPath' to the .xlsx file, removing it first if it already exists
+    with pd.ExcelWriter(xlsx_file_path, engine='openpyxl', mode='a') as writer:
+        workbook = writer.book
+        if 'NewRingPath' in workbook.sheetnames:
+            del workbook['NewRingPath']
         revised_path.to_excel(writer, sheet_name='NewRingPath', index=False)
 
     return intersection_points, intersecting_segments, intersecting_index, cir_seg_intersects
@@ -188,8 +192,44 @@ print("Starting positions:", ring_starting_positions)
 print("Updating Path_Index")
 updated_new_ring_path = update_path_index_based_on_starting_positions(xlsx_file_path, ring_starting_positions)
 
-# Add the updated 'NewRingPath' sheet to the .xlsx file
-with pd.ExcelWriter(xlsx_file_path, engine='openpyxl', mode='a', if_sheet_exists='new') as writer:
+# Add the updated 'NewRingPath' sheet to the .xlsx file, removing it first if it already exists
+with pd.ExcelWriter(xlsx_file_path, engine='openpyxl', mode='a') as writer:
+    workbook = writer.book
+    if 'NewRingPath' in workbook.sheetnames:
+        del workbook['NewRingPath']
     updated_new_ring_path.to_excel(writer, sheet_name='NewRingPath', index=False)
 
-print("Path_Index updated and saved to 'NewRingPath' sheet.")
+print("Path_Index updated and saved to 'NewRingPath' sheet. Now plotting the results")
+
+# import pandas as pd
+# import numpy as np
+# import matplotlib.pyplot as plt
+
+# Read the 'NewRingPath' sheet from the Excel file
+df_new_ring_path = pd.read_excel(xlsx_file_path, sheet_name='NewRingPath', engine='openpyxl')
+
+# Plot the values
+plt.figure(figsize=(10, 6))
+for path_index in df_new_ring_path['Path_Index'].unique():
+    path_data = df_new_ring_path[df_new_ring_path['Path_Index'] == path_index]
+    plt.scatter(path_data['X'], path_data['Y'], label=f'Path Index {path_index}', s=10)
+
+# Plotting the obstacle circle for reference
+df_obstacle_circle = pd.read_excel(xlsx_file_path, sheet_name='Obstacle', engine='openpyxl')
+circle_center = (df_obstacle_circle.iloc[0]['X'], df_obstacle_circle.iloc[0]['Y'])
+circle_radius = df_obstacle_circle.iloc[0]['Radius']
+circle = plt.Circle(circle_center, circle_radius, color='green', fill=False, label='Obstacle Circle')
+plt.gca().add_patch(circle)
+
+# Customize the plot
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.legend()
+plt.title('New Ring Path')
+plt.grid(True)
+plt.axis('equal')
+
+# Show the plot
+plt.show()
+
+

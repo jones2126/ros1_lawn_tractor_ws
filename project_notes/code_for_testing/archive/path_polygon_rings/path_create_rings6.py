@@ -72,12 +72,12 @@ file_path = 'collins_dr_62_A_from_rosbag_step1_20240513_2.xlsx'
 
 sheet_data = pd.read_excel(folder_path + file_path, sheet_name=None, engine='openpyxl')  # read all the sheets in the file
 
-# for debugging - Print the contents of 'Obstacle 1' sheet
-# if 'Obstacle 1' in sheet_data:
-#     print("Contents of 'Obstacle 1' sheet before modification:")
-#     print(sheet_data['Obstacle 1'])
-# else:
-#     print("'Obstacle 1' sheet not found.")
+#for debugging - Print the contents of 'Obstacle 1' sheet
+if 'Obstacle 1' in sheet_data:
+    print("Contents of 'Obstacle 1' sheet before modification:")
+    print(sheet_data['Obstacle 1'])
+else:
+    print("'Obstacle 1' sheet not found.")
 
 # Filter the data for the concentric rings
 filtered_data = sheet_data['SiteSurvey'][sheet_data['SiteSurvey']['Path Sequence'].between(1, 999)]

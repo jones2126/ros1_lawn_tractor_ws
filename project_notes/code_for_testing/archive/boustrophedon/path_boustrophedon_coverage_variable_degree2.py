@@ -3,7 +3,7 @@
 '''
 Script that uses a Boustrophedon approach to building a coverage path.
 
-$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/boustrophedon/path_boustrophedon_coverage_variable_degree.py
+$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/boustrophedon/path_boustrophedon_coverage_variable_degree2.py
 
 '''
 import pandas as pd
@@ -13,8 +13,8 @@ from shapely.affinity import rotate
 from matplotlib import pyplot as plt, patheffects
 import os
 import csv
+from openpyxl import load_workbook
 
-import os
 script_name = os.path.basename(__file__)
 print(f"running script: {script_name}")
 
@@ -66,13 +66,8 @@ def boustrophedon_path_corrected(polygon, line_spacing, angle_degrees):
             if isinstance(intersection, LineString):
                 path.append(intersection)
             elif isinstance(intersection, MultiLineString):
-
-                # for line in intersection:
-                #     path.append(line)
-
                 for line in intersection.geoms:
                     path.append(line)                    
-
 
     # Count the total number of line segments excluding the joining segments
     return path, len(path)
@@ -89,11 +84,9 @@ def plot_path(polygon, path_lines, degree):
         # Position the text in the center of the line segment
         text_x = (x[0] + x[1]) / 2
         text_y = (y[0] + y[1]) / 2
-        #ax.text(text_x, text_y, str(idx + 1), fontsize=8, verticalalignment='center', horizontalalignment='center')
         ax.text(text_x, text_y, str(idx + 1), fontsize=8, verticalalignment='center',
                 horizontalalignment='center', color='white', path_effects=[
                 patheffects.withStroke(linewidth=2, foreground="black")])
-
 
     ax.set_title(f'Boustrophedon Path at {degree}-degree')
     plt.xlabel('X coordinate')
@@ -105,53 +98,58 @@ def plot_path(polygon, path_lines, degree):
     plt.figtext(0.5, 0.01, f'Reference: {filepath}', ha='center', fontsize=8, color='gray')
     plt.show()
 
-def write_path_to_csv(path, filename):
-    # Open a file for writing
-    with open(filename, 'w', newline='') as csvfile:
-        # Create a CSV writer object
-        csvwriter = csv.writer(csvfile)
-        # Write the header
-        csvwriter.writerow(['x1', 'y1', 'x2', 'y2'])
-        
-        # Iterate over the LineStrings in the path
-        for linestring in path:
-            # For each line, write the start and end coordinates
-            start_point, end_point = linestring.coords[:]
-            csvwriter.writerow([start_point[0], start_point[1], end_point[0], end_point[1]])
+def write_path_to_excel(path, xlsx_file_path, sheet_name):
+    # Load the existing workbook
+    workbook = load_workbook(xlsx_file_path)
+    # Add a new sheet
+    if sheet_name in workbook.sheetnames:
+        del workbook[sheet_name]  # Delete the sheet if it already exists to avoid duplicates
+    worksheet = workbook.create_sheet(sheet_name)
 
+    # Write the header
+    worksheet.append(['x1', 'y1', 'x2', 'y2'])
+    
+    # Iterate over the LineStrings in the path
+    for linestring in path:
+        # For each line, write the start and end coordinates
+        start_point, end_point = linestring.coords[:]
+        worksheet.append([start_point[0], start_point[1], end_point[0], end_point[1]])
+
+    # Save the workbook
+    workbook.save(xlsx_file_path)
+
+def read_inner_ring(xlsx_file_path):
+    # Read the specified sheet from the Excel file
+    df = pd.read_excel(xlsx_file_path, sheet_name='UpdatedPath')
+    # Filter the data to include only points with Path_Index = 0
+    filtered_df = df[df['Path_Index'] == 0]
+    # Create a list of points (tuples) from the filtered data
+    polygon_points = list(zip(filtered_df['X'], filtered_df['Y']))
+    # Return the polygon created from these points
+    return Polygon(polygon_points)
 
 # The main function now correctly handles the angle normalization
 def main(angle_degrees):
-    # Sample hard_coded_points polygon points
-    # line_segments = [(1.0, -25.3), (-30, -37.2), (-45, -3.4), (-12.3, 14.7)]
-    # polygon = Polygon(line_segments)    
-
-    # Path to the CSV file - this needs to be updated based on putting all the data in one .xlsx file
-    #csv_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_innermost_ring.csv' 
-  
-    csv_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_ring_5.csv'  
-    print("reading the file: ", csv_path) 
-    #polygon_data = pd.read_csv(csv_path)
-    polygon_data = hard_coded_points
-    polygon_points_from_csv = list(zip(polygon_data['X'], polygon_data['Y']))
-    polygon = Polygon(polygon_points_from_csv)
-
-
-
+    # Path to the Excel file
+    xlsx_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/collins_dr_62_A_from_rosbag_step1_20240513_2.xlsx'  
+    print("reading the file: ", xlsx_file_path)
+    
+    # Read the polygon data from the Excel file
+    polygon = read_inner_ring(xlsx_file_path)
 
     # Generate the Boustrophedon path with the corrected angle and line spacing
-    #path, num_segments = boustrophedon_path_corrected(polygon, line_spacing=0.9, angle_degrees=angle_degrees)
     path, num_segments = boustrophedon_path_corrected(polygon, line_spacing=1.8, angle_degrees=angle_degrees)
     print(f"Total line segments: {num_segments}")
 
     # Plot the path
     plot_path(polygon, path, angle_degrees)
-    return path
+    return path, xlsx_file_path
 
 # Run the main function with a corrected angle
-path = main(19)
-# The .csv output file will be read by plotIntersectingPointsV8.py as input
-write_path_to_csv(path, '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/Site_01_boustrophedon_line_segments.csv')
+path, xlsx_file_path = main(19)
+# The output will be written to a new sheet in the Excel file
+write_path_to_excel(path, xlsx_file_path, 'boustrphdn_segmnts')
+
 print("First few lines of boustrophedon line segments")
 for point in path[:5]:
     print(point)
