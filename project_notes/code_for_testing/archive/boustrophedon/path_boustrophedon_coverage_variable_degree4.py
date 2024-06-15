@@ -3,7 +3,7 @@
 '''
 Script that uses a Boustrophedon approach to building a coverage path.
 
-$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/boustrophedon/path_boustrophedon_coverage_variable_degree2.py
+$ python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/archive/boustrophedon/path_boustrophedon_coverage_variable_degree4.py
 
 '''
 import pandas as pd
@@ -17,16 +17,6 @@ from openpyxl import load_workbook
 
 script_name = os.path.basename(__file__)
 print(f"running script: {script_name}")
-
-# Adding this line for Jupyter Notebook so the plot function at the end appears in the Jupyter notebook
-# Check if the script is being run in a Jupyter notebook.  If so run '%matplotlib inline'
-try:
-    from IPython import get_ipython
-    ipython = get_ipython()
-    if ipython is not None:
-        ipython.run_line_magic('matplotlib', 'inline')
-except (ImportError, NameError):
-    pass
 
 def boustrophedon_path_corrected(polygon, line_spacing, angle_degrees):
     # Normalize the angle to be within -90 to 90 degrees for intersection purposes
@@ -139,24 +129,26 @@ def read_inner_ring(xlsx_file_path):
     return Polygon(polygon_points)
 
 # The main function now correctly handles the angle normalization
-def main(angle_degrees):
-    # Path to the Excel file
-    xlsx_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/collins_dr_62_A_from_rosbag_step1_20240513_2.xlsx'  
-    print("reading the file: ", xlsx_file_path)
-    
-    # Read the polygon data from the Excel file
-    polygon = read_inner_ring(xlsx_file_path)
-
-    # Generate the Boustrophedon path with the corrected angle and line spacing
-    path, num_segments = boustrophedon_path_corrected(polygon, line_spacing=1.8, angle_degrees=angle_degrees)
-    print(f"Total line segments: {num_segments}")
-
-    # Plot the path
-    plot_path(polygon, path, angle_degrees)
-    return path, xlsx_file_path
-
+#def main(angle_degrees):
 # Run the main function with a corrected angle
-path, xlsx_file_path = main(19)
+#path, xlsx_file_path = main(19)
+angle_degrees = 19
+# Path to the Excel file
+xlsx_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/collins_dr_62_A_from_rosbag_step1_20240513_2.xlsx'  
+print("reading the file: ", xlsx_file_path)
+
+# Read the polygon data from the Excel file
+polygon = read_inner_ring(xlsx_file_path)
+
+# Generate the Boustrophedon path with the corrected angle and line spacing
+path, num_segments = boustrophedon_path_corrected(polygon, line_spacing=1.8, angle_degrees=angle_degrees)
+print(f"Total line segments: {num_segments}")
+
+# # Plot the path
+# plot_path(polygon, path, angle_degrees)
+# #return path, xlsx_file_path
+
+
 # The output will be written to a new sheet in the Excel file
 write_path_to_excel(path, xlsx_file_path, 'boustrphdn_segmnts')
 
