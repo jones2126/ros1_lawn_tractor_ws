@@ -45,6 +45,11 @@ def plot_coordinates(file_path):
     df = pd.read_excel(file_path, sheet_name='UpdatedPath')
     
     unique_path_indices = df['Path_Index'].unique()
+    
+    # Determine the min and max for x and y
+    x_min, x_max = df['X'].min(), df['X'].max()
+    y_min, y_max = df['Y'].min(), df['Y'].max()
+    
     plt.figure(figsize=(10, 6))
     
     for path_index in unique_path_indices:
@@ -55,7 +60,16 @@ def plot_coordinates(file_path):
     plt.ylabel('Y')
     plt.title('Plot of X and Y Coordinates with Different Colors for Each Path_Index')
     plt.legend()
+    
+    # Set consistent x and y axis limits
+    plt.xlim(x_min, x_max)
+    plt.ylim(y_min, y_max)
+    
+    # Set aspect ratio to be equal
+    plt.gca().set_aspect('equal', adjustable='box')
+    
     plt.show()
+
 
 # Define the path to the Excel file
 xlsx_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/collins_dr_62_A_from_rosbag_step1_20240513_2.xlsx'

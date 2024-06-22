@@ -158,7 +158,8 @@ def main():
             waypoints = file.readlines()
         
         for idx, waypoint in enumerate(waypoints):
-            x, y, _ = map(float, waypoint.split())
+            #x, y, _ = map(float, waypoint.split())
+            x, y, _, _, _ = map(float, waypoint.split())
             plt.plot(x, y, 'ro', markersize=5)
             plt.text(x + 0.1, y - 0.1, str(idx + 1), fontsize=6, color='green')
 
@@ -180,7 +181,7 @@ def main():
     speed=0.75
 
     working_directory = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/"
-    input_file_waypoints = working_directory + "Site_01_boustrophedon_line_segments_input_path_for_generator.txt"
+    input_file_waypoints = working_directory + "Site_01_transition_061924.txt"
     #/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophedon_line_segments_input_path_for_generator.txt
     output_file_curvature_of_waypoints = working_directory + "test_PID_curvature_of_waypoints.csv"
     output_file_waypoints = working_directory + "test_generator_output.txt"
@@ -195,7 +196,7 @@ def main():
     print("Record count:", total_count, "turning_radius:", turning_radius, "step_size:", step_size)
 
 
-    #plot_points(input_file_waypoints, drive_path, alternate_lookahead, lookahead)                          # Process 3: Plotting Points
+    plot_points(input_file_waypoints, drive_path, alternate_lookahead, lookahead)                          # Process 3: Plotting Points
 
     # Call the plotting function
     #plot_path_from_csv('path_data.csv')
