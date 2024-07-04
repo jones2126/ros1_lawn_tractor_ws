@@ -56,32 +56,9 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):  # pragma: no 
 
 # main routine
 #
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/square.txt"
-#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/generated_points_for_square.txt"
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_pine_valley_test2.txt"
-#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/435_PV_test2_GP.txt"
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_square_2.txt"
-#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_green_marks2_output_01.txt"
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_green_marks2.txt"
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_input_v2.txt"
-#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_3turnoverlap_output_v2.txt"
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_1_uturn.txt"
-#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_1_uturn_output.txt"
+input_file_waypoints =  "/home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_planner_stable/path_test.txt"
+output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophen_generator_output20240628.txt"
 
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_squar_input3.txt"
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_uturn_input4.txt"
-# /home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/collins_62_test_boustrophen.txt
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_first_polygon_wFinishingCircles.txt"
-input_file_waypoints =  "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophen_generator_input.txt"
-output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophen_generator_output20240502.txt"
-
-# /home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/test_PID_input.txt
-#input_file_waypoints =  "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/test_PID_input.txt"
-#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/test_PID_output.txt"
-
-
-#input_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_path_first_60_stripes_input.txt"
-#output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_path_first_60_stripes_step2.txt"
 print("Output file:", output_file_waypoints)
 
 

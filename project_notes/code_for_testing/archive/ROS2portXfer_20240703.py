@@ -4,9 +4,10 @@ import rospy
 import serial
 import threading
 import time
-from std_msgs.msg import Float32, Float64MultiArray
+from std_msgs.msg import Float32
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import NavSatFix
+from std_msgs.msg import Float64MultiArray
 
 # Add a global variable to signal threads to stop
 progControlFlag = True
@@ -33,9 +34,6 @@ ser2_lock = threading.Lock()
 velocity_str = ""
 numbers_str = ""
 iteration = 0
-
-# Serial status
-serial_status = [0.0, 0.0]
 
 def twist_callback(twist_msg):
     global linear_x, angular_z, prev_time_twist
@@ -67,11 +65,13 @@ def read_ttgo_main():
                     if line[0] == '3':
                         components = line.split(',')
                         msg = Float64MultiArray()
-                        msg.data = [float(x) for x in components[1:] if x.strip() != '']
+                        #msg.data = [float(x) for x in components[1:]]
+                        msg.data = [float(x) for x in components[1:] if x.strip() != '']   # I had an issue with an empty string
 
                         pub.publish(msg)
             except serial.SerialException:
-                rospy.logerr("read_ttgo_main: SerialException")
+                print("****************************************")
+                print("read_ttgo_main: SerialException")                
                 ser1.close()
                 time.sleep(1)
                 ser1.open()
@@ -98,6 +98,8 @@ def create_record_type_1():
             str(gps_status), 
             str(gpsStatusAge)])
         time.sleep(.25)
+        #ser2.write((velocity_str + '\n').encode())
+        #print("write_USB2TTL: writing record type 1") 
  
 def create_record_type_2():
     global numbers_str
@@ -112,22 +114,21 @@ def write_to_USB2TTL():
     while progControlFlag and not rospy.is_shutdown():
         with ser2_lock:
             try:
+                #if velocity_str:
                 ser2.write((velocity_str + '\n').encode())
+                #print("write_to_serial: wrote velocity_str", velocity_str)
+                #if numbers_str:
                 ser2.write((numbers_str + '\n').encode())
+                #print("write_to_serial: wrote numbers_str", numbers_str)
             except serial.SerialException:
-                rospy.logerr("write_to_serial: SerialException %f", rospy.get_time())
+                print("write_to_serial: SerialException", rospy.get_time())
                 ser2.close()
                 time.sleep(1)
                 ser2.open()
             else:
                 iteration = iteration + 1
+                #print("write_to_serial: sleeping - iteration:", iteration)
                 time.sleep(.5)
-
-def publish_serial_status(event=None):
-    global serial_status
-    status_msg = Float64MultiArray()
-    status_msg.data = serial_status
-    serial_status_pub.publish(status_msg)
 
 def shutdown():
     global progControlFlag
@@ -139,28 +140,24 @@ def shutdown():
 # Initializing the node
 rospy.init_node('ROS2portXfer')
 rospy.loginfo("Starting_ROS2portXfer")
-
 rospy.Subscriber('cmd_vel', Twist, twist_callback)
 rospy.Subscriber("left_speed", Float32, left_speed_callback)
 rospy.Subscriber("right_speed", Float32, right_speed_callback)
 rospy.Subscriber("fix", NavSatFix, fix_callback)
 pub = rospy.Publisher('my_array_topic', Float64MultiArray, queue_size=10)
-serial_status_pub = rospy.Publisher('serial_status', Float64MultiArray, queue_size=10)
 
 # Open the serial ports
 try:
     ser1 = serial.Serial('/dev/ttgo_main', 115200)
-    rospy.loginfo("Opened serial port /dev/ttgo_main")
-    serial_status[0] = 1.0
+    print("Opened serial port /dev/ttgo_main", e)  
 except Exception as e:
-    rospy.logerr("Failed to open serial port /dev/ttgo_main: %s", str(e))
+    print("Failed to open serial port /dev/ttgo_main", e)    
 
 try:
     ser2 = serial.Serial('/dev/USB2TTL', 115200)
-    rospy.loginfo("Opened serial port /dev/USB2TTL")
-    serial_status[1] = 1.0
+    print("Opened serial port /dev/USB2TTL", e) 
 except Exception as e:
-    rospy.logerr("Failed to open serial port /dev/USB2TTL: %s", str(e))
+    print("Failed to open serial port /dev/USB2TTL", e)    
 
 rospy.on_shutdown(shutdown)
 
@@ -168,8 +165,5 @@ threading.Thread(target=read_ttgo_main).start()
 threading.Thread(target=create_record_type_1).start()
 threading.Thread(target=create_record_type_2).start()
 threading.Thread(target=write_to_USB2TTL).start()
-
-# Publish serial status every second
-rospy.Timer(rospy.Duration(1), publish_serial_status)
 
 rospy.spin()

@@ -28,9 +28,9 @@
   <arg name="port" default="/dev/rosimu" />
   <node pkg="chip_imu_driver" type="chip_imu_driver_node" name="chip_imu_driver_node" output="screen">
     <param name="port" value="$(arg port)" />
-    <param name="initial_yaw" type="double" value="0.05"/>
-    <!-- <param name="initial_yaw" type="double" value="-90.94"/>  -->
-    <!-- initial yaw is 184 degrees (compass heading) -->    
+    <!-- <param name="initial_yaw" type="double" value="0.05"/> -->
+    <param name="initial_yaw" type="double" value="-90.94"/> 
+    <!-- initial yaw is 184 degrees (compass heading) or -90.94 using the -180 to 180 format where East is 0 degrees radian -->    
   </node>
 
   <!-- ****** map server ***** -->
@@ -54,19 +54,17 @@
   <node name="odom_wheel_node" pkg="ackermann_vehicle" type="odom_from_wheel_and_gps.py" output="screen" />
 
 
-  <!-- <param name="/speed_params" type="yaml" value="[230, 245, 256, 291, 294, 295, 296]" />  -->
-  <!-- <param name="/speed_params" type="yaml" value="[250, 258, 266, 305, 312, 318, 330]" />  -->
-  <!-- 312 = .75 m/s; 310 = ~ .35 m/s -->
-  <param name="/speed_params" type="yaml" value="[250, 258, 266, 306, 307, 310, 314]" /> 
+  <param name="/speed_params" type="yaml" value="[245, 258, 266, 312, 313, 314, 325]" /> 
+  <!-- <param name="/speed_params" type="yaml" value="[250, 258, 266, 306, 307, 310, 314]" />  -->
   <param name="GPS_origin_lat" value="40.485509842" />
   <param name="GPS_origin_lon" value="-80.332308247" />
   
 <!-- fix position 40.485509842 -80.332308247 357.9  the GPS antennae location -->
 
 <!-- linear_x >= 1.00 -> transmissionServoValue = transmissionFullForwardPos;  (1.80 m/s) 330
-     linear_x >= 0.75 -> transmissionServoValue = transmission075ForwardPos;   (1.00 m/s) 315
-     linear_x >= 0.50 -> transmissionServoValue = transmission050ForwardPos;   (0.75 m/s) 312
-     linear_x >= 0.05 -> transmissionServoValue = transmission025ForwardPos;   (0.50 m/s) 309   -->
+     linear_x >= 0.75 -> transmissionServoValue = transmission075ForwardPos;   (1.00 m/s) 318
+     linear_x >= 0.50 -> transmissionServoValue = transmission050ForwardPos;   (0.75 m/s) 316
+     linear_x >= 0.05 -> transmissionServoValue = transmission025ForwardPos;   (0.50 m/s) 314   -->
 
 <!--    transmissionFullReversePos,
         transmission075ReversePos,
@@ -77,6 +75,6 @@
         transmissionFullForwardPos,
 -->
 
-  <node name="serial_xfer" pkg="ackermann_vehicle" type="ROS2portXfer.py" output="screen" />  
+  <node name="serial_xfer" pkg="ackermann_vehicle" type="ROS2portXfer.py" output="log" />  
   
 </launch>

@@ -61,7 +61,8 @@ def choose_x3_y3_solution(x2, y2, x3_1, y3_1, x3_2, y3_2, preference='greater'):
 
 # Define the Excel file path and sheet names
 xlsx_file_path = '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/site1_20240513/collins_dr_62_A_from_rosbag_step1_20240513_2.xlsx'
-input_sheet_name = 'boustrphdn_trimmed'
+#input_sheet_name = 'boustrphdn_trimmed'
+input_sheet_name = 'stripes_trimmed'
 output_sheet_name = 'coverage_path'
 
 # Load the workbook and read the input sheet into a DataFrame

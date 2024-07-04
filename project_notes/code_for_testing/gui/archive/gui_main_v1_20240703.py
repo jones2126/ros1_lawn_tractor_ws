@@ -1,22 +1,25 @@
 #!/usr/bin/env python3
+# python3 /home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/gui/gui_main_v1.py
 import tkinter as tk
 import tkinter.font as tkFont 
 import subprocess
 import rospy
 import socket
 from sensor_msgs.msg import NavSatFix
-from std_msgs.msg import Float64MultiArray
 import time
 import signal
 import re
 import os
 
+
+
 class ROSLauncher(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        self.process = None
+        self.process = None  # Variable to hold the ROS process
         self.last_gps_update = 0
+
 
         # Get screen dimensions
         screen_width = self.winfo_screenwidth()
@@ -46,34 +49,19 @@ class ROSLauncher(tk.Tk):
         self.create_button("Location 3", self.launch_location3).grid(row=2, column=1, sticky="nsew", padx=5, pady=5)
         self.create_button("Location 4", self.launch_location4).grid(row=3, column=1, sticky="nsew", padx=5, pady=5)
 
-        # Create a frame for status indicators
-        self.status_frame = tk.Frame(self)
-        self.status_frame.grid(row=4, column=0, columnspan=3, sticky="se", padx=10, pady=10)
-
-        # GPS status
-        tk.Label(self.status_frame, text="GPS", font=("Arial", 10)).grid(row=0, column=0, padx=5)
-        self.gps_status_canvas = tk.Canvas(self.status_frame, width=30, height=30, bg="red", highlightthickness=0)
-        self.gps_status_canvas.grid(row=1, column=0, padx=5)
-
-        # Serial1 status
-        tk.Label(self.status_frame, text="Serial1", font=("Arial", 10)).grid(row=0, column=1, padx=5)
-        self.ser1_status_canvas = tk.Canvas(self.status_frame, width=30, height=30, bg="red", highlightthickness=0)
-        self.ser1_status_canvas.grid(row=1, column=1, padx=5)
-
-        # Serial2 status
-        tk.Label(self.status_frame, text="Serial2", font=("Arial", 10)).grid(row=0, column=2, padx=5)
-        self.ser2_status_canvas = tk.Canvas(self.status_frame, width=30, height=30, bg="red", highlightthickness=0)
-        self.ser2_status_canvas.grid(row=1, column=2, padx=5)
+        # GPS status visualization (icon)
+        self.gps_status_canvas = tk.Canvas(self, width=50, height=50, bg="red", highlightthickness=0)
+        self.gps_status_canvas.grid(row=3, column=0, sticky="sw", padx=5, pady=5)        
 
         # Configure rows and columns to expand
-        for i in range(5):  # Changed from 4 to 5 to accommodate the new row
+        for i in range(4):
             self.grid_rowconfigure(i, weight=1)
 
         for i in range(3):
             self.grid_columnconfigure(i, weight=1)
 
         # Start the periodic checks
-        self.periodic_check_ros()
+        #self.periodic_check_ros()
         self.check_gps_timeout()
 
     def check_ros_master(self):
@@ -85,11 +73,13 @@ class ROSLauncher(tk.Tk):
             return False
 
     def extract_pid_command_from_ps_file(self, filename):
+        """Extract PID and COMMAND from the results of 'ps aux' saved in a file."""
         with open(filename, 'r') as file:
             lines = file.readlines()[1:]  # Exclude header
             return {(line.split()[1], line.split()[-1]) for line in lines}
 
     def compare_and_save_diff(self, before_file, after_file, diff_file):
+        """Compare two 'ps aux' results and save the differences."""
         before_set = self.extract_pid_command_from_ps_file(before_file)
         after_set = self.extract_pid_command_from_ps_file(after_file)
         diff = after_set - before_set
@@ -104,8 +94,7 @@ class ROSLauncher(tk.Tk):
         if self.check_ros_master():
             rospy.init_node('gui_listener', anonymous=True)
             self.fix_subscriber = rospy.Subscriber("/fix", NavSatFix, self.gps_callback)
-            self.serial_status_subscriber = rospy.Subscriber("/serial_status", Float64MultiArray, self.serial_status_callback)
-            print(f"In periodic_check_ros, subscribing to /fix and /serial_status topics")
+            print(f"In periodic_check_ros, subscribing to /fix")
             self.after(5000, self.periodic_check_ros) 
         else:
             self.after(5000, self.periodic_check_ros) 
@@ -123,11 +112,13 @@ class ROSLauncher(tk.Tk):
         return button
 
     def save_ps_to_file(self, filename):
+        """Save the results of 'ps aux' command to a file."""
         with open(filename, 'w') as file:
             subprocess.run(["ps", "aux"], stdout=file)
             print(f"In save_ps_to_file, Results saved to {filename}")
 
     def extract_pid_command_from_ps_file(self, filename):
+        """Extract PID and COMMAND from the results of 'ps aux' saved in a file."""
         with open(filename, 'r') as file:
             lines = file.readlines()[1:]    # Exclude header from the file
             pid_command_set = set()         # Initialize an empty set
@@ -147,7 +138,17 @@ class ROSLauncher(tk.Tk):
         self.process = subprocess.Popen(["gnome-terminal", "--", "roslaunch", "ackermann_vehicle", "cub_cadet_real_world_oct23.launch"])      
         print("In launch_start, gps_listener in 10 seconds")
         time.sleep(10)      
-        print("In launch_start, done sleeping")
+        # 
+        # the function gps_callback which is setup below is used to update the GUI screen with the GPS status so I know
+        # when RTK fix is achieved
+        #
+        rospy.init_node('gps_listener', anonymous=True)
+        print("In launch_start, about to subscribe /fix in 10 seconds")
+        time.sleep(10)    
+        self.fix_subscriber = rospy.Subscriber("/fix", NavSatFix, self.gps_callback)
+        print("In launch_start, After /fix subscribing....Pausing 10 seconds")
+        time.sleep(10)
+        print("In launch_start, done sleepping")
 
     def launch_stop(self):
         print("In launch_stop")
@@ -157,6 +158,7 @@ class ROSLauncher(tk.Tk):
             if output:
                 pids = output.split()
                 for pid in pids:
+                    # Send SIGINT to gracefully stop the rosbag recording
                     subprocess.run(["kill", "-2", pid])
                     print(f"Stopped rosbag recording process with PID: {pid}")
         except Exception as e:
@@ -169,14 +171,15 @@ class ROSLauncher(tk.Tk):
             if output:
                 pids = output.split()
                 for pid in pids:
+                    # Send SIGINT to gracefully stop the rosbag recording
                     subprocess.run(["kill", "-9", pid])
                     print(f"Stopped rosbag recording process with PID: {pid}")
         except Exception as e:
             print(f"Error while trying to stop rosbag recording: {e}")
         time.sleep(2)
+
         self.fix_subscriber.unregister()
-        self.serial_status_subscriber.unregister()
-        print("Unregistered the /fix and /serial_status subscribers, Pausing 5 seconds")
+        print("Unregistered the /fix subscriber, Pausing 5 seconds")
         time.sleep(5)
 
         # Find the PID for "ackermann_vehicle cub_cadet_real_world_oct23.launch"
@@ -232,9 +235,54 @@ class ROSLauncher(tk.Tk):
                 print(f"Error killing process with PID {pid}. Error: {e}")
         print("In launch_stop, kill process complete")
 
+
+        # Save current processes to a file
+        after_file = '/home/tractor/processes_after_step3.txt'
+        self.save_ps_to_file(after_file)
+
+        # Compare before and after files and save the difference
+        diff_file_counter = 1  # Initialize a counter for naming difference files
+        while True:  # Find an unused filename
+            diff_filename = f"/home/tractor/diff_{diff_file_counter}.txt"
+            if not os.path.exists(diff_filename):
+                break
+            diff_file_counter += 1
+        self.compare_and_save_diff('/home/tractor/processes_before.txt', after_file, diff_filename)                      
+
     def launch_location1(self):
-        # Your existing implementation
-        pass
+        # copy from '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/PV_435_location1.txt' 
+        # to '/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/input_path.txt'        
+        # launch /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/launch/pure_pursuit_cub_cadet_oct23.launch
+        # $ roslaunch ackermann_vehicle pure_pursuit_cub_cadet_oct23.launch origin_lat:=40.34534080 origin_lon:=-80.12894600 ref_lat:=40.34530756451623 ref_lon:=-80.12885480045905
+        # launch /home/tractor/ros1_lawn_tractor_ws/src/ackermann_vehicle/nodes/path_update_origin_lat_lon.py
+
+        cmd = [
+            "gnome-terminal",
+            "--",
+            "bash",
+            "-c",
+           # "source /opt/ros/noetic/setup.bash && "  # Source ROS setup.bash (adjust if needed)
+           # "source /path/to/your/catkin_ws/devel/setup.bash && "  # Source your catkin workspace (adjust the path)
+            "roslaunch ackermann_vehicle pure_pursuit_cub_cadet_oct23.launch "
+            "origin_lat:=40.34534080 "
+            "origin_lon:=-80.12894600 "
+            "ref_lat:=40.34530756451623 "
+            "ref_lon:=-80.12885480045905; "
+            "exec bash"  # Keep the terminal open after the command finishes
+        ]
+        # Open a new terminal window and run the command
+        subprocess.Popen(cmd)
+
+        cmd = [
+            "gnome-terminal",
+            "--",
+            "bash",
+            "-c",
+            "cd /home/tractor/bagfiles && "  # Change to the bagfiles directory
+            "rosbag record -a; "  # Start recording all topics
+            "exec bash"  # Keep the terminal open after the command finishes
+            ]
+        rosbag_process = subprocess.Popen(cmd)
 
     def launch_location2(self):
         print("In location2 Pausing 10 seconds")
@@ -278,46 +326,44 @@ class ROSLauncher(tk.Tk):
         print("In location2 , after rosbag Popen statement, Pausing 10 seconds")
         time.sleep(10)   
     def launch_location3(self):
-        # Your existing implementation
-        pass
+        subprocess.Popen(["roslaunch", "YOUR_PACKAGE_NAME", "location3.launch"])
 
     def launch_location4(self):
-        # Your existing implementation
-        pass
-
+        subprocess.Popen(["roslaunch", "YOUR_PACKAGE_NAME", "location4.launch"])
     def launch_drive_new_path(self):
-        # Your existing implementation
-        pass
+        subprocess.Popen(["roslaunch", "YOUR_PACKAGE_NAME", "drive_new_path.launch"])        
 
-    def gps_callback(self, msg):
+    def gps_callback(self, data):
         self.last_gps_update = rospy.get_time()
-        self.update_gps_status_icon(msg.status.status)
+        self.gps_status = data.status.status
+        #print(f"In gps_callback, Status: {data.status.status}")
+        # Update the GPS status icon
+        self.update_gps_status_icon()
 
-    def serial_status_callback(self, data):
-        if len(data.data) >= 2:
-            self.update_serial_status_icon(self.ser1_status_canvas, data.data[0] > 0.5)
-            self.update_serial_status_icon(self.ser2_status_canvas, data.data[1] > 0.5)
-
-    def update_serial_status_icon(self, canvas, status):
-        color = "green" if status else "red"
-        canvas.config(bg=color)
-
-    def update_gps_status_icon(self, status):
+    def update_gps_status_icon(self):
         colors = {
             -1: "blue",
             0: "orange",
             1: "yellow",
             2: "green"
         }
-        self.gps_status_canvas.config(bg=colors.get(status, "red"))
+        #print(f"Icon Color: {colors.get(self.gps_status, 'red')}")
+        #print(f"GPS Status: {self.gps_status}")
+        self.gps_status_canvas.config(bg=colors.get(self.gps_status, "red"))
 
     def check_gps_timeout(self):
         current_time = time.time()
         if current_time - self.last_gps_update > 1.0:
-            self.update_gps_status_icon(-2)  # Use -2 to indicate timeout
-        self.after(500, self.check_gps_timeout)
+            self.gps_status = -2
+            self.update_gps_status_icon()
+        self.after(500, self.check_gps_timeout)  # Check again in 500ms        
 
 if __name__ == "__main__":
+
     app = ROSLauncher()
     app.title("ROS Launcher GUI")
-    app.mainloop()        
+    app.mainloop()
+
+
+
+

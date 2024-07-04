@@ -2,6 +2,7 @@
 
 '''
 Read the data from the specified sheet, reformat it, and save the results to a new sheet named coverage_path_refrmttd in the same Excel file.
+Each row of the input file consists of 4 (x,y) pairs.  Reformating it converts each row (i.e. 4 pairs) into 4 rows with 1 (x,y) pair each. 
 This is in support of creating a Boustrophedon coverage path that uses Dubins (i.e. key hole) u-turns.
 
 $ python3 path_coverage_path_reformat.py

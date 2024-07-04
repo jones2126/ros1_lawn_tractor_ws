@@ -62,7 +62,7 @@ class OdomPublisher:
         # self.GPS_origin_lat = 40.34534080  #435 Pine Valley
         # self.GPS_origin_lon = -80.12894600 
 # <!-- fix position 40.485509842 -80.332308247 357.9  the GPS antennae location -->
-        self.GPS_origin_lat = 40.485509842  #62 Collins Dr - antennae location
+        self.GPS_origin_lat = 40.485509842  #62 Collins Dr - antennae location near the fire pit
         self.GPS_origin_lon = -80.332308247
 
         rospy.Timer(rospy.Duration(60), self.calibrate_lat_lon_origin)
