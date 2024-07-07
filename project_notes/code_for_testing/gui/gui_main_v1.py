@@ -137,6 +137,37 @@ class ROSLauncher(tk.Tk):
                 command = " ".join(split_line[10:])
                 pid_command_set.add((pid, command))
             return pid_command_set                  
+
+    def log_command(self, command):
+        # this is a future function to make a log entry in a history file (i.e. .xlsx file)
+        # I have not implemented this yet, but wanted to save this starting code.
+        # These statements would need to be added to the 'launch_start' function
+        #       command = "roslaunch ackermann_vehicle cub_cadet_real_world_oct23.launch"
+        #       self.process = subprocess.Popen(["gnome-terminal", "--", "bash", "-c", command])
+        #       self.log_command(command)
+        # This statement, 'self.excel_file_path = os.path.expanduser('~/command_line_history.xlsx')'
+        # would need to be added to 'def __init__(self):'
+        epoch_time = int(time.time())
+        human_readable_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        # Read existing Excel file if it exists, otherwise create a new DataFrame
+        if os.path.exists(self.excel_file_path):
+            df = pd.read_excel(self.excel_file_path)
+        else:
+            df = pd.DataFrame(columns=['Epoch Time', 'Human Readable Time', 'Command'])
+        
+        # Append new command
+        new_row = pd.DataFrame({
+            'Epoch Time': [epoch_time],
+            'Human Readable Time': [human_readable_time],
+            'Command': [command]
+        })
+        df = pd.concat([df, new_row], ignore_index=True)
+        
+        # Save updated DataFrame to Excel file
+        df.to_excel(self.excel_file_path, index=False)
+        
+        print(f"Logged command: {command}")
    
     def launch_start(self):
         print("In launch_start, saving processes in 5 seconds")
@@ -144,6 +175,7 @@ class ROSLauncher(tk.Tk):
         self.save_ps_to_file("processes_before.txt")  # Save initial processes
         print("In launch_start, launching cub_cadet_real_world_oct23.launch in 5 seconds")
         time.sleep(5)  # Increased wait for roscore to start
+        #self.process = subprocess.Popen(["gnome-terminal", "--", "bash", "-c", command])
         self.process = subprocess.Popen(["gnome-terminal", "--", "roslaunch", "ackermann_vehicle", "cub_cadet_real_world_oct23.launch"])      
         print("In launch_start, gps_listener in 10 seconds")
         time.sleep(10)      

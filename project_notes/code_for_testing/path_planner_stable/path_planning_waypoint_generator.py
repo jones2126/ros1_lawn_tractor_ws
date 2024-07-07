@@ -57,8 +57,7 @@ def plot_arrow(x, y, yaw, length=1.0, width=0.5, fc="r", ec="k"):  # pragma: no 
 # main routine
 #
 input_file_waypoints =  "/home/tractor/ros1_lawn_tractor_ws/project_notes/code_for_testing/path_planner_stable/path_test.txt"
-output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_boustrophen_generator_output20240628.txt"
-
+output_file_waypoints = "/home/tractor/ros1_lawn_tractor_ws/project_notes/paths/Collins_Dr_62/Site_01_throttle_test.txt"
 print("Output file:", output_file_waypoints)
 
 

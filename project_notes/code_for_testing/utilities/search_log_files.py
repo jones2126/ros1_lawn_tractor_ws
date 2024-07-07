@@ -36,7 +36,8 @@ log_directory = '/home/tractor/.ros/log/latest'
 
 # Terms to search for
 #search_terms = ['error', 'warning', 'exception', 'fail', 'critical', 'SerialException', 'Failed', 'USB2TTL']
-search_terms = ['SerialException', 'Failed', 'USB2TTL', 'Starting_ROS2portXfer']
+#search_terms = ['SerialException', 'Failed', 'USB2TTL', 'Starting_ROS2portXfer']
+search_terms = ['I2C','warning']
 
 # Whitelist terms
 whitelist = ['off_path_error', 'JS ERROR']

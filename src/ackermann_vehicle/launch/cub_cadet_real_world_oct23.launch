@@ -61,10 +61,10 @@
   
 <!-- fix position 40.485509842 -80.332308247 357.9  the GPS antennae location -->
 
-<!-- linear_x >= 1.00 -> transmissionServoValue = transmissionFullForwardPos;  (1.80 m/s) 330
-     linear_x >= 0.75 -> transmissionServoValue = transmission075ForwardPos;   (1.00 m/s) 318
-     linear_x >= 0.50 -> transmissionServoValue = transmission050ForwardPos;   (0.75 m/s) 316
-     linear_x >= 0.05 -> transmissionServoValue = transmission025ForwardPos;   (0.50 m/s) 314   -->
+<!-- linear_x >= 1.00 -> transmissionServoValue = transmissionFullForwardPos;  (1.80 m/s)
+     linear_x >= 0.75 -> transmissionServoValue = transmission075ForwardPos;   (1.00 m/s) 
+     linear_x >= 0.50 -> transmissionServoValue = transmission050ForwardPos;   (0.75 m/s) 
+     linear_x >= 0.05 -> transmissionServoValue = transmission025ForwardPos;   (0.50 m/s)    -->
 
 <!--    transmissionFullReversePos,
         transmission075ReversePos,
