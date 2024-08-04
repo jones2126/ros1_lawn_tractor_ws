@@ -60,6 +60,27 @@ df_combined = pd.concat([df_existing, df_new], ignore_index=True)
 print("Saving data to .xlsx file")
 df_combined.to_excel(xlsx_file, index=False)
 
+# Set column width and alignment
+print("Adjusting column width and alignment")
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Alignment
+
+wb = load_workbook(xlsx_file)
+ws = wb.active
+
+column_letter = get_column_letter(1)  # 1 corresponds to column A
+ws.column_dimensions[column_letter].width = 13  # 13 characters
+for cell in ws[column_letter]:
+    cell.alignment = Alignment(horizontal='right')
+column_letter = get_column_letter(2)  # 2 corresponds to column B
+ws.column_dimensions[column_letter].width = 23  # 23 characters
+for cell in ws[column_letter]:
+    cell.alignment = Alignment(horizontal='right')
+column_letter = get_column_letter(3)  # 3 corresponds to column C
+ws.column_dimensions[column_letter].width = 100  # 100 characters
+print("Saving file")
+wb.save(xlsx_file)
+
 # Print a message indicating completion
 print(f"History updated. {len(new_data)} new commands added.")
 

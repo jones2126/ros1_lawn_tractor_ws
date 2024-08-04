@@ -35,9 +35,9 @@ def search_logs(directory, search_terms, whitelist):
 log_directory = '/home/tractor/.ros/log/latest'
 
 # Terms to search for
-#search_terms = ['error', 'warning', 'exception', 'fail', 'critical', 'SerialException', 'Failed', 'USB2TTL']
+search_terms = ['error', 'warning', 'exception', 'fail', 'critical', 'SerialException', 'Failed', 'USB2TTL', 'meters_travelled']
 #search_terms = ['SerialException', 'Failed', 'USB2TTL', 'Starting_ROS2portXfer']
-search_terms = ['I2C','warning']
+#search_terms = ['I2C','warning', 'periodic_check_ros', 'error']
 
 # Whitelist terms
 whitelist = ['off_path_error', 'JS ERROR']

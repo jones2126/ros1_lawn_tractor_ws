@@ -17,7 +17,6 @@ class ROSLauncher(tk.Tk):
         super().__init__()
         self.process = None
         self.last_gps_update = 0
-        self.ros_initialized = False
 
         # Get screen dimensions
         screen_width = self.winfo_screenwidth()
@@ -47,31 +46,9 @@ class ROSLauncher(tk.Tk):
         self.create_button("Location 3", self.launch_location3).grid(row=2, column=1, sticky="nsew", padx=5, pady=5)
         self.create_button("Location 4", self.launch_location4).grid(row=3, column=1, sticky="nsew", padx=5, pady=5)
 
-        # Frame for array data
-        self.array_frame = tk.Frame(self)
-        self.array_frame.grid(row=3, column=1, columnspan=2, sticky="se", padx=10, pady=10)  # Changed from column=2 to column=1, columnspan=2
-
         # Create a frame for status indicators
         self.status_frame = tk.Frame(self)
         self.status_frame.grid(row=4, column=0, columnspan=3, sticky="se", padx=10, pady=10)
-
-
-        # Configure columns in array_frame
-        self.array_frame.columnconfigure(0, weight=1)
-        self.array_frame.columnconfigure(1, weight=1)
-
-        # Labels for array data
-        tk.Label(self.array_frame, text="Steering Pot:", font=("Arial", 14)).grid(row=0, column=0, sticky="e", padx=(0, 5))
-        self.filtered_steer_pot_int_label = tk.Label(self.array_frame, text="N/A", font=("Arial", 14))
-        self.filtered_steer_pot_int_label.grid(row=0, column=1, sticky="w")
-
-        tk.Label(self.array_frame, text="Steer Set Point:", font=("Arial", 14)).grid(row=1, column=0, sticky="e", padx=(0, 5))
-        self.steer_set_point_label = tk.Label(self.array_frame, text="N/A", font=("Arial", 14))
-        self.steer_set_point_label.grid(row=1, column=1, sticky="w")
-
-        tk.Label(self.array_frame, text="Steer Effort:", font=("Arial", 14)).grid(row=2, column=0, sticky="e", padx=(0, 5))
-        self.steer_effort_label = tk.Label(self.array_frame, text="N/A", font=("Arial", 14))
-        self.steer_effort_label.grid(row=2, column=1, sticky="w")        
 
         # GPS status
         tk.Label(self.status_frame, text="GPS", font=("Arial", 10)).grid(row=0, column=0, padx=5)
@@ -99,17 +76,6 @@ class ROSLauncher(tk.Tk):
         self.periodic_check_ros()
         self.check_gps_timeout()
 
-    def log_message(self, message, level="info"):
-        if self.ros_initialized:
-            if level == "info":
-                rospy.loginfo(message)
-            elif level == "warn":
-                rospy.logwarn(message)
-            elif level == "error":
-                rospy.logerr(message)
-        else:
-            print(f"[{level.upper()}] {message}")
-
     def check_ros_master(self):
         try:
             s = socket.create_connection(("localhost", 11311), timeout=1)
@@ -117,19 +83,6 @@ class ROSLauncher(tk.Tk):
             return True
         except socket.error:
             return False
-
-    def initialize_ros(self):
-        if not self.ros_initialized:
-            try:
-                rospy.init_node('gui_listener', anonymous=True)
-                self.fix_subscriber = rospy.Subscriber("/fix", NavSatFix, self.gps_callback)
-                self.serial_status_subscriber = rospy.Subscriber("/serial_status", Float64MultiArray, self.serial_status_callback)
-                self.array_subscriber = rospy.Subscriber("/my_array_topic", Float64MultiArray, self.array_callback)                
-                self.ros_initialized = True
-                self.log_message("ROS node initialized and topics subscribed")
-            except rospy.ROSException as e:
-                self.log_message(f"Failed to initialize ROS: {e}", "error")
-                self.ros_initialized = False
 
     def extract_pid_command_from_ps_file(self, filename):
         with open(filename, 'r') as file:
@@ -147,23 +100,15 @@ class ROSLauncher(tk.Tk):
                 file.write(f"{pid}\t{cmd}\n")                    
 
     def periodic_check_ros(self):
+        print(f"In periodic_check_ros")
         if self.check_ros_master():
-            if not self.ros_initialized:
-                self.initialize_ros()
+            rospy.init_node('gui_listener', anonymous=True)
+            self.fix_subscriber = rospy.Subscriber("/fix", NavSatFix, self.gps_callback)
+            self.serial_status_subscriber = rospy.Subscriber("/serial_status", Float64MultiArray, self.serial_status_callback)
+            print(f"In periodic_check_ros, subscribing to /fix and /serial_status topics")
+            self.after(5000, self.periodic_check_ros) 
         else:
-            if self.ros_initialized:
-                self.log_message("ROS master not found. Resetting ROS initialization.", "warn")
-                self.ros_initialized = False
-                if self.fix_subscriber:
-                    self.fix_subscriber.unregister()
-                if self.serial_status_subscriber:
-                    self.serial_status_subscriber.unregister()
-                if self.array_subscriber:  # Add this line
-                    self.array_subscriber.unregister()  # Add this line
-                self.fix_subscriber = None
-                self.serial_status_subscriber = None
-                self.array_subscriber = None  # Add this line
-        self.after(5000, self.periodic_check_ros)
+            self.after(5000, self.periodic_check_ros) 
 
     def on_button_hover(self, event):
         event.widget.config(bg="#FF0000")  # red
@@ -225,7 +170,16 @@ class ROSLauncher(tk.Tk):
         print(f"Logged command: {command}")
    
     def launch_start(self):
-        pass
+        print("In launch_start, saving processes in 5 seconds")
+        time.sleep(5)  # Increased wait for roscore to start
+        self.save_ps_to_file("processes_before.txt")  # Save initial processes
+        print("In launch_start, launching cub_cadet_real_world_oct23.launch in 5 seconds")
+        time.sleep(5)  # Increased wait for roscore to start
+        #self.process = subprocess.Popen(["gnome-terminal", "--", "bash", "-c", command])
+        self.process = subprocess.Popen(["gnome-terminal", "--", "roslaunch", "ackermann_vehicle", "cub_cadet_real_world_oct23.launch"])      
+        print("In launch_start, gps_listener in 10 seconds")
+        time.sleep(10)      
+        print("In launch_start, done sleeping")
 
     def launch_stop(self):
         print("In launch_stop")
@@ -315,24 +269,32 @@ class ROSLauncher(tk.Tk):
         pass
 
     def launch_location2(self):
-        self.log_message("Starting launch_location2 - saving list of processes running")
-        self.save_ps_to_file("processes_before.txt")  # Save initial processes       
-        self.log_message("In launch_location2 Pausing 2 seconds")
-        time.sleep(2)   
+        print("In location2 Pausing 10 seconds")
+        time.sleep(10)   
         cmd = [
             "gnome-terminal",
             "--",
             "bash",
             "-c",
-            "roslaunch ackermann_vehicle cub_cadet_location_2.launch; "
+           # "source /opt/ros/noetic/setup.bash && "  # Source ROS setup.bash (adjust if needed)
+           # "source /path/to/your/catkin_ws/devel/setup.bash && "  # Source your catkin workspace (adjust the path)
+           # The lat, lon parameters below are applied to the param server in 'pure_pursuit_cub_cadet_oct23.launch' and then 
+           # referenced in 'odom_from_wheel_and_gps.py' every 60 seconds in the function 'calibrate_lat_lon_origin'
+           # These points represent the lat, lon for the 62 Collins Dr near the fire pit.
+            "roslaunch ackermann_vehicle pure_pursuit_cub_cadet_oct23.launch "
+            "origin_lat:=40.485509842 "
+            "origin_lon:=-80.332308247 "
+            "ref_lat:=40.485509842 "
+            "ref_lon:=-80.332308247; "
             "exec bash"  # Keep the terminal open after the command finishes
         ]
-        self.log_message("In launch_location2, initiating launch file")
-        time.sleep(1)   
+
+        print("In location2 , after cmd statement, Pausing 10 seconds")
+        time.sleep(10)   
         # Open a new terminal window and run the command
         subprocess.Popen(cmd)
-        self.log_message("In launch_location2, after Popen statement, Pausing 20 seconds")
-        time.sleep(20)   
+        print("In location2 , after Popen statement, Pausing 10 seconds")
+        time.sleep(10)   
         cmd = [
             "gnome-terminal",
             "--",
@@ -341,28 +303,23 @@ class ROSLauncher(tk.Tk):
             "cd /home/tractor/bagfiles && "  # Change to the bagfiles directory
             "rosbag record -a; "  # Start recording all topics
             "exec bash"  # Keep the terminal open after the command finishes
-        ]              
+            ]
+        print("In location2 , after 2nd cmd statement, Pausing 10 seconds")
+        time.sleep(10)               
         rosbag_process = subprocess.Popen(cmd)
-        self.log_message("At the end of launch_location2")
-
+        print("In location2 , after rosbag Popen statement, Pausing 10 seconds")
+        time.sleep(10)   
     def launch_location3(self):
+        # Your existing implementation
         pass
 
     def launch_location4(self):
+        # Your existing implementation
         pass
 
     def launch_drive_new_path(self):
+        # Your existing implementation
         pass
-
-    def array_callback(self, msg):
-        if len(msg.data) > 15:  # Assuming steer_effort is the 16th element
-            filtered_steer_pot_int = msg.data[2]
-            steer_set_point = msg.data[4]
-            steer_effort = msg.data[15]
-            
-            self.filtered_steer_pot_int_label.config(text=f"{filtered_steer_pot_int:.2f}")
-            self.steer_set_point_label.config(text=f"{steer_set_point:.2f}")
-            self.steer_effort_label.config(text=f"{steer_effort:.2f}")
 
     def gps_callback(self, msg):
         self.last_gps_update = rospy.get_time()

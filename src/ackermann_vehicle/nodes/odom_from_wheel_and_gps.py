@@ -25,8 +25,8 @@ PI = pi
 class OdomPublisher:
 
     def calibrate_lat_lon_origin(self, event):
-        GPS_origin_lat = rospy.get_param("GPS_origin_lat", None)
-        GPS_origin_lon = rospy.get_param("GPS_origin_lon", None)
+        GPS_origin_lat = rospy.get_param("base_station_lat", None)
+        GPS_origin_lon = rospy.get_param("base_station_lon", None)
         gps_origin_offset_applied = rospy.get_param("gps_origin_offset_applied", None)
         self.GPS_origin_lat = GPS_origin_lat
         self.GPS_origin_lon = GPS_origin_lon

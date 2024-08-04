@@ -5,6 +5,7 @@ import serial
 import threading
 import time
 from std_msgs.msg import Float32, Float64MultiArray
+from std_msgs.msg import Float32MultiArray
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import NavSatFix
 
@@ -45,11 +46,13 @@ def twist_callback(twist_msg):
 
 def left_speed_callback(left_speed_msg):
     global left_speed
-    left_speed = left_speed_msg.data
+    #left_speed = left_speed_msg.data
+    left_speed = round(left_speed_msg.data[3], 2)  # speed is the 3rd element in the array
 
 def right_speed_callback(right_speed_msg):
     global right_speed
-    right_speed = right_speed_msg.data
+    #right_speed = right_speed_msg.data
+    right_speed = round(right_speed_msg.data[3], 2)  # speed is the 3rd element in the array
 
 def fix_callback(msg):
     global prev_time_gps_fix, gpsStatusAge, gps_status
@@ -68,7 +71,6 @@ def read_ttgo_main():
                         components = line.split(',')
                         msg = Float64MultiArray()
                         msg.data = [float(x) for x in components[1:] if x.strip() != '']
-
                         pub.publish(msg)
             except serial.SerialException:
                 rospy.logerr("read_ttgo_main: SerialException")
@@ -141,8 +143,11 @@ rospy.init_node('ROS2portXfer')
 rospy.loginfo("Starting_ROS2portXfer")
 
 rospy.Subscriber('cmd_vel', Twist, twist_callback)
-rospy.Subscriber("left_speed", Float32, left_speed_callback)
-rospy.Subscriber("right_speed", Float32, right_speed_callback)
+#rospy.Subscriber("left_speed", Float32, left_speed_callback)
+#rospy.Subscriber("right_speed", Float32, right_speed_callback)
+rospy.Subscriber('wheel_data_left', Float32MultiArray, left_speed_callback)
+rospy.Subscriber('wheel_data_right', Float32MultiArray, right_speed_callback)
+
 rospy.Subscriber("fix", NavSatFix, fix_callback)
 pub = rospy.Publisher('my_array_topic', Float64MultiArray, queue_size=10)
 serial_status_pub = rospy.Publisher('serial_status', Float64MultiArray, queue_size=10)
