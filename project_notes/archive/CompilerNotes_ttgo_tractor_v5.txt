@@ -1,0 +1,172 @@
+ Compiler Notes 8/5/2024
+
+ *  Executing task in folder ttgo_tractor_v5: platformio run --target upload 
+
+Processing ttgo-lora32-v1 (platform: espressif32; board: ttgo-lora32-v1; framework: arduino)
+---------------------------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/ttgo-lora32-v1.html
+PLATFORM: Espressif 32 (6.7.0) > TTGO LoRa32-OLED V1
+HARDWARE: ESP32 240MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20016.0 (2.0.16) 
+ - tool-esptoolpy @ 1.40501.0 (4.5.1) 
+ - tool-mkfatfs @ 2.0.1 
+ - tool-mklittlefs @ 1.203.210628 (2.3) 
+ - tool-mkspiffs @ 2.230.0 (2.30) 
+ - toolchain-xtensa-esp32 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 37 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- LoRa @ 0.8.0
+|-- Adafruit SSD1306 @ 2.5.11
+|-- SPI @ 2.0.0
+Building in release mode
+Compiling .pio/build/ttgo-lora32-v1/src/main.cpp.o
+Building .pio/build/ttgo-lora32-v1/bootloader.bin
+esptool.py v4.5.1
+Creating esp32 image...
+Merged 1 ELF section
+Successfully created esp32 image.
+Generating partitions .pio/build/ttgo-lora32-v1/partitions.bin
+Compiling .pio/build/ttgo-lora32-v1/lib56c/SPI/SPI.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/lib7fb/LoRa/LoRa.cpp.o
+Archiving .pio/build/ttgo-lora32-v1/lib56c/libSPI.a
+Indexing .pio/build/ttgo-lora32-v1/lib56c/libSPI.a
+Compiling .pio/build/ttgo-lora32-v1/lib26f/Wire/Wire.cpp.o
+Archiving .pio/build/ttgo-lora32-v1/lib7fb/libLoRa.a
+Indexing .pio/build/ttgo-lora32-v1/lib7fb/libLoRa.a
+Compiling .pio/build/ttgo-lora32-v1/libdfd/Adafruit BusIO/Adafruit_BusIO_Register.cpp.o
+Archiving .pio/build/ttgo-lora32-v1/lib26f/libWire.a
+Indexing .pio/build/ttgo-lora32-v1/lib26f/libWire.a
+Compiling .pio/build/ttgo-lora32-v1/libdfd/Adafruit BusIO/Adafruit_I2CDevice.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/libdfd/Adafruit BusIO/Adafruit_SPIDevice.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/lib16f/Adafruit GFX Library/Adafruit_GFX.cpp.o
+Archiving .pio/build/ttgo-lora32-v1/libdfd/libAdafruit BusIO.a
+Indexing .pio/build/ttgo-lora32-v1/libdfd/libAdafruit BusIO.a
+Compiling .pio/build/ttgo-lora32-v1/lib16f/Adafruit GFX Library/Adafruit_GrayOLED.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/lib16f/Adafruit GFX Library/Adafruit_SPITFT.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/lib16f/Adafruit GFX Library/glcdfont.c.o
+Compiling .pio/build/ttgo-lora32-v1/libaa6/Adafruit SSD1306/Adafruit_SSD1306.cpp.o
+Archiving .pio/build/ttgo-lora32-v1/lib16f/libAdafruit GFX Library.a
+Indexing .pio/build/ttgo-lora32-v1/lib16f/libAdafruit GFX Library.a
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/Esp.cpp.o
+Archiving .pio/build/ttgo-lora32-v1/libaa6/libAdafruit SSD1306.a
+Indexing .pio/build/ttgo-lora32-v1/libaa6/libAdafruit SSD1306.a
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/FirmwareMSC.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/FunctionalInterrupt.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/HWCDC.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/HardwareSerial.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/IPAddress.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/IPv6Address.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/MD5Builder.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/Print.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/Stream.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/StreamString.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/USB.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/USBCDC.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/USBMSC.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/WString.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/base64.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/cbuf.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-adc.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-bt.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-cpu.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-dac.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-gpio.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-i2c-slave.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-i2c.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-ledc.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-matrix.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-misc.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-psram.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-rgb-led.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-rmt.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-sigmadelta.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-spi.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-time.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-timer.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-tinyusb.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-touch.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/esp32-hal-uart.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/firmware_msc_fat.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/libb64/cdecode.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/libb64/cencode.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/main.cpp.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/stdlib_noniso.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/wiring_pulse.c.o
+Compiling .pio/build/ttgo-lora32-v1/FrameworkArduino/wiring_shift.c.o
+Archiving .pio/build/ttgo-lora32-v1/libFrameworkArduino.a
+Indexing .pio/build/ttgo-lora32-v1/libFrameworkArduino.a
+Linking .pio/build/ttgo-lora32-v1/firmware.elf
+Retrieving maximum program size .pio/build/ttgo-lora32-v1/firmware.elf
+Checking size .pio/build/ttgo-lora32-v1/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=         ]   7.0% (used 22856 bytes from 327680 bytes)
+Flash: [===       ]  26.8% (used 351605 bytes from 1310720 bytes)
+Building .pio/build/ttgo-lora32-v1/firmware.bin
+esptool.py v4.5.1
+Creating esp32 image...
+Merged 2 ELF sections
+Successfully created esp32 image.
+Configuring upload protocol...
+AVAILABLE: cmsis-dap, esp-bridge, esp-prog, espota, esptool, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa
+CURRENT: upload_protocol = esptool
+Looking for upload port...
+Using manually specified: /dev/ttyACM0
+Uploading .pio/build/ttgo-lora32-v1/firmware.bin
+esptool.py v4.5.1
+Serial port /dev/ttyACM0
+Connecting.........
+Chip is ESP32-D0WDQ6-V3 (revision v3.0)
+Features: WiFi, BT, Dual Core, 240MHz, VRef calibration in efuse, Coding Scheme None
+Crystal is 26MHz
+MAC: 78:21:84:88:19:48
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00001000 to 0x00005fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000e000 to 0x0000ffff...
+Flash will be erased from 0x00010000 to 0x00065fff...
+Compressed 17536 bytes to 12202...
+Writing at 0x00001000... (100 %)
+Wrote 17536 bytes (12202 compressed) at 0x00001000 in 0.5 seconds (effective 262.6 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 146...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 361.0 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 47...
+Writing at 0x0000e000... (100 %)
+Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 497.6 kbit/s)...
+Hash of data verified.
+Compressed 351968 bytes to 201013...
+Writing at 0x00010000... (7 %)
+Writing at 0x0001b5e3... (15 %)
+Writing at 0x00027a6a... (23 %)
+Writing at 0x0002d091... (30 %)
+Writing at 0x00032a61... (38 %)
+Writing at 0x00038007... (46 %)
+Writing at 0x0003d8a3... (53 %)
+Writing at 0x00042c62... (61 %)
+Writing at 0x00048334... (69 %)
+Writing at 0x0004d7a6... (76 %)
+Writing at 0x0005672b... (84 %)
+Writing at 0x0005cdca... (92 %)
+Writing at 0x000646e0... (100 %)
+Wrote 351968 bytes (201013 compressed) at 0x00010000 in 4.8 seconds (effective 592.2 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+===================================== [SUCCESS] Took 74.64 seconds =====================================
+ *  Terminal will be reused by tasks, press any key to close it. 
