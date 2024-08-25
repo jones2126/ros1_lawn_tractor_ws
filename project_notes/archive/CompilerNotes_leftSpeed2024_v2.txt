@@ -1,16 +1,9 @@
- Compiler Notes 8/4/2024
-
- Special Note:  I had to add a syscalls.c in the src directory to resolve a Compiler linking problem:
- (.text._write_r+0x14): undefined reference to `_write'
-
-
- *  The terminal process "platformio 'run', '--target', 'upload', '--environment', 'teensy31'" terminated with exit code: 1. 
- *  Terminal will be reused by tasks, press any key to close it. 
+from 8/8/24
 
  *  Executing task in folder leftSpeed2024_v2: platformio run --target upload --environment teensy31 
 
 Processing teensy31 (platform: teensy; board: teensy31; framework: arduino)
---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Verbose mode can be enabled via `-v, --verbose` option
 CONFIGURATION: https://docs.platformio.org/page/boards/teensy/teensy31.html
 PLATFORM: Teensy (5.0.0) > Teensy 3.1 / 3.2
@@ -28,178 +21,6 @@ Dependency Graph
 |-- rosserial_arduino @ 0.0.3
 |-- Wire @ 1.0
 Building in release mode
-Compiling .pio/build/teensy31/src/main.cpp.o
-In file included from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/Float32MultiArray.h:8,
-                 from src/main.cpp:3:
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h: In member function 'virtual int std_msgs::MultiArrayLayout::deserialize(unsigned char*)':
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h:57:60: warning: 'void* realloc(void*, size_t)' moving an object of non-trivially copyable type 'std_msgs::MultiArrayLayout::_dim_type' {aka 'class std_msgs::MultiArrayDimension'}; use 'new' and 'delete' instead [-Wclass-memaccess]
-   57 |         this->dim = (std_msgs::MultiArrayDimension*)realloc(this->dim, dim_lengthT * sizeof(std_msgs::MultiArrayDimension));
-      |                                                     ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h:8,
-                 from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/Float32MultiArray.h:8,
-                 from src/main.cpp:3:
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayDimension.h:12:9: note: 'std_msgs::MultiArrayLayout::_dim_type' {aka 'class std_msgs::MultiArrayDimension'} declared here
-   12 |   class MultiArrayDimension : public ros::Msg
-      |         ^~~~~~~~~~~~~~~~~~~
-In file included from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/Float32MultiArray.h:8,
-                 from src/main.cpp:3:
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h:61:15: warning: 'void* memcpy(void*, const void*, size_t)' writing to an object of type 'std_msgs::MultiArrayLayout::_dim_type' {aka 'class std_msgs::MultiArrayDimension'} with no trivial copy-assignment; use copy-assignment or copy-initialization instead [-Wclass-memaccess]
-   61 |         memcpy( &(this->dim[i]), &(this->st_dim), sizeof(std_msgs::MultiArrayDimension));
-      |         ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h:8,
-                 from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/Float32MultiArray.h:8,
-                 from src/main.cpp:3:
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayDimension.h:12:9: note: 'std_msgs::MultiArrayLayout::_dim_type' {aka 'class std_msgs::MultiArrayDimension'} declared here
-   12 |   class MultiArrayDimension : public ros::Msg
-      |         ^~~~~~~~~~~~~~~~~~~
-Linking .pio/build/teensy31/firmware.elf
-/home/tractor/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/bin/ld: /home/tractor/.platformio/packages/toolchain-gccarmnoneeabi-teensy/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/nofp/libc.a(libc_a-writer.o): in function `_write_r':
-(.text._write_r+0x14): undefined reference to `_write'
-collect2: error: ld returned 1 exit status
-*** [.pio/build/teensy31/firmware.elf] Error 1
-====================================== [FAILED] Took 6.74 seconds ======================================
-
- *  The terminal process "platformio 'run', '--target', 'upload', '--environment', 'teensy31'" terminated with exit code: 1. 
- *  Terminal will be reused by tasks, press any key to close it. 
-
- *  Executing task in folder leftSpeed2024_v2: platformio run --target upload --environment teensy31 
-
-Processing teensy31 (platform: teensy; board: teensy31; framework: arduino)
---------------------------------------------------------------------------------------------------------
-Verbose mode can be enabled via `-v, --verbose` option
-CONFIGURATION: https://docs.platformio.org/page/boards/teensy/teensy31.html
-PLATFORM: Teensy (5.0.0) > Teensy 3.1 / 3.2
-HARDWARE: MK20DX256 72MHz, 64KB RAM, 256KB Flash
-DEBUG: Current (jlink) External (jlink)
-PACKAGES: 
- - framework-arduinoteensy @ 1.159.0 (1.59) 
- - tool-teensy @ 1.159.0 (1.59) 
- - toolchain-gccarmnoneeabi-teensy @ 1.110301.0 (11.3.1)
-LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
-LDF Modes: Finder ~ chain, Compatibility ~ soft
-Found 93 compatible libraries
-Scanning dependencies...
-Dependency Graph
-|-- rosserial_arduino @ 0.0.3
-|-- Wire @ 1.0
-Building in release mode
-Compiling .pio/build/teensy31/src/main.cpp.o
-Compiling .pio/build/teensy31/src/syscalls.c.o
-Compiling .pio/build/teensy31/lib033/SPI/SPI.cpp.o
-In file included from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/Float32MultiArray.h:8,
-                 from src/main.cpp:3:
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h: In member function 'virtual int std_msgs::MultiArrayLayout::deserialize(unsigned char*)':
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h:57:60: warning: 'void* realloc(void*, size_t)' moving an object of non-trivially copyable type 'std_msgs::MultiArrayLayout::_dim_type' {aka 'class std_msgs::MultiArrayDimension'}; use 'new' and 'delete' instead [-Wclass-memaccess]
-   57 |         this->dim = (std_msgs::MultiArrayDimension*)realloc(this->dim, dim_lengthT * sizeof(std_msgs::MultiArrayDimension));
-      |                                                     ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h:8,
-                 from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/Float32MultiArray.h:8,
-                 from src/main.cpp:3:
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayDimension.h:12:9: note: 'std_msgs::MultiArrayLayout::_dim_type' {aka 'class std_msgs::MultiArrayDimension'} declared here
-   12 |   class MultiArrayDimension : public ros::Msg
-      |         ^~~~~~~~~~~~~~~~~~~
-In file included from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/Float32MultiArray.h:8,
-                 from src/main.cpp:3:
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h:61:15: warning: 'void* memcpy(void*, const void*, size_t)' writing to an object of type 'std_msgs::MultiArrayLayout::_dim_type' {aka 'class std_msgs::MultiArrayDimension'} with no trivial copy-assignment; use copy-assignment or copy-initialization instead [-Wclass-memaccess]
-   61 |         memcpy( &(this->dim[i]), &(this->st_dim), sizeof(std_msgs::MultiArrayDimension));
-      |         ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayLayout.h:8,
-                 from .pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/Float32MultiArray.h:8,
-                 from src/main.cpp:3:
-.pio/libdeps/teensy31/rosserial_arduino/src/std_msgs/MultiArrayDimension.h:12:9: note: 'std_msgs::MultiArrayLayout::_dim_type' {aka 'class std_msgs::MultiArrayDimension'} declared here
-   12 |   class MultiArrayDimension : public ros::Msg
-      |         ^~~~~~~~~~~~~~~~~~~
-Archiving .pio/build/teensy31/lib033/libSPI.a
-Indexing .pio/build/teensy31/lib033/libSPI.a
-Compiling .pio/build/teensy31/libd51/Ethernet/Dhcp.cpp.o
-Compiling .pio/build/teensy31/libd51/Ethernet/Dns.cpp.o
-Compiling .pio/build/teensy31/libd51/Ethernet/Ethernet.cpp.o
-Compiling .pio/build/teensy31/libd51/Ethernet/EthernetClient.cpp.o
-Compiling .pio/build/teensy31/libd51/Ethernet/EthernetServer.cpp.o
-Compiling .pio/build/teensy31/libd51/Ethernet/EthernetUdp.cpp.o
-Compiling .pio/build/teensy31/libd51/Ethernet/socket.cpp.o
-Compiling .pio/build/teensy31/libd51/Ethernet/utility/w5100.cpp.o
-Compiling .pio/build/teensy31/lib3d5/rosserial_arduino/duration.cpp.o
-Archiving .pio/build/teensy31/libd51/libEthernet.a
-Indexing .pio/build/teensy31/libd51/libEthernet.a
-Compiling .pio/build/teensy31/lib3d5/rosserial_arduino/time.cpp.o
-Compiling .pio/build/teensy31/lib138/Wire/Wire.cpp.o
-Archiving .pio/build/teensy31/lib3d5/librosserial_arduino.a
-Indexing .pio/build/teensy31/lib3d5/librosserial_arduino.a
-Compiling .pio/build/teensy31/lib138/Wire/WireIMXRT.cpp.o
-Compiling .pio/build/teensy31/lib138/Wire/WireKinetis.cpp.o
-Compiling .pio/build/teensy31/lib138/Wire/utility/twi.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/AudioStream.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/CrashReport.cpp.o
-Archiving .pio/build/teensy31/lib138/libWire.a
-Indexing .pio/build/teensy31/lib138/libWire.a
-Compiling .pio/build/teensy31/FrameworkArduino/DMAChannel.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/EventResponder.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/HardwareSerial.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/HardwareSerial1.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/HardwareSerial2.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/HardwareSerial3.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/HardwareSerial4.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/HardwareSerial5.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/HardwareSerial6.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/IPAddress.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/IntervalTimer.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/Print.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/Stream.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/Time.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/Tone.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/WMath.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/WString.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/analog.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/avr_emulation.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/eeprom.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/keylayouts.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/main.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/math_helper.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/memcpy-armv7m.S.o
-Compiling .pio/build/teensy31/FrameworkArduino/memset.S.o
-Compiling .pio/build/teensy31/FrameworkArduino/mk20dx128.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/new.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/nonstd.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/pins_teensy.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/ser_print.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/serial1.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/serial2.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/serial3.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/serial4.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/serial5.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/serial6.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/serial6_lpuart.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/serialEvent.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/serialEvent1.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/serialEvent2.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/serialEvent3.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/serialEvent4.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/serialEvent5.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/serialEvent6.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/serialEventUSB1.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/serialEventUSB2.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/touch.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_audio.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_desc.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_dev.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_flightsim.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_inst.cpp.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_joystick.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_keyboard.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_mem.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_midi.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_mouse.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_mtp.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_rawhid.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_seremu.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_serial.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_serial2.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_serial3.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/usb_touch.c.o
-Compiling .pio/build/teensy31/FrameworkArduino/yield.cpp.o
-Archiving .pio/build/teensy31/libFrameworkArduino.a
-Indexing .pio/build/teensy31/libFrameworkArduino.a
 Linking .pio/build/teensy31/firmware.elf
 Checking size .pio/build/teensy31/firmware.elf
 Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
@@ -211,5 +32,5 @@ AVAILABLE: jlink, teensy-cli, teensy-gui
 CURRENT: upload_protocol = teensy-gui
 Uploading .pio/build/teensy31/firmware.hex
 Opening Teensy Loader...
-===================================== [SUCCESS] Took 68.53 seconds =====================================
+=================================== [SUCCESS] Took 5.06 seconds ===================================
  *  Terminal will be reused by tasks, press any key to close it. 

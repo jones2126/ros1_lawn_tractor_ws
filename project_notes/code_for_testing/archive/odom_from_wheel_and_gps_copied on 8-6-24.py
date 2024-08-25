@@ -5,7 +5,6 @@ from sensor_msgs.msg import Imu, NavSatFix, NavSatStatus, TimeReference
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Float32
 from std_msgs.msg import Float64
-from std_msgs.msg import Float32MultiArray
 from tf2_ros import TransformBroadcaster, TransformStamped
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from math import cos, sin, pi
@@ -28,7 +27,7 @@ class OdomPublisher:
     def calibrate_lat_lon_origin(self, event):
         GPS_origin_lat = rospy.get_param("base_station_lat", None)
         GPS_origin_lon = rospy.get_param("base_station_lon", None)
-        # gps_origin_offset_applied = rospy.get_param("gps_origin_offset_applied", None)
+        gps_origin_offset_applied = rospy.get_param("gps_origin_offset_applied", None)
         self.GPS_origin_lat = GPS_origin_lat
         self.GPS_origin_lon = GPS_origin_lon
         rospy.loginfo("GPS_origin_lat in odom: %s, GPS_origin_lon: %s", self.GPS_origin_lat, self.GPS_origin_lon)
@@ -37,8 +36,8 @@ class OdomPublisher:
         rospy.init_node('odometry_publisher')
         self.left_distance = 0.0
         self.right_distance = 0.0
-        # self.left_distance_prev = 0.0
-        # self.right_distance_prev = 0.0
+        self.left_distance_prev = 0.0
+        self.right_distance_prev = 0.0
         self.left_delta = 0.0
         self.right_delta = 0.0
         self.left_speed = 0
@@ -50,7 +49,7 @@ class OdomPublisher:
         self.heading_radians_wheels = self.heading_radians_imu
         self.prev_yaw = 0.0
         self.angular_vel_z_imu = 0.0
-        # self.angular_vel_z_wheel = 0.0
+        self.angular_vel_z_wheel = 0.0
         self.imu_calls = 0
         self.imu_skips = 0
         # the initial quat is calculated based on the pre-defined yaw.  Maybe
@@ -70,8 +69,8 @@ class OdomPublisher:
         #origin_lat = 40.34534080; origin_lon = -80.12894600  # represents the starting point of my tractor inside the garage - averaged on 20230904
 
 
-        # self.x = 0.0
-        # self.y = 0.0        
+        self.x = 0.0
+        self.y = 0.0        
         self.x_gps = 0.0
         self.y_gps = 0.0
         self.x_wheel = 0.0
@@ -90,26 +89,12 @@ class OdomPublisher:
         self.yaw = 0
         self.linear_velocity_from_wheels = 0.0
 
-        # added on 8/6/24 to calculate speed based on GPS lat, lon changes
-        self.last_gps_time = rospy.Time.now()
-        self.gps_linear_velocity = 0.0
-        # end of added code on 8/6/24
 
-        # 8/6/24 added to accomodate new topics containing wheel speed data
-        self.left_delta = 0.0 
-        self.right_delta = 0.0
-        # end of 8/6/24 change
+        rospy.Subscriber('/left_meters_travelled_msg', Float32, self.left_distance_cb)
+        rospy.Subscriber('/right_meters_travelled_msg', Float32, self.right_distance_cb)
 
-
-        # 8/6/24 changed to accomodate new topics containing wheel speed data
-        # rospy.Subscriber('/left_meters_travelled_msg', Float32, self.left_distance_cb)
-        # rospy.Subscriber('/right_meters_travelled_msg', Float32, self.right_distance_cb)        
-        #rospy.Subscriber('/left_speed', Float32, self.left_speed_cb)
-        #rospy.Subscriber('/right_speed', Float32, self.right_speed_cb)
-        rospy.Subscriber('wheel_data_left', Float32MultiArray, self.left_wheel_data_cb)
-        rospy.Subscriber('wheel_data_right', Float32MultiArray, self.right_wheel_data_cb)
-        # end of 8/6/24 change
-
+        rospy.Subscriber('/left_speed', Float32, self.left_speed_cb)
+        rospy.Subscriber('/right_speed', Float32, self.right_speed_cb)
 
         rospy.Subscriber('/imu/data', Imu, self.imu_callback)
         #rospy.Subscriber("fix", NavSatFix, self.gps_callback)
@@ -129,24 +114,17 @@ class OdomPublisher:
             old_angle = new_angle
         return old_angle
 
-    # 8/6/24 changed to accomodate new topics containing wheel speed data
-    # def left_distance_cb(self, msg):
-    #     self.left_distance = msg.data
-    # def right_distance_cb(self, msg):
-    #     self.right_distance = msg.data
-    # def left_speed_cb(self, msg):
-    #     self.left_speed = msg.data
-    # def right_speed_cb(self, msg):
-    #     self.right_speed = msg.data       
-    def left_wheel_data_cb(self, msg):
-        self.left_speed = msg.data[3]
-        self.left_delta = msg.data[4]
-        self.left_distance += self.left_delta       
-    def right_wheel_data_cb(self, msg):
-        self.right_speed = msg.data[3]
-        self.right_delta = msg.data[4]
-        self.right_distance += self.right_delta
-    # end of 8/6/24 change                      
+    def left_distance_cb(self, msg):
+        self.left_distance = msg.data
+                      
+    def right_distance_cb(self, msg):
+        self.right_distance = msg.data
+
+    def left_speed_cb(self, msg):
+        self.left_speed = msg.data
+
+    def right_speed_cb(self, msg):
+        self.right_speed = msg.data               
 
     def imu_callback(self, msg):
         self.imu_calls = self.imu_calls + 1
@@ -208,22 +186,12 @@ class OdomPublisher:
             self.non_RTK_fix = self.non_RTK_fix  + 1
             self.RTK_fix = False    
         if data.status.status == 2:
-            current_time = rospy.Time.now()  # added on 8/6/24
             self.prev_lat = self.current_lat
             self.prev_lon = self.current_lon
             self.current_lat = data.latitude
             self.current_lon = data.longitude
             delta_lon = self.current_lon - self.prev_lon
             delta_lat = self.current_lat - self.prev_lat
-
-            # added on 8/6/24 
-            dt = (current_time - self.last_gps_time).to_sec()  
-            if dt > 0:  # Avoid division by zero 
-                dx, dy = gc.ll2xy(self.current_lat, self.current_lon, self.prev_lat, self.prev_lon)
-                distance = math.sqrt(dx*dx + dy*dy)
-                self.gps_linear_velocity = distance / dt
-            self.last_gps_time = current_time
-            # end of added code on 8/6/24 
 
             # Only update self.COG if linear_velocity_from_wheels is greater than 0.1
             if self.linear_velocity_from_wheels > 0.1:
@@ -266,8 +234,8 @@ class OdomPublisher:
         delta_time_odom = (current_time_odom - self.last_time).to_sec()
 
         # Calculate distance travelled by each wheel - there will be a rollover event that is not programmed yet
-        # self.left_delta = self.left_distance - self.left_distance_prev
-        # self.right_delta = self.right_distance - self.right_distance_prev
+        self.left_delta = self.left_distance - self.left_distance_prev
+        self.right_delta = self.right_distance - self.right_distance_prev
 
         # Calculate the distance travelled and speed by the robot using the average distance of the two wheels
         distance = (self.left_delta + self.right_delta) / 2
@@ -302,11 +270,9 @@ class OdomPublisher:
             self.y_base_link = self.y_gps
             self.x_wheel = self.x_gps
             self.y_wheel = self.y_gps
-            linear_velocity = self.gps_linear_velocity  # added on 8/6/24
         else:
             self.x_base_link = self.x_wheel
             self.y_base_link = self.y_wheel
-            linear_velocity = self.linear_velocity_from_wheels  # added on 8/6/24
         # Create and publish Odometry message
         # to publish this I need x,y, quat, linear x and angular z
         odom_msg = Odometry()
@@ -320,9 +286,7 @@ class OdomPublisher:
         odom_msg.pose.pose.orientation.y = self.quat[1]
         odom_msg.pose.pose.orientation.z = self.quat[2]
         odom_msg.pose.pose.orientation.w = self.quat[3]
-      
-      #  odom_msg.twist.twist.linear.x = self.linear_velocity_from_wheels  # removed on 8/6/24
-        odom_msg.twist.twist.linear.x = linear_velocity  # added on 8/6/24
+        odom_msg.twist.twist.linear.x = self.linear_velocity_from_wheels
         odom_msg.twist.twist.linear.y = 0.0
         odom_msg.twist.twist.angular.z = self.angular_vel_z_imu
         self.odom_pub.publish(odom_msg)
@@ -347,8 +311,8 @@ class OdomPublisher:
 
         br.sendTransform(t)
 
-        # self.left_distance_prev = self.left_distance
-        # self.right_distance_prev = self.right_distance
+        self.left_distance_prev = self.left_distance
+        self.right_distance_prev = self.right_distance
         self.last_time = current_time_odom
 
     def print_info(self, event=None):

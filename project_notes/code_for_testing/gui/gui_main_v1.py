@@ -10,6 +10,9 @@ import time
 import signal
 import re
 import os
+from sensor_msgs.msg import Imu     # to get IMU data
+import tf.transformations           # to get IMU data
+import math                         # to get IMU data
 
 class ROSLauncher(tk.Tk):
 
@@ -71,7 +74,11 @@ class ROSLauncher(tk.Tk):
 
         tk.Label(self.array_frame, text="Steer Effort:", font=("Arial", 14)).grid(row=2, column=0, sticky="e", padx=(0, 5))
         self.steer_effort_label = tk.Label(self.array_frame, text="N/A", font=("Arial", 14))
-        self.steer_effort_label.grid(row=2, column=1, sticky="w")        
+        self.steer_effort_label.grid(row=2, column=1, sticky="w")
+
+        tk.Label(self.array_frame, text="Heading:", font=("Arial", 14)).grid(row=3, column=0, sticky="e", padx=(0, 5))
+        self.heading_label = tk.Label(self.array_frame, text="N/A", font=("Arial", 14))
+        self.heading_label.grid(row=3, column=1, sticky="w")      
 
         # GPS status
         tk.Label(self.status_frame, text="GPS", font=("Arial", 10)).grid(row=0, column=0, padx=5)
@@ -124,7 +131,8 @@ class ROSLauncher(tk.Tk):
                 rospy.init_node('gui_listener', anonymous=True)
                 self.fix_subscriber = rospy.Subscriber("/fix", NavSatFix, self.gps_callback)
                 self.serial_status_subscriber = rospy.Subscriber("/serial_status", Float64MultiArray, self.serial_status_callback)
-                self.array_subscriber = rospy.Subscriber("/my_array_topic", Float64MultiArray, self.array_callback)                
+                self.array_subscriber = rospy.Subscriber("/my_array_topic", Float64MultiArray, self.array_callback)
+                self.imu_subscriber = rospy.Subscriber("/imu/data", Imu, self.imu_callback)
                 self.ros_initialized = True
                 self.log_message("ROS node initialized and topics subscribed")
             except rospy.ROSException as e:
@@ -158,6 +166,8 @@ class ROSLauncher(tk.Tk):
                     self.fix_subscriber.unregister()
                 if self.serial_status_subscriber:
                     self.serial_status_subscriber.unregister()
+
+
                 if self.array_subscriber:  # Add this line
                     self.array_subscriber.unregister()  # Add this line
                 self.fix_subscriber = None
@@ -254,7 +264,12 @@ class ROSLauncher(tk.Tk):
         time.sleep(2)
         self.fix_subscriber.unregister()
         self.serial_status_subscriber.unregister()
-        print("Unregistered the /fix and /serial_status subscribers, Pausing 5 seconds")
+
+        if hasattr(self, 'imu_subscriber') and self.imu_subscriber:
+            self.imu_subscriber.unregister()
+            print("Unregistered the IMU subscriber")
+
+        print("Unregistered the /fix, /serial_status and /imu subscribers, Pausing 5 seconds")
         time.sleep(5)
 
         # Find the PID for "ackermann_vehicle cub_cadet_real_world_oct23.launch"
@@ -331,8 +346,8 @@ class ROSLauncher(tk.Tk):
         time.sleep(1)   
         # Open a new terminal window and run the command
         subprocess.Popen(cmd)
-        self.log_message("In launch_location2, after Popen statement, Pausing 20 seconds")
-        time.sleep(20)   
+        self.log_message("In launch_location2, after Popen statement, Pausing 15 seconds")
+        time.sleep(15)   
         cmd = [
             "gnome-terminal",
             "--",
@@ -372,6 +387,22 @@ class ROSLauncher(tk.Tk):
         if len(data.data) >= 2:
             self.update_serial_status_icon(self.ser1_status_canvas, data.data[0] > 0.5)
             self.update_serial_status_icon(self.ser2_status_canvas, data.data[1] > 0.5)
+
+    def imu_callback(self, msg):
+        # Extract the orientation quaternion
+        orientation_q = msg.orientation
+        # Convert quaternion to Euler angles
+        orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
+        (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(orientation_list)
+        # Convert yaw to degrees
+        heading_deg = math.degrees(yaw)
+        # Ensure heading is between -180 and 180 degrees (to match your IMU code)
+        if heading_deg > 180:
+            heading_deg -= 360
+        elif heading_deg < -180:
+            heading_deg += 360
+        # Update the heading label
+        self.heading_label.config(text=f"{heading_deg:.2f}°")
 
     def update_serial_status_icon(self, canvas, status):
         color = "green" if status else "red"

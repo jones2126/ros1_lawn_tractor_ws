@@ -1,9 +1,9 @@
-Compiler Notes 8/4/2024
+from 8/10/24
 
- *  Executing task in folder rightSpeed2024_v2: platformio run --target upload --environment nano_every 
+*  Executing task in folder rightSpeed2024_v2: platformio run --target upload --environment nano_every 
 
 Processing nano_every (platform: atmelmegaavr; board: nano_every; framework: arduino)
------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
 Verbose mode can be enabled via `-v, --verbose` option
 CONFIGURATION: https://docs.platformio.org/page/boards/atmelmegaavr/nano_every.html
 PLATFORM: Atmel megaAVR (1.9.0) > Arduino Nano Every
@@ -20,62 +20,20 @@ Dependency Graph
 |-- rosserial_arduino @ 0.0.3
 |-- Wire @ 1.0
 Building in release mode
-Auto-detected: /dev/ttyACM0
-Compiling .pio/build/nano_every/FrameworkArduinoVariant/variant.c.o
+Using manually specified: /dev/odom_right
 Compiling .pio/build/nano_every/src/main.cpp.o
-Compiling .pio/build/nano_every/lib247/SPI/SPI.cpp.o
-Archiving .pio/build/nano_every/lib247/libSPI.a
-Indexing .pio/build/nano_every/lib247/libSPI.a
-Compiling .pio/build/nano_every/lib545/rosserial_arduino/duration.cpp.o
-Compiling .pio/build/nano_every/lib545/rosserial_arduino/time.cpp.o
-Compiling .pio/build/nano_every/libd33/Wire/Wire.cpp.o
-Archiving .pio/build/nano_every/lib545/librosserial_arduino.a
-Indexing .pio/build/nano_every/lib545/librosserial_arduino.a
-Compiling .pio/build/nano_every/libd33/Wire/utility/twi.c.o
-Compiling .pio/build/nano_every/FrameworkArduino/CDC.cpp.o
-Archiving .pio/build/nano_every/libd33/libWire.a
-Indexing .pio/build/nano_every/libd33/libWire.a
-Compiling .pio/build/nano_every/FrameworkArduino/NANO_compat.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/Tone.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/UART.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/UART0.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/UART1.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/UART2.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/UART3.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/UNO_compat.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/USBCore.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/WInterrupts.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/WMath.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/abi.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/api/Common.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/api/IPAddress.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/api/PluggableUSB.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/api/Print.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/api/Stream.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/api/String.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/hooks.c.o
-Compiling .pio/build/nano_every/FrameworkArduino/main.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/new.cpp.o
-Compiling .pio/build/nano_every/FrameworkArduino/wiring.c.o
-Compiling .pio/build/nano_every/FrameworkArduino/wiring_analog.c.o
-Compiling .pio/build/nano_every/FrameworkArduino/wiring_digital.c.o
-Compiling .pio/build/nano_every/FrameworkArduino/wiring_pulse.S.o
-Compiling .pio/build/nano_every/FrameworkArduino/wiring_pulse.c.o
-Compiling .pio/build/nano_every/FrameworkArduino/wiring_shift.c.o
-Archiving .pio/build/nano_every/libFrameworkArduino.a
-Indexing .pio/build/nano_every/libFrameworkArduino.a
 Linking .pio/build/nano_every/firmware.elf
 Checking size .pio/build/nano_every/firmware.elf
 Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
 RAM:   [===       ]  28.9% (used 1774 bytes from 6144 bytes)
-Flash: [====      ]  35.2% (used 17125 bytes from 48640 bytes)
+Flash: [====      ]  35.3% (used 17181 bytes from 48640 bytes)
 Building .pio/build/nano_every/firmware.hex
 Configuring upload protocol...
 AVAILABLE: jtag2updi
 CURRENT: upload_protocol = jtag2updi
 Looking for upload port...
-Using manually specified: /dev/ttyACM0
-Forcing reset using 1200bps open/close on port /dev/ttyACM0
+Using manually specified: /dev/odom_right
+Forcing reset using 1200bps open/close on port /dev/odom_right
 Uploading .pio/build/nano_every/firmware.hex
 
 avrdude: jtagmkII_initialize(): Cannot locate "flash" and "boot" memories in description
@@ -131,15 +89,15 @@ Reading | ################################################## | 100% 0.00s
 avrdude: verifying ...
 avrdude: 1 bytes of lock verified
 avrdude: reading input file ".pio/build/nano_every/firmware.hex"
-avrdude: writing flash (17126 bytes):
+avrdude: writing flash (17182 bytes):
 
-Writing | ################################################## | 100% 12.48s
+Writing | ################################################## | 100% 12.60s
 
-avrdude: 17126 bytes of flash written
+avrdude: 17182 bytes of flash written
 
 avrdude: safemode: Fuses OK (E:FF, H:FF, L:FF)
 
 avrdude done.  Thank you.
 
-============================================ [SUCCESS] Took 22.11 seconds ============================================
+========================================= [SUCCESS] Took 17.00 seconds =========================================
  *  Terminal will be reused by tasks, press any key to close it. 

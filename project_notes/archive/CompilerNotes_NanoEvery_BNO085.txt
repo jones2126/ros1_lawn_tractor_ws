@@ -1,0 +1,159 @@
+ *  Executing task in folder NanoEveryTestStack: platformio run --target upload --environment nano_every 
+
+Processing nano_every (platform: atmelmegaavr; board: nano_every; framework: arduino)
+-------------------------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/atmelmegaavr/nano_every.html
+PLATFORM: Atmel megaAVR (1.9.0) > Arduino Nano Every
+HARDWARE: ATMEGA4809 16MHz, 6KB RAM, 47.50KB Flash
+PACKAGES: 
+ - framework-arduino-megaavr @ 1.8.8 
+ - tool-avrdude-megaavr @ 1.60300.191015 (6.3.0) 
+ - toolchain-atmelavr @ 1.70300.191015 (7.3.0)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 8 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- Adafruit BNO08x @ 1.2.5
+|-- Rosserial Arduino Library @ 0.7.9
+|-- Wire @ 1.0
+Building in release mode
+Using manually specified: /dev/ttyACM0
+Compiling .pio/build/nano_every/FrameworkArduinoVariant/variant.c.o
+Compiling .pio/build/nano_every/src/main.cpp.o
+Compiling .pio/build/nano_every/libd33/Wire/Wire.cpp.o
+Compiling .pio/build/nano_every/libd33/Wire/utility/twi.c.o
+Archiving .pio/build/nano_every/libd33/libWire.a
+Indexing .pio/build/nano_every/libd33/libWire.a
+Compiling .pio/build/nano_every/lib247/SPI/SPI.cpp.o
+Compiling .pio/build/nano_every/lib51a/Adafruit BusIO/Adafruit_BusIO_Register.cpp.o
+Compiling .pio/build/nano_every/lib51a/Adafruit BusIO/Adafruit_I2CDevice.cpp.o
+Archiving .pio/build/nano_every/lib247/libSPI.a
+Indexing .pio/build/nano_every/lib247/libSPI.a
+Compiling .pio/build/nano_every/lib51a/Adafruit BusIO/Adafruit_SPIDevice.cpp.o
+Compiling .pio/build/nano_every/lib126/Adafruit Unified Sensor/Adafruit_Sensor.cpp.o
+Archiving .pio/build/nano_every/lib126/libAdafruit Unified Sensor.a
+Indexing .pio/build/nano_every/lib126/libAdafruit Unified Sensor.a
+Archiving .pio/build/nano_every/lib51a/libAdafruit BusIO.a
+Indexing .pio/build/nano_every/lib51a/libAdafruit BusIO.a
+Compiling .pio/build/nano_every/libba5/Adafruit BNO08x/Adafruit_BNO08x.cpp.o
+Compiling .pio/build/nano_every/libba5/Adafruit BNO08x/sh2.c.o
+Compiling .pio/build/nano_every/libba5/Adafruit BNO08x/sh2_SensorValue.c.o
+Compiling .pio/build/nano_every/libba5/Adafruit BNO08x/sh2_util.c.o
+Compiling .pio/build/nano_every/libba5/Adafruit BNO08x/shtp.c.o
+Compiling .pio/build/nano_every/lib75a/Rosserial Arduino Library/duration.cpp.o
+Archiving .pio/build/nano_every/libba5/libAdafruit BNO08x.a
+Indexing .pio/build/nano_every/libba5/libAdafruit BNO08x.a
+Compiling .pio/build/nano_every/lib75a/Rosserial Arduino Library/time.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/CDC.cpp.o
+Archiving .pio/build/nano_every/lib75a/libRosserial Arduino Library.a
+Indexing .pio/build/nano_every/lib75a/libRosserial Arduino Library.a
+Compiling .pio/build/nano_every/FrameworkArduino/NANO_compat.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/UART.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/UART0.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/UART1.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/UART2.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/UART3.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/UNO_compat.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/USBCore.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/WInterrupts.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/abi.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/api/Common.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/api/IPAddress.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/api/PluggableUSB.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/api/Print.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/api/Stream.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/api/String.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/hooks.c.o
+Compiling .pio/build/nano_every/FrameworkArduino/main.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/new.cpp.o
+Compiling .pio/build/nano_every/FrameworkArduino/wiring.c.o
+Compiling .pio/build/nano_every/FrameworkArduino/wiring_analog.c.o
+Compiling .pio/build/nano_every/FrameworkArduino/wiring_digital.c.o
+Compiling .pio/build/nano_every/FrameworkArduino/wiring_pulse.S.o
+Compiling .pio/build/nano_every/FrameworkArduino/wiring_pulse.c.o
+Compiling .pio/build/nano_every/FrameworkArduino/wiring_shift.c.o
+Archiving .pio/build/nano_every/libFrameworkArduino.a
+Indexing .pio/build/nano_every/libFrameworkArduino.a
+Linking .pio/build/nano_every/firmware.elf
+Checking size .pio/build/nano_every/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [=======   ]  73.0% (used 4488 bytes from 6144 bytes)
+Flash: [======    ]  58.8% (used 28622 bytes from 48640 bytes)
+Building .pio/build/nano_every/firmware.hex
+Configuring upload protocol...
+AVAILABLE: jtag2updi
+CURRENT: upload_protocol = jtag2updi
+Looking for upload port...
+Using manually specified: /dev/ttyACM0
+Forcing reset using 1200bps open/close on port /dev/ttyACM0
+Uploading .pio/build/nano_every/firmware.hex
+
+avrdude: jtagmkII_initialize(): Cannot locate "flash" and "boot" memories in description
+avrdude: AVR device initialized and ready to accept instructions
+
+Reading | ################################################## | 100% 0.27s
+
+avrdude: Device signature = 0x1e9651 (probably m4809)
+avrdude: erasing chip
+avrdude: reading input file "0x01"
+avrdude: writing fuse2 (1 bytes):
+
+Writing | ################################################## | 100% 0.01s
+
+avrdude: 1 bytes of fuse2 written
+avrdude: verifying fuse2 memory against 0x01:
+avrdude: load data fuse2 data from input file 0x01:
+avrdude: input file 0x01 contains 1 bytes
+avrdude: reading on-chip fuse2 data:
+
+Reading | ################################################## | 100% 0.00s
+
+avrdude: verifying ...
+avrdude: 1 bytes of fuse2 verified
+avrdude: reading input file "0xC9"
+avrdude: writing fuse5 (1 bytes):
+
+Writing | ################################################## | 100% 0.01s
+
+avrdude: 1 bytes of fuse5 written
+avrdude: verifying fuse5 memory against 0xC9:
+avrdude: load data fuse5 data from input file 0xC9:
+avrdude: input file 0xC9 contains 1 bytes
+avrdude: reading on-chip fuse5 data:
+
+Reading | ################################################## | 100% 0.00s
+
+avrdude: verifying ...
+avrdude: 1 bytes of fuse5 verified
+avrdude: reading input file "0xC5"
+avrdude: writing lock (1 bytes):
+
+Writing | ################################################## | 100% 0.01s
+
+avrdude: 1 bytes of lock written
+avrdude: verifying lock memory against 0xC5:
+avrdude: load data lock data from input file 0xC5:
+avrdude: input file 0xC5 contains 1 bytes
+avrdude: reading on-chip lock data:
+
+Reading | ################################################## | 100% 0.00s
+
+avrdude: verifying ...
+avrdude: 1 bytes of lock verified
+avrdude: reading input file ".pio/build/nano_every/firmware.hex"
+avrdude: writing flash (28622 bytes):
+
+Writing | ################################################## | 100% 20.87s
+
+avrdude: 28622 bytes of flash written
+
+avrdude: safemode: Fuses OK (E:FF, H:FF, L:FF)
+
+avrdude done.  Thank you.
+
+================================= [SUCCESS] Took 34.73 seconds =================================
+ *  Terminal will be reused by tasks, press any key to close it. 
