@@ -95,6 +95,11 @@ class ROSLauncher(tk.Tk):
         self.ser2_status_canvas = tk.Canvas(self.status_frame, width=30, height=30, bg="red", highlightthickness=0)
         self.ser2_status_canvas.grid(row=1, column=2, padx=5)
 
+        # Magnetometer status
+        tk.Label(self.status_frame, text="Mag", font=("Arial", 10)).grid(row=0, column=3, padx=5)
+        self.mag_status_canvas = tk.Canvas(self.status_frame, width=30, height=30, bg="red", highlightthickness=0)
+        self.mag_status_canvas.grid(row=1, column=3, padx=5)
+
         # Configure rows and columns to expand
         for i in range(5):  # Changed from 4 to 5 to accommodate the new row
             self.grid_rowconfigure(i, weight=1)
@@ -389,20 +394,34 @@ class ROSLauncher(tk.Tk):
             self.update_serial_status_icon(self.ser2_status_canvas, data.data[1] > 0.5)
 
     def imu_callback(self, msg):
-        # Extract the orientation quaternion
+        # get data
+        mag_accuracy = msg.orientation_covariance[0]
         orientation_q = msg.orientation
+        
         # Convert quaternion to Euler angles
         orientation_list = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
         (roll, pitch, yaw) = tf.transformations.euler_from_quaternion(orientation_list)
+        
         # Convert yaw to degrees
         heading_deg = math.degrees(yaw)
-        # Ensure heading is between -180 and 180 degrees (to match your IMU code)
-        if heading_deg > 180:
+        if heading_deg > 180:   # Ensure heading is between -180 and 180 degrees (to match your IMU code)
             heading_deg -= 360
         elif heading_deg < -180:
             heading_deg += 360
+        
         # Update the heading label
         self.heading_label.config(text=f"{heading_deg:.2f}°")
+
+        # Update the magenetometer color status
+        if math.isnan(mag_accuracy) or mag_accuracy < 1.5:  # Handle NaN and low accuracy
+            color = "red"
+        elif 1.5 <= mag_accuracy < 2.5:
+            color = "yellow"
+        elif mag_accuracy >= 2.5:
+            color = "green"
+        else:
+            color = "gray"  # For unexpected values
+        self.mag_status_canvas.config(bg=color)          
 
     def update_serial_status_icon(self, canvas, status):
         color = "green" if status else "red"

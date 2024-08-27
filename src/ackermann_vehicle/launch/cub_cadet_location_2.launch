@@ -43,9 +43,14 @@
     <param name="baud" value="115200"/>
   </node>
 
-  <node pkg="chip_imu_driver" type="chip_imu_driver_node" name="chip_imu_driver_node" output="screen">
+<!--   <node pkg="chip_imu_driver" type="chip_imu_driver_node" name="chip_imu_driver_node" output="screen">
       <param name="port" value="/dev/rosimu" />
       <param name="initial_yaw" type="double" value="-90.94"/> 
+  </node> -->
+
+  <node pkg="rosserial_python" type="serial_node.py" name="teensy_imu_node" output="screen">
+      <param name="port" value="/dev/teensy_imu"/>
+      <param name="baud" value="115200"/>
   </node>
 
   <node name="map_server" pkg="map_server" type="map_server"
