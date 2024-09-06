@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<root>
+ <tabbed_widget parent="main_window" name="Main Window">
+  <Tab tab_name="odom" containers="1">
+   <Container>
+    <DockSplitter orientation="-" count="1" sizes="1">
+     <DockArea name="...">
+      <plot flip_x="false" mode="XYPlot" style="Lines" flip_y="false">
+       <range bottom="-9.968107" right="9.724479" top="35.466275" left="-37.225205"/>
+       <limitY/>
+       <curve color="#1f77b4" curve_x="/odom/pose/pose/position/x" name="/odom/pose/pose/position/[x;y]" curve_y="/odom/pose/pose/position/y"/>
+       <curve color="#d62728" curve_x="/lookahead_data/data[0]" name="/lookahead_data/data[[0];1]]" curve_y="/lookahead_data/data[1]"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="heading" containers="1">
+   <Container>
+    <DockSplitter orientation="-" count="1" sizes="1">
+     <DockArea name="...">
+      <plot flip_x="false" mode="TimeSeries" style="Lines" flip_y="false">
+       <range bottom="-3.297000" right="253.635423" top="3.297000" left="133.534517"/>
+       <limitY/>
+       <curve color="#17becf" name="/hdg_from_imu/data"/>
+       <curve color="#bcbd22" name="/gps_array_data/data[6]"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="gps status" containers="1">
+   <Container>
+    <DockSplitter orientation="-" count="1" sizes="1">
+     <DockArea name="...">
+      <plot flip_x="false" mode="TimeSeries" style="Lines" flip_y="false">
+       <range bottom="-0.050000" right="253.635423" top="2.050000" left="133.534517"/>
+       <limitY/>
+       <curve color="#d62728" name="/fix/status/status"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="rc mode" containers="1">
+   <Container>
+    <DockSplitter orientation="-" count="1" sizes="1">
+     <DockSplitter orientation="|" count="2" sizes="0.500535;0.499465">
+      <DockArea name="...">
+       <plot flip_x="false" mode="TimeSeries" style="Lines" flip_y="false">
+        <range bottom="0.975000" right="253.635423" top="2.025000" left="133.534517"/>
+        <limitY/>
+        <curve color="#1ac938" name="/my_array_topic/data[10]"/>
+       </plot>
+      </DockArea>
+      <DockArea name="...">
+       <plot flip_x="false" mode="TimeSeries" style="Lines" flip_y="false">
+        <range bottom="293.225000" right="253.635423" top="325.775000" left="133.534517"/>
+        <limitY/>
+        <curve color="#ff7f0e" name="/my_array_topic/data[1]"/>
+       </plot>
+      </DockArea>
+     </DockSplitter>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="speed" containers="1">
+   <Container>
+    <DockSplitter orientation="-" count="1" sizes="1">
+     <DockArea name="...">
+      <plot flip_x="false" mode="TimeSeries" style="Lines" flip_y="false">
+       <range bottom="-20366900.707100" right="253.635423" top="21878301.499990" left="133.534517"/>
+       <limitY/>
+       <curve color="#3b6bc5" name="/cmd_vel/linear/x"/>
+       <curve color="#ff7f0e" name="/odom/twist/twist/linear/x"/>
+       <curve color="#1ac938" name="/wheel_data_left/data[3]"/>
+       <curve color="#c7001d" name="/wheel_data_right/data[3]"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="angular.z" containers="1">
+   <Container>
+    <DockSplitter orientation="-" count="1" sizes="1">
+     <DockArea name="...">
+      <plot flip_x="false" mode="TimeSeries" style="Lines" flip_y="false">
+       <range bottom="-5.009889" right="253.635423" top="1.985993" left="133.534517"/>
+       <limitY/>
+       <curve color="#1ac938" name="/cmd_vel/angular/z"/>
+       <curve color="#ff7f0e" name="/off_path_error/data"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab tab_name="left-n-right" containers="1">
+   <Container>
+    <DockSplitter orientation="-" count="1" sizes="1">
+     <DockArea name="...">
+      <plot flip_x="false" mode="TimeSeries" style="Lines" flip_y="false">
+       <range bottom="-0.232055" right="253.635423" top="1.661665" left="133.534517"/>
+       <limitY/>
+       <curve color="#1ac938" name="/wheel_data_left/data[3]"/>
+       <curve color="#ff7f0e" name="/wheel_data_right/data[3]"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <currentTabIndex index="6"/>
+ </tabbed_widget>
+ <use_relative_time_offset enabled="1"/>
+ <!-- - - - - - - - - - - - - - - -->
+ <!-- - - - - - - - - - - - - - - -->
+ <Plugins>
+  <plugin ID="DataLoad CSV">
+   <parameters delimiter="0" time_axis=""/>
+  </plugin>
+  <plugin ID="DataLoad MCAP"/>
+  <plugin ID="DataLoad ROS bags">
+   <use_header_stamp value="false"/>
+   <discard_large_arrays value="true"/>
+   <max_array_size value="100"/>
+   <boolean_strings_to_number value="true"/>
+   <remove_suffix_from_strings value="true"/>
+   <selected_topics value="/cmd_vel;/fix;/gps_array_data;/hdg_from_imu;/hdg_from_wheels;/imu/data;/lookahead_data;/my_array_topic;/odom;/off_path_error;/vel;/wheel_data_left;/wheel_data_right"/>
+  </plugin>
+  <plugin ID="DataLoad ULog"/>
+  <plugin ID="ROS Topic Subscriber">
+   <use_header_stamp value="false"/>
+   <discard_large_arrays value="true"/>
+   <max_array_size value="100"/>
+   <boolean_strings_to_number value="true"/>
+   <remove_suffix_from_strings value="true"/>
+   <selected_topics value=""/>
+  </plugin>
+  <plugin ID="UDP Server"/>
+  <plugin ID="WebSocket Server"/>
+  <plugin ID="ZMQ Subscriber"/>
+  <plugin ID="Fast Fourier Transform"/>
+  <plugin ID="Quaternion to RPY"/>
+  <plugin ID="Reactive Script Editor">
+   <library code="--[[ Helper function to create a series from arrays&#xa;&#xa; new_series: a series previously created with ScatterXY.new(name)&#xa; prefix:     prefix of the timeseries, before the index of the array&#xa; suffix_X:   suffix to complete the name of the series containing the X value. If [nil], use the index of the array.&#xa; suffix_Y:   suffix to complete the name of the series containing the Y value&#xa; timestamp:   usually the tracker_time variable&#xa;              &#xa; Example:&#xa; &#xa; Assuming we have multiple series in the form:&#xa; &#xa;   /trajectory/node.{X}/position/x&#xa;   /trajectory/node.{X}/position/y&#xa;   &#xa; where {N} is the index of the array (integer). We can create a reactive series from the array with:&#xa; &#xa;   new_series = ScatterXY.new(&quot;my_trajectory&quot;) &#xa;   CreateSeriesFromArray( new_series, &quot;/trajectory/node&quot;, &quot;position/x&quot;, &quot;position/y&quot;, tracker_time );&#xa;--]]&#xa;&#xa;function CreateSeriesFromArray( new_series, prefix, suffix_X, suffix_Y, timestamp )&#xa;  &#xa;  --- clear previous values&#xa;  new_series:clear()&#xa;  &#xa;  --- Append points to new_series&#xa;  index = 0&#xa;  while(true) do&#xa;&#xa;    x = index;&#xa;    -- if not nil, get the X coordinate from a series&#xa;    if suffix_X ~= nil then &#xa;      series_x = TimeseriesView.find( string.format( &quot;%s.%d/%s&quot;, prefix, index, suffix_X) )&#xa;      if series_x == nil then break end&#xa;      x = series_x:atTime(timestamp)&#x9; &#xa;    end&#xa;    &#xa;    series_y = TimeseriesView.find( string.format( &quot;%s.%d/%s&quot;, prefix, index, suffix_Y) )&#xa;    if series_y == nil then break end &#xa;    y = series_y:atTime(timestamp)&#xa;    &#xa;    new_series:push_back(x,y)&#xa;    index = index+1&#xa;  end&#xa;end&#xa;&#xa;--[[ Similar to the built-in function GetSeriesNames(), but select only the names with a give prefix. --]]&#xa;&#xa;function GetSeriesNamesByPrefix(prefix)&#xa;  -- GetSeriesNames(9 is a built-in function&#xa;  all_names = GetSeriesNames()&#xa;  filtered_names = {}&#xa;  for i, name in ipairs(all_names)  do&#xa;    -- check the prefix&#xa;    if name:find(prefix, 1, #prefix) then&#xa;      table.insert(filtered_names, name);&#xa;    end&#xa;  end&#xa;  return filtered_names&#xa;end&#xa;&#xa;--[[ Modify an existing series, applying offsets to all their X and Y values&#xa;&#xa; series: an existing timeseries, obtained with TimeseriesView.find(name)&#xa; delta_x: offset to apply to each x value&#xa; delta_y: offset to apply to each y value &#xa;  &#xa;--]]&#xa;&#xa;function ApplyOffsetInPlace(series, delta_x, delta_y)&#xa;  -- use C++ indeces, not Lua indeces&#xa;  for index=0, series:size()-1 do&#xa;    x,y = series:at(index)&#xa;    series:set(index, x + delta_x, y + delta_y)&#xa;  end&#xa;end&#xa;"/>
+   <scripts/>
+  </plugin>
+  <plugin ID="CSV Exporter"/>
+  <plugin ID="ROS /rosout Visualization"/>
+  <plugin ID="ROS Topic Re-Publisher"/>
+ </Plugins>
+ <!-- - - - - - - - - - - - - - - -->
+ <previouslyLoaded_Datafiles>
+  <fileInfo filename="../../bagfiles/2024-09-04-12-30-24.bag" prefix="">
+   <plugin ID="DataLoad ROS bags">
+    <use_header_stamp value="false"/>
+    <discard_large_arrays value="true"/>
+    <max_array_size value="100"/>
+    <boolean_strings_to_number value="true"/>
+    <remove_suffix_from_strings value="true"/>
+    <selected_topics value="/cmd_vel;/fix;/gps_array_data;/hdg_from_imu;/hdg_from_wheels;/imu/data;/lookahead_data;/my_array_topic;/odom;/off_path_error;/vel;/wheel_data_left;/wheel_data_right"/>
+   </plugin>
+  </fileInfo>
+ </previouslyLoaded_Datafiles>
+ <!-- - - - - - - - - - - - - - - -->
+ <customMathEquations/>
+ <snippets/>
+ <!-- - - - - - - - - - - - - - - -->
+</root>
+
